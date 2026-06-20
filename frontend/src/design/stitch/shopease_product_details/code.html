@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ShopEase - Product Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#000000",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#1a1c1d",
+                        "surface-tint": "#5e5e5e",
+                        "on-primary-container": "#848484",
+                        "on-tertiary-fixed": "#1a1c1d",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary": "#005cba",
+                        "surface-container": "#f0edef",
+                        "outline-variant": "#cfc4c5",
+                        "inverse-surface": "#303032",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "inverse-on-surface": "#f3f0f2",
+                        "surface-dim": "#dcd9dc",
+                        "primary-container": "#1b1b1b",
+                        "surface-container-highest": "#e4e2e4",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-primary-fixed-variant": "#474747",
+                        "on-surface": "#1b1b1d",
+                        "inverse-primary": "#c6c6c6",
+                        "secondary-fixed": "#d7e3ff",
+                        "surface-container-high": "#eae7ea",
+                        "on-tertiary-fixed-variant": "#454749",
+                        "error-container": "#ffdad6",
+                        "outline": "#7e7576",
+                        "on-secondary-fixed": "#001b3e",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e4e2e4",
+                        "on-tertiary-container": "#838486",
+                        "tertiary-fixed-dim": "#c6c6c8",
+                        "on-background": "#1b1b1d",
+                        "secondary-container": "#5095fe",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fcf8fb",
+                        "surface": "#fcf8fb",
+                        "surface-bright": "#fcf8fb",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "tertiary-fixed": "#e2e2e4",
+                        "surface-container-low": "#f6f3f5",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#4c4546",
+                        "on-secondary-container": "#002d61",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "stack-xl": "64px",
+                        "margin-mobile": "20px",
+                        "stack-md": "16px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-[100] bg-surface/80 backdrop-blur-3xl border-b-[0.5px] border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex justify-between items-center h-16">
+<a class="text-headline-md font-headline-md font-bold tracking-tighter text-primary" href="#">ShopEase</a>
+<nav class="hidden md:flex space-x-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md" href="#">Shop</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md" href="#">Featured</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md" href="#">Discover</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="hover:opacity-70 transition-opacity active:scale-[0.98] transition-transform duration-200">
+<span class="material-symbols-outlined text-primary">shopping_bag</span>
+</button>
+<button class="hover:opacity-70 transition-opacity active:scale-[0.98] transition-transform duration-200">
+<span class="material-symbols-outlined text-primary">person</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[100px] md:pt-[120px] pb-stack-xl max-w-container-max mx-auto w-full">
+<!-- Product Details Split Layout -->
+<div class="flex flex-col lg:flex-row gap-gutter md:gap-stack-xl px-margin-mobile md:px-margin-desktop mb-stack-xl">
+<!-- Left: Image Gallery -->
+<div class="w-full lg:w-[60%] flex flex-col gap-4 fade-in">
+<!-- Main Image -->
+<div class="w-full aspect-square md:aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" data-alt="A highly detailed, ultra-high-resolution photograph of a premium, minimalist over-ear headphone resting on a polished, pristine white marble block. The lighting is soft and high-key, casting a very faint, elegant shadow. The headphone features a matte black finish with subtle brushed metal accents. The overall aesthetic is clean, luxurious, and modern, perfectly matching a bright, minimalist UI design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5ju3rxleLaJ461i3Wr-msAo2iuMIgNPWSrhG_0dEQhLsjKWMHdIxWjN5bS7V0kDH4PcxExYlHCR_VbPdkHo6r9ie_RickNpgTIdLACgrfiL5dG5pYpSIrcVJJCClpr0z25p3xn3Cq53QsZ2vl5ny8j7O48jdCj4vVFLVaqHGiyzspY2_iKfX5t5KGGX3r8cBjP7Dd6ZJL1328_F5x75P4165AYVcFul2YUBBfUWC_Q--LhzAB7ZhNmAo8aLb7wJD3UfhHeipeRtEn"/>
+</div>
+<!-- Thumbnails -->
+<div class="grid grid-cols-4 gap-4">
+<div class="aspect-square bg-surface-container-low rounded-lg overflow-hidden cursor-pointer border border-transparent hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A close-up, highly detailed shot focusing on the brushed metal hinge and matte black ear cup of a premium headphone. Soft, diffused lighting highlights the flawless texture of the materials. The background is a slightly out-of-focus, sterile white, emphasizing the product's high-end craftsmanship within a minimalist, luxury design context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlTXt9zHFM6V4F88tJN3nHemeVCKTTSeTTt8ufUIyYgr1C4ThF4XKGlDCUaIbQandAXtp1OMZsI4nMV6oXJYqR_mWZPF7Mw7DY2vb93LF7N-GISGBFjUfwcIkp-wN259ZcKcwGqe9fB4iPNqr8XJ2g8-p8BczC76dFYyxKc7reK1dHAll1NF276xe6onkFWBB71cPr2D5O0HKvGstbwg3ejOmR_--a3j_bXg85fRnWQEtt1fcqVXOnk6A3JTv7SY3iSJ9gi_D6L8MF"/>
+</div>
+<div class="aspect-square bg-surface-container-low rounded-lg overflow-hidden cursor-pointer border border-transparent hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A top-down, highly detailed macro view of the premium headphone's headband, showing the fine stitching on the plush leather. The lighting is bright and even, casting almost no shadow to maintain a clean, flat look. The background is pure system gray, aligning with a sophisticated, light-mode minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBctbxyey60akpglzYuXzJjljzJ2xTuh5FMEhF_Y_NBr8MB4KB8Ngog6YJSWZ9jNyh-m5VqyjemuUjYvvs6XwQ2vsr760J2rAtJ5uYlw1DuXnTo1WIvLF6pRkF9jI7I9oBs9hIGJDtP52DfiLeYf6jUdXlt7gV6oCZo86CxFEIYMSgr5Gj3Vt5QZEWrO4ay494MRoeq5gvUfFHTOLyVQCR8Fu0sh1tn_mkCqNSBbvn7CvlX2ta_3zKVbwBIYdIDrHeD8COwabwomHdq"/>
+</div>
+<div class="aspect-square bg-surface-container-low rounded-lg overflow-hidden cursor-pointer border border-transparent hover:border-primary transition-colors">
+<img class="w-full h-full object-cover" data-alt="A detailed, stylized photograph showing the premium headphone elegantly draped over a sleek, modern, clear acrylic stand. The lighting creates subtle reflections on the acrylic, adding depth without clutter. The scene is brightly lit against a crisp white background, portraying a high-end, uncluttered, and professional product presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKVntX48Kb_Mzeh00TkAvQ9T7l-XU_qgxp8ul3-5HcAVxfbRjAnSAzQX5NT3uGr_KWZelPUQ22T9hl25ea29DSYAWB7OQojUN2RnJYRzEFDBMaBtCx_W7btWcGRuGomc__GNy5NN70Nw3l-0gfi44Gmi3Dpl80FgHq51GYEOQJdlTKXBbJBA9PlfEh6RGSHC1iyQcZ9aI3gFCOI1SLtNwGS5Q00GMQ51xKuQrZOCBhvi_ti-3ye3mGAWakQJ3nBU_aIVugOTJC2_OD"/>
+</div>
+</div>
+</div>
+<!-- Right: Sticky Info Panel -->
+<div class="w-full lg:w-[40%] relative">
+<div class="lg:sticky lg:top-[120px] flex flex-col gap-stack-lg fade-in" style="animation-delay: 0.2s;">
+<!-- Header & Price -->
+<div class="flex flex-col gap-unit">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Audio</span>
+<h1 class="text-display-lg-mobile md:text-headline-lg font-headline-lg text-primary">Aura Studio Pro</h1>
+<p class="text-headline-md font-headline-md text-on-surface-variant mt-2">$349.00</p>
+</div>
+<!-- Description -->
+<p class="text-body-md font-body-md text-on-surface-variant leading-relaxed">
+                        Experience unparalleled acoustic precision with the Aura Studio Pro. Engineered with custom planar magnetic drivers and encased in aerospace-grade aluminum, these headphones deliver a soundscape that is both expansive and intensely detailed. Designed for the discerning audiophile.
+                    </p>
+<!-- Features -->
+<div class="flex flex-col gap-4 py-stack-md border-y border-outline-variant/30">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">bluetooth</span>
+<span class="text-body-md font-body-md text-primary">Bluetooth 5.3 with aptX Lossless</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">battery_charging_full</span>
+<span class="text-body-md font-body-md text-primary">40-hour battery life</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0;">noise_control_off</span>
+<span class="text-body-md font-body-md text-primary">Adaptive Active Noise Cancellation</span>
+</div>
+</div>
+<!-- Action -->
+<button class="w-full bg-primary text-on-primary py-4 px-6 rounded-full text-label-md font-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all duration-200 mt-4">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+                        Add to Bag
+                    </button>
+<!-- Shipping Info -->
+<div class="flex flex-col gap-2 mt-4 text-label-sm font-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">local_shipping</span>
+                            Free shipping and returns.
+                        </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Products (Horizontal Scroll) -->
+<div class="px-margin-mobile md:px-margin-desktop mt-[120px] fade-in" style="animation-delay: 0.4s;">
+<div class="flex justify-between items-end mb-stack-md">
+<h2 class="text-headline-md font-headline-md text-primary">Complete the Setup</h2>
+</div>
+<div class="flex gap-gutter overflow-x-auto no-scrollbar pb-8 snap-x">
+<!-- Card 1 -->
+<a class="min-w-[280px] md:min-w-[320px] flex flex-col gap-4 group snap-start" href="#">
+<div class="aspect-square bg-surface-container-low rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A highly detailed, brightly lit photograph of a sleek, matte black minimalist headphone stand. The stand is made of premium machined aluminum with a simple geometric base. It sits on a pristine white surface with soft, high-key lighting, casting a faint shadow. The image perfectly embodies a clean, luxury tech aesthetic suitable for a modern e-commerce site." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXw7Nfh61yVPPt8EUzXnEE5qk8bprFGUIwYM18nOITSt8jJq_qolw1zKpH1NbSio4PpNc4WyFxVSydy0DDZK741pJjpG-xp-gS1iCppx5VGhJgdfUFFRgl6wqAlcgCs-d_ACI__8e2naA4cb3YroIN7Vfcg0VEe-tDzdTyWCq5VuFtk1089dnKbAciyePOk9kapOn07ob2x6mLw5ahGq2hCQ5x2xEvg9lw8H_sxgxrPxAEaWvus-793m9h6vXb3G2M736e6nYKnASR"/>
+</div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-label-md font-label-md text-primary">Aura Base Station</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Wireless Charging Stand</p>
+</div>
+<span class="text-label-md font-label-md text-primary">$89</span>
+</div>
+</a>
+<!-- Card 2 -->
+<a class="min-w-[280px] md:min-w-[320px] flex flex-col gap-4 group snap-start" href="#">
+<div class="aspect-square bg-surface-container-low rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro, highly detailed photograph of a premium, braided audio cable coiled elegantly on a crisp white surface. The cable features a thick, durable black nylon braid and polished silver connectors. The lighting is soft and even, highlighting the texture of the braid. The composition is clean, minimalist, and conveys a sense of high-end audio luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEhsYhSUYrB2r4G5qS9hGNkeLOdA5pgBUcaVUPq-oBLrK_7xFf_8rPsTm7mz6wssFK-FDoHbesid8LLR9L4Zmw_iCkI-JssqfGRNtmGWaU2ZZdSPf0OD8hr46l7vP7FA05GJifAc-uXBc77-q2UdQIiliIwmF3KIcBo6xY8CK2Q1ZUU0Jzfyvko5C-8ebF5G7mnhb60PVtSo7eg0InfUNrl2qq9wVlAR-63auEFRJOSCFp8KgipqQS-muLTjEw2g7FMrJnOP4d3QNz"/>
+</div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-label-md font-label-md text-primary">Premium Audio Cable</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Braided Nylon, 2m</p>
+</div>
+<span class="text-label-md font-label-md text-primary">$49</span>
+</div>
+</a>
+<!-- Card 3 -->
+<a class="min-w-[280px] md:min-w-[320px] flex flex-col gap-4 group snap-start" href="#">
+<div class="aspect-square bg-surface-container-low rounded-xl overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A detailed, minimalist photograph of a sleek, hard-shell carrying case designed for premium headphones. The case is a dark, matte charcoal gray with a subtle, textured surface. It rests on a clean, light gray background under soft, high-key lighting. The aesthetic is extremely clean, modern, and perfectly suited for a luxury tech brand's product page." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD27rQyRS7fwfXEhkzqOkaEiRwZKPgIaedx9Qjx97R_l-vmhxsD_oSPRYUsb5bVhB3M4skbQ3VAw1vsDr4v-JKDAE-nyAovQiFDfG2owoR9hpJQYu03ZDiOgwOYrDDsUBcKoE5QoxulH7ov34UIQgqQWYH2RRLUNglC1XWEhfLY7KiSKTOmcpd7xj_bIwUIj-iJ2pE3DmWv796Rd9xamoRtXD2NbwzMGw7yDDxQx0tGSizY5IiWnSLZhQ2uHGC7oo1LDMto6TSJb58n"/>
+</div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-label-md font-label-md text-primary">Travel Case Pro</h3>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Hard Shell Protection</p>
+</div>
+<span class="text-label-md font-label-md text-primary">$65</span>
+</div>
+</a>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-xl mt-stack-xl bg-background border-t-[0.5px] border-outline-variant">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="flex flex-col gap-4">
+<span class="text-headline-sm font-headline-sm font-bold text-primary">ShopEase</span>
+<p class="text-body-md font-body-md text-on-surface-variant">© 2024 ShopEase. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap md:justify-end gap-6 md:gap-8 items-center">
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Shipping</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

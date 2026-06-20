@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ShopEase - Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#000000",
+                      "secondary-fixed-dim": "#aac7ff",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#1a1c1d",
+                      "surface-tint": "#5e5e5e",
+                      "on-primary-container": "#848484",
+                      "on-tertiary-fixed": "#1a1c1d",
+                      "primary-fixed": "#e2e2e2",
+                      "secondary": "#005cba",
+                      "surface-container": "#f0edef",
+                      "outline-variant": "#cfc4c5",
+                      "inverse-surface": "#303032",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#c6c6c6",
+                      "inverse-on-surface": "#f3f0f2",
+                      "surface-dim": "#dcd9dc",
+                      "primary-container": "#1b1b1b",
+                      "surface-container-highest": "#e4e2e4",
+                      "on-secondary-fixed-variant": "#00458e",
+                      "on-primary-fixed-variant": "#474747",
+                      "on-surface": "#1b1b1d",
+                      "inverse-primary": "#c6c6c6",
+                      "secondary-fixed": "#d7e3ff",
+                      "surface-container-high": "#eae7ea",
+                      "on-tertiary-fixed-variant": "#454749",
+                      "error-container": "#ffdad6",
+                      "outline": "#7e7576",
+                      "on-secondary-fixed": "#001b3e",
+                      "on-tertiary": "#ffffff",
+                      "surface-variant": "#e4e2e4",
+                      "on-tertiary-container": "#838486",
+                      "tertiary-fixed-dim": "#c6c6c8",
+                      "on-background": "#1b1b1d",
+                      "secondary-container": "#5095fe",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#fcf8fb",
+                      "surface": "#fcf8fb",
+                      "surface-bright": "#fcf8fb",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed": "#1b1b1b",
+                      "tertiary-fixed": "#e2e2e4",
+                      "surface-container-low": "#f6f3f5",
+                      "tertiary": "#000000",
+                      "on-surface-variant": "#4c4546",
+                      "on-secondary-container": "#002d61",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1440px",
+                      "stack-xl": "64px",
+                      "margin-mobile": "20px",
+                      "stack-md": "16px",
+                      "unit": "8px",
+                      "gutter": "24px",
+                      "stack-sm": "8px",
+                      "stack-lg": "32px",
+                      "margin-desktop": "64px"
+              },
+              "fontFamily": {
+                      "label-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #fcf8fb;
+            color: #1b1b1d;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface-container/80 backdrop-blur-3xl fixed top-0 w-full z-[100] border-b-[0.5px] border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex justify-between items-center h-16">
+<div class="flex items-center gap-8">
+<a class="text-headline-md font-headline-md font-bold tracking-tighter text-primary dark:text-primary-fixed" href="#">ShopEase</a>
+<div class="hidden md:flex gap-6">
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-primary-fixed transition-colors text-label-md font-label-md hover:opacity-70" href="#">Shop</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-primary-fixed transition-colors text-label-md font-label-md hover:opacity-70" href="#">Featured</a>
+<a class="text-on-surface-variant dark:text-on-tertiary-container hover:text-primary dark:hover:text-primary-fixed transition-colors text-label-md font-label-md hover:opacity-70" href="#">Discover</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed hover:opacity-70 transition-opacity p-2 rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="text-primary dark:text-primary-fixed hover:opacity-70 transition-opacity p-2 rounded-full hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-32 pb-stack-xl px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<header class="mb-stack-lg">
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary tracking-tighter">Your Cart</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-2">2 items in your cart.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Cart Items List -->
+<div class="lg:col-span-8 flex flex-col gap-0 border-t border-outline-variant/30">
+<!-- Item 1 -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center py-stack-md border-b border-outline-variant/30 gap-6 group">
+<div class="w-32 h-32 flex-shrink-0 bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="A minimalist, high-end photography shot of a sleek black leather minimalist wallet on a pristine white marble surface, soft diffused lighting, sharp focus, capturing the texture of the leather." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMMJ-jGhO08kC6Rd_hJc26L_1uy2qrICZpD-Zw5VQzD4oUlX2_8k5TGXYcZv4zTzbnSt_J8kKSp-mDW9c5BDS63eGRrDR37Fl8__MKjhTv65186Zv37LMNDeXYV5wQ4i979rVH1MObzfxM70EVdDF-Gm7UsZ22jtwLSExy3PgRKuzFWf7BEXokR_GcRrcgVIO6un-8t7hTM54A39MINwIqOUrhH8PY_caM73z-4E0T715YE0_4ZjZvLdtqKW7G2mU9VsWTIc_m5neO"/>
+</div>
+<div class="flex-grow flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
+<div class="flex flex-col gap-1">
+<h3 class="text-headline-md font-headline-md text-primary">Minimalist Leather Wallet</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Onyx Black</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container rounded-full px-3 py-1 border border-outline-variant/50">
+<button aria-label="Decrease quantity" class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<span class="text-label-md font-label-md w-8 text-center text-primary">1</span>
+<button aria-label="Increase quantity" class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<p class="text-headline-md font-headline-md text-primary font-medium w-24 text-right">$85.00</p>
+<button aria-label="Remove item" class="text-on-surface-variant hover:text-error transition-colors p-2">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center py-stack-md border-b border-outline-variant/30 gap-6 group">
+<div class="w-32 h-32 flex-shrink-0 bg-surface-container rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="A premium overhead product shot of a brushed aluminum mechanical keyboard with white keycaps on a light gray minimalist desk, soft natural lighting from a window, clean composition, high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqwa2vO1aSvW_m7xubkMc5nlg7x-fe4SxU03rM42CN_p_U3TkzNixQWL5kxLUnTGz_ywqYNWte9V1GZvu2vi7jpdHZYX--GOwUi-7C7Z9nn467H7pOub5gmFiq2qFfeIitWwBzV43rmudNBlaTodV_Bg3R6tWMe_nFdjxRcyd_i4Vdp8Y3yiQQr5pczEYp3g679QjuV9_89GNBtxnbPVrAYgn_bAfSa51kDvSabY0ZWVfovMoeBEXz6FvDfuiLCTWuZCG_IAE4L--W"/>
+</div>
+<div class="flex-grow flex flex-col sm:flex-row sm:items-center justify-between w-full gap-4">
+<div class="flex flex-col gap-1">
+<h3 class="text-headline-md font-headline-md text-primary">Alloy Mechanical Keyboard</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Silver / White Switches</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container rounded-full px-3 py-1 border border-outline-variant/50">
+<button aria-label="Decrease quantity" class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<span class="text-label-md font-label-md w-8 text-center text-primary">1</span>
+<button aria-label="Increase quantity" class="text-on-surface-variant hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<p class="text-headline-md font-headline-md text-primary font-medium w-24 text-right">$145.00</p>
+<button aria-label="Remove item" class="text-on-surface-variant hover:text-error transition-colors p-2">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Summary Sidebar -->
+<div class="lg:col-span-4 mt-8 lg:mt-0">
+<div class="bg-surface-container-low rounded-xl p-8 sticky top-24 border border-outline-variant/30">
+<h2 class="text-headline-lg font-headline-lg text-primary mb-6">Summary</h2>
+<div class="flex flex-col gap-4 border-b border-outline-variant/30 pb-6 mb-6">
+<div class="flex justify-between items-center">
+<span class="text-body-lg font-body-lg text-on-surface-variant">Subtotal</span>
+<span class="text-body-lg font-body-lg text-primary font-medium">$230.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-lg font-body-lg text-on-surface-variant">Estimated Shipping</span>
+<span class="text-body-lg font-body-lg text-primary font-medium">Calculated at checkout</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-8">
+<span class="text-headline-md font-headline-md text-primary">Total</span>
+<span class="text-headline-lg font-headline-lg text-primary font-semibold tracking-tight">$230.00</span>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 px-6 rounded-lg text-label-md font-label-md uppercase tracking-widest hover:opacity-90 active:scale-[0.98] transition-all duration-200">
+                        Proceed to Checkout
+                    </button>
+<div class="mt-6 flex items-center justify-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="text-label-sm font-label-sm">Secure Checkout</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Optional: Empty State (Hidden by default, shown here for structural inclusion if needed to toggle via JS) -->
+<div class="hidden flex-col items-center justify-center py-stack-xl text-center">
+<div class="w-48 h-48 mb-8 opacity-20">
+<span class="material-symbols-outlined text-display-lg" style="font-size: 120px;">shopping_bag</span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-primary mb-4">Your cart is empty</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-md mx-auto mb-8">Looks like you haven't added anything yet. Discover our latest collections.</p>
+<button class="bg-surface-container text-primary py-3 px-8 rounded-lg text-label-md font-label-md border border-outline-variant/50 hover:bg-surface-container-high transition-colors">
+                Continue Shopping
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-background dark:bg-surface-container-lowest w-full py-stack-xl mt-stack-xl border-t-[0.5px] border-outline-variant">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div>
+<a class="text-headline-sm font-headline-sm font-bold text-primary dark:text-primary-fixed mb-4 inline-block" href="#">ShopEase</a>
+<p class="text-body-md font-body-md text-on-surface dark:text-on-surface-variant">© 2024 ShopEase. All rights reserved.</p>
+</div>
+<div class="flex flex-col md:flex-row md:justify-end gap-4 md:gap-8 mt-6 md:mt-0">
+<a class="text-label-sm font-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-primary transition-colors hover:text-primary dark:hover:text-primary-fixed" href="#">Privacy Policy</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-primary transition-colors hover:text-primary dark:hover:text-primary-fixed" href="#">Terms of Service</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-primary transition-colors hover:text-primary dark:hover:text-primary-fixed" href="#">Shipping</a>
+<a class="text-label-sm font-label-sm text-on-surface-variant dark:text-on-tertiary-container hover:text-primary transition-colors hover:text-primary dark:hover:text-primary-fixed" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,23 @@
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: '/api', // Mock base URL
+});
+
+// Mocking API responses
+const mockProducts = [
+  { id: 1, name: 'Aura Studio Pro', price: 349.00, category: 'Audio', description: 'Experience unparalleled acoustic precision...', image: '{{DATA:IMAGE:IMAGE_1}}' },
+  { id: 2, name: 'Chrono Titan', price: 899.00, category: 'Wearables', description: 'Time, redefined.', image: '{{DATA:IMAGE:IMAGE_2}}' },
+  { id: 3, name: 'Base Power', price: 129.00, category: 'Accessories', description: 'Effortless energy.', image: '{{DATA:IMAGE:IMAGE_3}}' },
+  // ... more mock data
+];
+
+export const productServices = {
+  getAll: () => Promise.resolve({ data: mockProducts }),
+  getById: (id) => Promise.resolve({ data: mockProducts.find(p => p.id === parseInt(id)) }),
+};
+
+export const authServices = {
+  login: (credentials) => Promise.resolve({ data: { token: 'mock-token', user: { name: 'John Doe', email: credentials.email } } }),
+  register: (data) => Promise.resolve({ data: { token: 'mock-token', user: data } }),
+};
