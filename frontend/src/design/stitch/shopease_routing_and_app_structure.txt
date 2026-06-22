@@ -1,0 +1,37 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
+
+// Pages (referencing the generated screens via the DataStore)
+// In a real project, these would be local components. 
+// Here we represent the routing structure as requested.
+
+const ProtectedRoute = ({ children }) => {
+  const { state } = useAuth();
+  return state.isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <ToastProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Routes>
+          </Router>
+        </ToastProvider>
+      </CartProvider>
+    </AuthProvider>
+  );
+};
+
+export default App;

@@ -1,0 +1,94 @@
+import React, { createContext, useContext, useReducer } from 'react';
+
+const CartContext = createContext();
+
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD_TO_CART':
+      const existingItem = state.items.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        return {
+          ...state,
+          items: state.items.map(item =>
+            item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item
+          )
+        };
+      }
+      return { ...state, items: [...state.items, { ...action.payload, quantity: 1 }] };
+    case 'REMOVE_FROM_CART':
+      return { ...state, items: state.items.filter(item => item.id !== action.payload) };
+    case 'UPDATE_QUANTITY':
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload.id ? { ...item, quantity: action.payload.quantity } : item
+        )
+      };
+    case 'CLEAR_CART':
+      return { ...state, items: [] };
+    default:
+      return state;
+  }
+};
+
+export const CartProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  return (
+    <CartContext.Provider value={{ state, dispatch }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => useContext(CartContext);
+
+// --- Auth Context ---
+const AuthContext = createContext();
+
+const authReducer = (state, action) => {
+  switch (action.type) {
+    case 'LOGIN':
+      return { ...state, user: action.payload, isAuthenticated: true };
+    case 'LOGOUT':
+      return { ...state, user: null, isAuthenticated: false };
+    default:
+      return state;
+  }
+};
+
+export const AuthProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(authReducer, { user: null, isAuthenticated: false });
+  return (
+    <AuthContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
+
+// --- Toast Context ---
+const ToastContext = createContext();
+
+export const ToastProvider = ({ children }) => {
+  const [toasts, setToasts] = React.useState([]);
+  const addToast = (message, type = 'success') => {
+    const id = Date.now();
+    setToasts([...toasts, { id, message, type }]);
+    setTimeout(() => setToasts(t => t.filter(toast => toast.id !== id)), 3000);
+  };
+  return (
+    <ToastContext.Provider value={{ addToast }}>
+      {children}
+      <div className="fixed bottom-8 right-8 z-[200] flex flex-col gap-2">
+        {toasts.map(toast => (
+          <div key={toast.id} className="bg-white/80 backdrop-blur-md border border-outline-variant/30 px-6 py-3 rounded-full shadow-lg text-body-md animate-fade-in-up">
+            {toast.message}
+          </div>
+        ))}
+      </div>
+    </ToastContext.Provider>
+  );
+};
+
+export const useToast = () => useContext(ToastContext);

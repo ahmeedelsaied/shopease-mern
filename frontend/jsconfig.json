@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@stitch/*": ["src/design/stitch/*"]
+    }
+  },
+  "include": ["src"]
+}

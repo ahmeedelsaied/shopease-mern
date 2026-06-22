@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ShopEase - Quiet Luxury</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#000000",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#1a1c1d",
+                        "surface-tint": "#5e5e5e",
+                        "on-primary-container": "#848484",
+                        "on-tertiary-fixed": "#1a1c1d",
+                        "primary-fixed": "#e2e2e2",
+                        "secondary": "#005cba",
+                        "surface-container": "#f0edef",
+                        "outline-variant": "#cfc4c5",
+                        "inverse-surface": "#303032",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "inverse-on-surface": "#f3f0f2",
+                        "surface-dim": "#dcd9dc",
+                        "primary-container": "#1b1b1b",
+                        "surface-container-highest": "#e4e2e4",
+                        "on-secondary-fixed-variant": "#00458e",
+                        "on-primary-fixed-variant": "#474747",
+                        "on-surface": "#1b1b1d",
+                        "inverse-primary": "#c6c6c6",
+                        "secondary-fixed": "#d7e3ff",
+                        "surface-container-high": "#eae7ea",
+                        "on-tertiary-fixed-variant": "#454749",
+                        "error-container": "#ffdad6",
+                        "outline": "#7e7576",
+                        "on-secondary-fixed": "#001b3e",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e4e2e4",
+                        "on-tertiary-container": "#838486",
+                        "tertiary-fixed-dim": "#c6c6c8",
+                        "on-background": "#1b1b1d",
+                        "secondary-container": "#5095fe",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fcf8fb",
+                        "surface": "#fcf8fb",
+                        "surface-bright": "#fcf8fb",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#1b1b1b",
+                        "tertiary-fixed": "#e2e2e4",
+                        "surface-container-low": "#f6f3f5",
+                        "tertiary": "#000000",
+                        "on-surface-variant": "#4c4546",
+                        "on-secondary-container": "#002d61",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "stack-xl": "64px",
+                        "margin-mobile": "20px",
+                        "stack-md": "16px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .fade-in-up.is-visible { opacity: 1; transform: translateY(0); }
+        .smooth-image-hover img { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .smooth-image-hover:hover img { transform: scale(1.05); }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface antialiased selection:bg-primary selection:text-on-primary">
+<!-- Shared Component: TopNavBar -->
+<nav class="fixed top-0 w-full z-[100] bg-surface/80 backdrop-blur-3xl border-b-[0.5px] border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex justify-between items-center h-16">
+<div class="text-headline-md font-headline-md font-bold tracking-tighter text-primary">
+                ShopEase
+            </div>
+<ul class="hidden md:flex gap-8 items-center">
+<li>
+<a class="text-primary font-semibold border-b border-primary text-label-md font-label-md pb-1" href="#">Shop</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md hover:opacity-70" href="#">Featured</a>
+</li>
+<li>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md hover:opacity-70" href="#">Discover</a>
+</li>
+</ul>
+<div class="flex gap-4 text-primary">
+<button class="hover:opacity-70 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="hover:opacity-70 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-16">
+<!-- Cinematic Hero Section -->
+<section class="relative w-full min-h-[870px] flex flex-col justify-end items-center pb-stack-xl overflow-hidden bg-surface-container-low group cursor-pointer">
+<div class="absolute inset-0 w-full h-full z-0 smooth-image-hover">
+<img class="w-full h-full object-cover object-center" data-alt="A cinematic, high-resolution product shot of a sleek, premium minimalist technology device, perhaps a matte black smart speaker or aluminum tablet, sitting alone on a pristine white marble pedestal. The lighting is dramatic, high-key studio lighting that creates soft gradients and highlights the premium materials. The overall aesthetic screams 'quiet luxury', Apple store style minimalism, with expansive white space and a cool, calm atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpOoGDLowEyqCXOaTmprBeYCZxovcmy-qToAE-qRtWEPXxFlcYJVngkNeDPzx6u7EctVRW1AQbv82L_xSr-9oBaACNzcfTTFDiRnbk0PxWTr_33J5Jl4VcjkMv5njH-IP-S-uTE_jXXVs_zchbGrUdoMjmV9w6ZA_q-pszWtDfe8tqHwxEvhXaPJ1d-7IbDpb9utdi7b_sIFRA4adYJ2uRhCOKTKcOSic8i5fP9jn9mMsQtzQX89FqM3irYR9klSj_BR9LuVU36OXY"/>
+</div>
+<div class="relative z-10 text-center flex flex-col items-center gap-stack-md max-w-2xl px-margin-mobile fade-in-up">
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary tracking-tight">
+                    Pure Form.
+                </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+                    Experience the pinnacle of minimalist design and uncompromising performance.
+                </p>
+<div class="mt-stack-sm flex gap-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full text-label-md font-label-md hover:opacity-80 active:scale-[0.98] transition-all">
+                        Buy Now
+                    </button>
+<button class="border border-outline bg-transparent text-primary px-8 py-3 rounded-full text-label-md font-label-md hover:bg-surface-container-low active:scale-[0.98] transition-all">
+                        Learn More
+                    </button>
+</div>
+</div>
+</section>
+<!-- Categories (Pill Chips) -->
+<section class="w-full border-b-[0.5px] border-outline-variant/30 py-stack-sm bg-surface-container-lowest sticky top-16 z-40 backdrop-blur-md">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex gap-3 overflow-x-auto no-scrollbar items-center py-2">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary text-label-sm font-label-sm whitespace-nowrap transition-transform active:scale-[0.98]">All Products</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-label-sm font-label-sm whitespace-nowrap">Audio</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-label-sm font-label-sm whitespace-nowrap">Wearables</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-label-sm font-label-sm whitespace-nowrap">Home Studio</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors text-label-sm font-label-sm whitespace-nowrap">Accessories</button>
+</div>
+</div>
+</section>
+<!-- Featured Products (Bento/Asymmetric) -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl mt-stack-md flex flex-col gap-stack-lg">
+<div class="text-center fade-in-up">
+<h2 class="text-headline-lg font-headline-lg text-primary tracking-tight">The Featured Collection.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter h-auto md:h-[600px]">
+<!-- Large Featured Item -->
+<div class="relative bg-surface-container overflow-hidden rounded-2xl group cursor-pointer h-[400px] md:h-full smooth-image-hover fade-in-up">
+<img class="absolute inset-0 w-full h-full object-cover object-center" data-alt="A stunning, close-up lifestyle shot of a pair of premium over-ear headphones with brushed steel and soft leather materials. They are resting elegantly on a minimalist concrete table next to a subtle, blurred green plant. The lighting is soft, diffused natural daylight coming from an off-camera window, casting gentle shadows. The mood is sophisticated, serene, and highly detailed, embodying a modern, quiet luxury aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOQM6KH8KjlUvhwC3009T-01paoOi_oLAicjQxVmcOSYl9UvqwACFry3DHFDKTEA4-hFolYnFAfIAeRsN9v1yXf8eBDaSWEJ6UsqfUh8rzhdzyxPRptORzg5nIYxSmJQfDcKjBwJdBfmFrR5c7EWEonysgcP51DH6KnP8hC_nUGCoNC1D4mSC-sh7l2evd8A_4xAU3KYwcni9_xH8aYnPn4jnZPftJwcxRdjGUk2B9TcFo1uiGIdxvx8Buq-f4uRcWLQXJCEqKgBbG"/>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+<div class="absolute bottom-0 left-0 p-8 flex flex-col gap-2 w-full">
+<span class="text-label-sm font-label-sm text-surface-container-low tracking-widest uppercase">New Release</span>
+<h3 class="text-headline-md font-headline-md text-surface-container-lowest">Aura Studio Headphones</h3>
+<p class="text-body-md font-body-md text-surface-container-low/80 max-w-sm hidden md:block">Immersive sound meets unparalleled comfort in our most advanced acoustic design yet.</p>
+</div>
+</div>
+<!-- Stacked Smaller Items -->
+<div class="flex flex-col gap-gutter h-full">
+<div class="relative bg-[#f5f5f7] overflow-hidden rounded-2xl group cursor-pointer flex-1 h-[300px] md:h-auto smooth-image-hover fade-in-up" style="transition-delay: 0.1s;">
+<img class="absolute inset-0 w-full h-full object-contain p-12 object-right" data-alt="A minimalist, top-down product shot of a sleek, titanium smartwatch resting on a pure white, seamless background. The watch face is dark, showing a simple, elegant analog dial design in white. The lighting is bright, even, and creates no harsh shadows, focusing entirely on the precision engineering and premium materials of the watch. The style is strictly 'Apple store', clean, geometric, and luxurious." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzR3W8yPOYJpzqYtGv22xxVgE3qqodvSTuARTyqFDh3DhE4fAjNpAbqKE2udj7BVP29u2R9nGJci95Dk8G_c0JnsuyXvDM-yOSsZB-y9teJ1EWirNeJs_81dYtjurHA-VElvwR99pEuGYGiyBBzqXQ1DzqnCIZm3D5nu4PTL--S_oHHEQS20CFl1CWdtCyrIpPNKC-UiWdHnqPfWFHGwcHdwcuyqwZOo-5VDPNsVPqXghYKgCEzOsR9wwrhokys8-_-Pb8F79H_gNJ"/>
+<div class="absolute top-0 left-0 p-8 flex flex-col gap-2 max-w-[60%]">
+<h3 class="text-headline-md font-headline-md text-primary">Chrono Titan</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Time, redefined.</p>
+</div>
+</div>
+<div class="relative bg-[#f5f5f7] overflow-hidden rounded-2xl group cursor-pointer flex-1 h-[300px] md:h-auto smooth-image-hover fade-in-up" style="transition-delay: 0.2s;">
+<img class="absolute inset-0 w-full h-full object-contain p-8 object-right-bottom" data-alt="A clean, modern lifestyle shot of a minimalist wireless charging pad made of smooth matte ceramic. It is placed on a light oak wooden desk. A subtle, soft white LED glows softly from the edge. The scene is brightly lit with a cool, calm light, emphasizing the intersection of natural materials and high-end technology. The composition is sparse, utilizing negative space effectively." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbDzk7vPcReqkq4Xq40O-wOAu0oaSwXKTDKtg_HBsQsxSjQIAyvWeRXG_ujx0A-7mLsVcGWJ5gBacgwVRE8s2xvxC0AEezl_GIeP1IRBDv9yZlYMXLTUR6WbJCmuRgCwOvibImxOLGGqITEJZANqMJ0g6KVOnP0Z_vTduyYJicaDaBa9NjIaYXKLbjRsOuN3ymW9YlcJV3PLMJJPYG17m7wFQtfFIpJzCejaYHWoN-48aNUwG2DKu9XDwtUxDGOFcZRURvNDlpfsmO"/>
+<div class="absolute top-0 left-0 p-8 flex flex-col gap-2 max-w-[60%]">
+<h3 class="text-headline-md font-headline-md text-primary">Base Power</h3>
+<p class="text-body-md font-body-md text-on-surface-variant">Effortless energy.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Grid (with Skeleton Loading State) -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl mb-stack-xl">
+<div class="flex justify-between items-end border-b-[0.5px] border-outline-variant/30 pb-4 mb-stack-lg fade-in-up">
+<h2 class="text-headline-md font-headline-md text-primary">Everyday Essentials</h2>
+<a class="text-label-md font-label-md text-primary hover:opacity-70 transition-opacity" href="#">View All</a>
+</div>
+<!-- The Grid Container -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-gutter gap-y-stack-lg" id="product-grid">
+<!-- Items will be injected via JS to simulate loading, but we place structure here for clarity -->
+<script>
+                    const products = [
+                        { name: 'Ergo Mouse Pro', price: '$129', alt: "A highly minimalist, ergonomic computer mouse in a soft, matte stone-gray finish. It sits alone against a perfectly pure white background. The lighting is meticulously controlled to show off the subtle curves and lack of visible seams. The image is crisp, modern, and embodies a premium, high-end desk accessory aesthetic typical of luxury tech brands." },
+                        { name: 'Desk Pad Minimal', price: '$49', alt: "A top-down view of a premium, dark gray felt desk pad unrolled on a stark white surface. The texture of the felt is highly detailed and tactile. There are no other objects in the frame, focusing entirely on the quality and minimalism of the material itself. The lighting is soft and even, highlighting the 'quiet luxury' approach to workspace design." },
+                        { name: 'Alloy Laptop Stand', price: '$89', alt: "A sculptural, minimalist laptop stand made from a single continuous piece of machined silver aluminum. It is photographed on a seamless white background, casting a very subtle, soft drop shadow. The geometry is clean and precise, appearing almost like a piece of modern art rather than an accessory. The lighting emphasizes the metallic finish and structural integrity." },
+                        { name: 'Studio Mic Capsule', price: '$199', alt: "A close-up, premium product shot of a sleek, cylindrical studio microphone in matte black. The microphone grille features an intricate geometric pattern. It is set against a very light gray background, giving it a sophisticated, professional appearance. The lighting highlights the cylindrical shape and the high-quality finish, fitting perfectly within a minimalist tech ecosystem." }
+                    ];
+
+                    document.write(products.map((p, i) => `
+                        <div class="group relative flex flex-col gap-4 cursor-pointer product-item fade-in-up" style="transition-delay: ${i * 0.1}s">
+                            <!-- Skeleton State -->
+                            <div class="skeleton-layer absolute inset-0 w-full h-full bg-surface-container-lowest z-20 flex flex-col gap-4 transition-opacity duration-500">
+                                <div class="w-full aspect-[4/5] bg-surface-container-high rounded-xl animate-pulse"></div>
+                                <div class="w-3/4 h-5 bg-surface-container-high rounded animate-pulse"></div>
+                                <div class="w-1/4 h-4 bg-surface-container-high rounded animate-pulse"></div>
+                            </div>
+                            
+                            <!-- Actual Content -->
+                            <div class="w-full aspect-[4/5] bg-[#f5f5f7] rounded-xl overflow-hidden smooth-image-hover flex items-center justify-center p-8">
+                                <img src="placeholder" data-alt="${p.alt}" class="w-full h-full object-contain" />
+                            </div>
+                            <div class="flex flex-col gap-1 px-1">
+                                <h4 class="text-label-md font-label-md text-primary">${p.name}</h4>
+                                <span class="text-body-md font-body-md text-on-surface-variant">${p.price}</span>
+                            </div>
+                        </div>
+                    `).join(''));
+                </script>
+</div>
+</section>
+</main>
+<!-- Shared Component: Footer -->
+<footer class="w-full py-stack-xl mt-stack-xl border-t-[0.5px] border-outline-variant bg-background">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="flex flex-col justify-between h-full gap-stack-md">
+<div class="text-headline-sm font-headline-sm font-bold text-primary">
+                    ShopEase
+                </div>
+<div class="text-on-surface text-body-md font-body-md">
+                    © 2024 ShopEase. All rights reserved.
+                </div>
+</div>
+<div class="flex flex-col md:items-end justify-end gap-4">
+<ul class="flex flex-wrap gap-6 md:justify-end">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Terms of Service</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Shipping</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Contact</a></li>
+</ul>
+</div>
+</div>
+</footer>
+<!-- Interactive Scripts -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulate Skeleton Loading
+            setTimeout(() => {
+                const skeletons = document.querySelectorAll('.skeleton-layer');
+                skeletons.forEach(skel => {
+                    skel.style.opacity = '0';
+                    setTimeout(() => skel.remove(), 500); // Remove from DOM after fade out
+                });
+            }, 1800); // 1.8s artificial load time
+
+            // Intersection Observer for Fade-in on scroll
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-up').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body></html>

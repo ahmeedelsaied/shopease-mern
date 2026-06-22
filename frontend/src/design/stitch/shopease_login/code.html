@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ShopEase - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#000000",
+                    "secondary-fixed-dim": "#aac7ff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#1a1c1d",
+                    "surface-tint": "#5e5e5e",
+                    "on-primary-container": "#848484",
+                    "on-tertiary-fixed": "#1a1c1d",
+                    "primary-fixed": "#e2e2e2",
+                    "secondary": "#005cba",
+                    "surface-container": "#f0edef",
+                    "outline-variant": "#cfc4c5",
+                    "inverse-surface": "#303032",
+                    "error": "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "inverse-on-surface": "#f3f0f2",
+                    "surface-dim": "#dcd9dc",
+                    "primary-container": "#1b1b1b",
+                    "surface-container-highest": "#e4e2e4",
+                    "on-secondary-fixed-variant": "#00458e",
+                    "on-primary-fixed-variant": "#474747",
+                    "on-surface": "#1b1b1d",
+                    "inverse-primary": "#c6c6c6",
+                    "secondary-fixed": "#d7e3ff",
+                    "surface-container-high": "#eae7ea",
+                    "on-tertiary-fixed-variant": "#454749",
+                    "error-container": "#ffdad6",
+                    "outline": "#7e7576",
+                    "on-secondary-fixed": "#001b3e",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#e4e2e4",
+                    "on-tertiary-container": "#838486",
+                    "tertiary-fixed-dim": "#c6c6c8",
+                    "on-background": "#1b1b1d",
+                    "secondary-container": "#5095fe",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#fcf8fb",
+                    "surface": "#fcf8fb",
+                    "surface-bright": "#fcf8fb",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#1b1b1b",
+                    "tertiary-fixed": "#e2e2e4",
+                    "surface-container-low": "#f6f3f5",
+                    "tertiary": "#000000",
+                    "on-surface-variant": "#4c4546",
+                    "on-secondary-container": "#002d61",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1440px",
+                    "stack-xl": "64px",
+                    "margin-mobile": "20px",
+                    "stack-md": "16px",
+                    "unit": "8px",
+                    "gutter": "24px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                    "label-sm": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "label-md": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "display-lg-mobile": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "64px",
+                            {
+                                    "lineHeight": "72px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg-mobile": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .invisible-shadow {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex items-center justify-center p-margin-mobile md:p-margin-desktop font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<main class="w-full max-w-md mx-auto">
+<div class="bg-surface-container-lowest rounded-xl invisible-shadow p-stack-lg border border-surface-variant backdrop-blur-2xl">
+<!-- Brand / Header -->
+<div class="text-center mb-stack-lg">
+<h1 class="text-headline-lg font-headline-lg text-primary tracking-tighter mb-stack-sm">ShopEase</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Sign in to continue</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-stack-md flex flex-col" method="POST">
+<!-- Email Input -->
+<div class="relative group">
+<input class="peer w-full bg-transparent border-0 border-b border-surface-variant focus:border-secondary focus:ring-0 px-0 py-unit text-body-lg font-body-lg text-on-surface placeholder-transparent transition-colors duration-200" id="email" name="email" placeholder="Email Address" required="" type="email"/>
+<label class="absolute left-0 -top-4 text-label-sm font-label-sm text-on-surface-variant transition-all peer-placeholder-shown:text-body-lg peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:text-secondary cursor-text" for="email">
+                        Email Address
+                    </label>
+</div>
+<!-- Password Input -->
+<div class="relative group mt-stack-md">
+<input class="peer w-full bg-transparent border-0 border-b border-surface-variant focus:border-secondary focus:ring-0 px-0 py-unit text-body-lg font-body-lg text-on-surface placeholder-transparent transition-colors duration-200" id="password" name="password" placeholder="Password" required="" type="password"/>
+<label class="absolute left-0 -top-4 text-label-sm font-label-sm text-on-surface-variant transition-all peer-placeholder-shown:text-body-lg peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:text-secondary cursor-text" for="password">
+                        Password
+                    </label>
+</div>
+<!-- Forgot Password -->
+<div class="flex justify-end mt-unit">
+<a class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">
+                        Forgot Password?
+                    </a>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-stack-sm mt-stack-lg">
+<button class="w-full bg-primary text-on-primary py-3 px-6 rounded-DEFAULT text-label-md font-label-md hover:opacity-90 active:scale-[0.98] transition-all duration-200 flex justify-center items-center" type="submit">
+                        Sign In
+                    </button>
+<a class="w-full bg-transparent text-primary py-3 px-6 rounded-DEFAULT text-label-md font-label-md border border-surface-variant hover:bg-surface-container-low active:scale-[0.98] transition-all duration-200 flex justify-center items-center text-center" href="#">
+                        Create Account
+                    </a>
+</div>
+</form>
+</div>
+</main>
+</body></html>
