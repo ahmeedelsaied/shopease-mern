@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import { createContext, useContext, useEffect, useMemo, useReducer, useCallback } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext();
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [state.user, state.token]);
 
-  const register = async (payload) => {
+  const register = useCallback(async (payload) => {
     dispatch({ type: 'AUTH_REQUEST' });
 
     try {
@@ -77,9 +77,9 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: 'AUTH_FAILURE', payload: message });
       throw new Error(message);
     }
-  };
+  }, []);
 
-  const login = async (payload) => {
+  const login = useCallback(async (payload) => {
     dispatch({ type: 'AUTH_REQUEST' });
 
     try {
@@ -101,29 +101,28 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: 'AUTH_FAILURE', payload: message });
       throw new Error(message);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     dispatch({ type: 'LOGOUT' });
-  };
+  }, []);
 
-  const clearError = () => {
+  const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
-  };
+  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        register,
-        login,
-        logout,
-        clearError,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      ...state,
+      register,
+      login,
+      logout,
+      clearError,
+    }),
+    [state, register, login, logout, clearError]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

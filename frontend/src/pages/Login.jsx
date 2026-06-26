@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
@@ -17,13 +17,11 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  const location = useLocation();
-
   useEffect(() => {
     clearError();
     setFormState({ email: '', password: '' });
     setLocalError('');
-  }, [clearError, location.pathname]);
+  }, [clearError]);
 
   const handleChange = (event) => {
     setFormState((prev) => ({
