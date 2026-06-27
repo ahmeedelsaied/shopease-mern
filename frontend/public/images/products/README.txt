@@ -1,0 +1,1 @@
+This folder contains generated local product images for the ShopEase frontend. Do not modify filenames without updating the backend seeder paths.

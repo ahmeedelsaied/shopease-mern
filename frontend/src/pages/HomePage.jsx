@@ -71,20 +71,20 @@ const HomePage = () => {
               ShopEase
             </h1>
             <p className="mt-stack-sm text-body-lg font-body-lg text-on-surface-variant">
-              E-Commerce Platform
+              Discover premium products with elegant search and filtering.
             </p>
           </div>
         </section>
 
         <section className="rounded-3xl bg-surface-container-low p-gutter md:p-10 shadow-soft">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="w-full md:w-1/2">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="w-full lg:w-[48%]">
               <SearchBar
                 searchQuery={searchQuery}
                 onChange={setSearchQuery}
               />
             </div>
-            <div className="w-full md:w-1/2">
+            <div className="w-full lg:w-[48%]">
               <CategoryFilter
                 categories={categories}
                 selectedCategory={selectedCategory}
@@ -94,12 +94,24 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section>
-          <ProductGrid
-            products={products}
-            loading={loading}
-            error={error}
-          />
+        <section className="space-y-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">
+                Product listing
+              </p>
+              <h2 className="text-headline-lg font-headline-lg text-primary">
+                Browse our curated catalog
+              </h2>
+            </div>
+            <p className="text-body-md font-body-md text-on-surface-variant">
+              {loading
+                ? 'Loading products...'
+                : `${products.length} product${products.length === 1 ? '' : 's'} found`}
+            </p>
+          </div>
+
+          <ProductGrid products={products} loading={loading} error={error} />
         </section>
       </div>
     </div>

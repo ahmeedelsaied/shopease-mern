@@ -81,6 +81,7 @@ const ProductDetails = () => {
             <img
               src={product.image}
               alt={product.name}
+              loading="lazy"
               className="w-full h-[520px] object-cover"
             />
           </Card>
@@ -106,6 +107,17 @@ const ProductDetails = () => {
               </div>
             </div>
 
+            <div className="pt-2">
+              <Button
+                type="button"
+                variant="primary"
+                className="w-full disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={product.stock === 0}
+              >
+                {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+              </Button>
+            </div>
+
             <div className="space-y-3 text-body-md font-body-md text-on-surface-variant">
               <p>{product.description}</p>
               <p>
@@ -116,12 +128,6 @@ const ProductDetails = () => {
                 <span className="font-semibold text-on-surface">Featured:</span>{' '}
                 {product.featured ? 'Yes' : 'No'}
               </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Button type="button" className="w-full">
-                Add To Cart
-              </Button>
             </div>
           </Card>
         </div>
