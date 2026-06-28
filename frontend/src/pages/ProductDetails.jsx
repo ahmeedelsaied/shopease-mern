@@ -4,12 +4,16 @@ import api from '../services/api';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Loader from '../components/ui/Loader';
+import Toast from '../components/ui/Toast';
+import { useCart } from '../context/CartContext';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -113,6 +117,12 @@ const ProductDetails = () => {
                 variant="primary"
                 className="w-full disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={product.stock === 0}
+                onClick={() => {
+                  if (product.stock > 0) {
+                    addToCart(product);
+                    setShowToast(true);
+                  }
+                }}
               >
                 {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
               </Button>
@@ -132,6 +142,11 @@ const ProductDetails = () => {
           </Card>
         </div>
       </div>
+      <Toast
+        message="Product added to cart"
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 };

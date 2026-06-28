@@ -1,12 +1,13 @@
-import { Link, NavLink } from 'react-router-dom';
-import { cn, components } from '../styles/designSystem';
+import { Link, NavLink } from "react-router-dom";
+import { cn, components } from "../styles/designSystem";
+import { useCart } from "../context/CartContext";
 
 const navLinkClass = ({ isActive }) =>
   cn(
-    'text-label-md font-label-md transition-colors hover:opacity-70',
+    "text-label-md font-label-md transition-colors hover:opacity-70",
     isActive
-      ? 'text-primary font-semibold border-b border-primary pb-1'
-      : 'text-on-surface-variant hover:text-primary'
+      ? "text-primary font-semibold border-b border-primary pb-1"
+      : "text-on-surface-variant hover:text-primary",
   );
 
 const TopNavBar = () => {
@@ -39,15 +40,40 @@ const TopNavBar = () => {
         </ul>
 
         <div className="flex gap-4 text-primary">
-          <Link to="/cart" aria-label="Shopping bag" className={components.button.icon}>
-            <span className="material-symbols-outlined">shopping_bag</span>
-          </Link>
-          <Link to="/login" aria-label="Account" className={components.button.icon}>
+          <div className="relative">
+            <Link
+              to="/cart"
+              aria-label="Shopping bag"
+              className={components.button.icon}
+            >
+              <span className="material-symbols-outlined">shopping_bag</span>
+            </Link>
+
+            <CartBadge />
+          </div>
+
+          <Link
+            to="/login"
+            aria-label="Account"
+            className={components.button.icon}
+          >
             <span className="material-symbols-outlined">person</span>
           </Link>
         </div>
       </div>
     </nav>
+  );
+};
+
+const CartBadge = () => {
+  const { totalItems } = useCart();
+
+  if (!totalItems) return null;
+
+  return (
+    <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 rounded-full bg-primary text-on-primary text-[12px] font-semibold">
+      {totalItems}
+    </span>
   );
 };
 
