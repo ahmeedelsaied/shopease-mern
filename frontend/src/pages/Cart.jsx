@@ -1,12 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Toast from '../components/ui/Toast';
 
 const Cart = () => {
+  const navigate = useNavigate();
   const { cartItems, subtotal, totalItems, increaseQuantity, decreaseQuantity, removeFromCart, clearCart } = useCart();
+  const [toastMessage, setToastMessage] = useState('');
 
   const isEmpty = !cartItems || cartItems.length === 0;
 
@@ -53,7 +56,10 @@ const Cart = () => {
                     <Button size="sm" variant="outline" onClick={() => decreaseQuantity(item.id)}>-</Button>
                     <Input value={item.quantity} readOnly className="w-16 text-center" />
                     <Button size="sm" variant="outline" onClick={() => increaseQuantity(item.id)}>+</Button>
-                    <Button size="sm" variant="ghost" className="ml-4 text-error" onClick={() => removeFromCart(item.id)}>Remove</Button>
+                    <Button size="sm" variant="ghost" className="ml-4 text-error" onClick={() => {
+                      removeFromCart(item.id);
+                      setToastMessage(`${item.name} removed from cart`);
+                    }}>Remove</Button>
                   </div>
                 </div>
               </Card>
@@ -67,13 +73,18 @@ const Cart = () => {
                 <span className="text-headline-sm font-headline-sm text-primary">{formattedSubtotal}</span>
               </div>
 
-              <Button variant="primary" className="w-full">Checkout</Button>
+              <Button variant="primary" className="w-full" onClick={() => navigate('/checkout')}>Checkout</Button>
 
-              <Button variant="ghost" className="w-full" onClick={() => clearCart()}>Clear cart</Button>
+              <Button variant="ghost" className="w-full" onClick={() => {
+                clearCart();
+                setToastMessage('Cart cleared');
+              }}>Clear cart</Button>
             </Card>
           </aside>
         </div>
       </div>
+
+      <Toast message={toastMessage} isVisible={Boolean(toastMessage)} onClose={() => setToastMessage('')} />
     </div>
   );
 };
