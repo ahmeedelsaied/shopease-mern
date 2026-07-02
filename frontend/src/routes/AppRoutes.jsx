@@ -9,7 +9,13 @@ import Orders from '../pages/Orders';
 import Profile from '../pages/Profile';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import NotFound from '../pages/NotFound';
+import AdminDashboard from '../pages/AdminDashboard';
+import AdminUsers from '../pages/AdminUsers';
+import AdminProducts from '../pages/AdminProducts';
+import AdminOrders from '../pages/AdminOrders';
 import ProtectedRoute from './ProtectedRoute';
+import AdminRoute from './AdminRoute';
 
 const AppRoutes = () => {
   return (
@@ -50,8 +56,41 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsers />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/products"
+          element={
+            <AdminRoute>
+              <AdminProducts />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="admin/orders"
+          element={
+            <AdminRoute>
+              <AdminOrders />
+            </AdminRoute>
+          }
+        />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

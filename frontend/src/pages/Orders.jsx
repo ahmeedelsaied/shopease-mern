@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Card from "../components/ui/Card";
-import Button from "../components/ui/Button";
-import api from "../services/api";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import api from '../services/api';
+import { Link } from 'react-router-dom';
+import { Skeleton, SkeletonCard, SkeletonText } from '../components/ui/Skeleton';
+import EmptyState from '../components/EmptyState';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -16,7 +18,7 @@ const Orders = () => {
         setOrders(response.data.data || []);
       } catch (err) {
         setError(
-          err.response?.data?.message || err.message || "Unable to load orders",
+          err.response?.data?.message || err.message || 'Unable to load orders'
         );
       } finally {
         setLoading(false);
@@ -29,10 +31,16 @@ const Orders = () => {
   if (loading) {
     return (
       <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-        <div className="max-w-container-max mx-auto">
-          <p className="text-body-md text-on-surface-variant">
-            Loading your orders...
-          </p>
+        <div className="max-w-container-max mx-auto space-y-6">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
+            <SkeletonText lines={2} className="max-w-md" />
+          </div>
+          <div className="grid gap-4">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <SkeletonCard key={index} className="p-4" />
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -58,14 +66,13 @@ const Orders = () => {
         {error ? <p className="text-sm text-error">{error}</p> : null}
 
         {!orders.length && !error ? (
-          <Card variant="panel" className="p-8 text-center">
-            <h2 className="text-headline-sm font-headline-sm text-primary">
-              No orders yet
-            </h2>
-            <p className="mt-2 text-body-md text-on-surface-variant">
-              Once you place an order, it will appear here.
-            </p>
-          </Card>
+          <EmptyState
+            icon="receipt_long"
+            title="No orders yet"
+            description="Once you place an order, it will appear here."
+            actionLabel="Continue shopping"
+            actionTo="/"
+          />
         ) : null}
 
         <div className="space-y-4">

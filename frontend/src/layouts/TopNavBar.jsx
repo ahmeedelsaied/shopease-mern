@@ -30,9 +30,9 @@ const TopNavBar = () => {
   }, []);
 
   const handleLogout = () => {
-    logout();
     setOpen(false);
-    navigate('/login');
+    logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -97,6 +97,11 @@ const TopNavBar = () => {
                     <Link to="/orders" className="block rounded-xl px-3 py-2 text-sm text-on-surface hover:bg-surface-container-high" onClick={() => setOpen(false)}>
                       Orders
                     </Link>
+                    {user?.role === 'admin' ? (
+                      <Link to="/admin" className="block rounded-xl px-3 py-2 text-sm text-on-surface hover:bg-surface-container-high" onClick={() => setOpen(false)}>
+                        Admin Dashboard
+                      </Link>
+                    ) : null}
                     <button type="button" className="mt-1 w-full rounded-xl px-3 py-2 text-left text-sm text-on-surface hover:bg-surface-container-high" onClick={handleLogout}>
                       Logout
                     </button>

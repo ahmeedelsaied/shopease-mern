@@ -5,6 +5,7 @@ import Input from '../components/ui/Input';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Toast from '../components/ui/Toast';
+import EmptyState from '../components/EmptyState';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -18,14 +19,14 @@ const Cart = () => {
   if (isEmpty) {
     return (
       <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-        <div className="max-w-container-max mx-auto rounded-3xl bg-surface-container-low p-12 text-center">
-          <h2 className="text-headline-md font-headline-md text-primary">Your cart is empty</h2>
-          <p className="mt-4 text-body-md text-on-surface-variant">Looks like you haven't added any products yet.</p>
-          <div className="mt-6">
-            <Link to="/">
-              <Button variant="primary">Continue shopping</Button>
-            </Link>
-          </div>
+        <div className="max-w-container-max mx-auto">
+          <EmptyState
+            icon="shopping_cart"
+            title="Your cart is empty"
+            description="Looks like you haven't added any products yet."
+            actionLabel="Continue shopping"
+            actionTo="/"
+          />
         </div>
       </div>
     );

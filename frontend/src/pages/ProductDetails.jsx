@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Loader from '../components/ui/Loader';
 import Toast from '../components/ui/Toast';
+import { Skeleton, SkeletonText } from '../components/ui/Skeleton';
 import { useCart } from '../context/CartContext';
 
 const ProductDetails = () => {
@@ -41,8 +41,20 @@ const ProductDetails = () => {
   if (loading) {
     return (
       <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-        <div className="max-w-container-max mx-auto rounded-3xl bg-surface-container-low p-10 text-center">
-          <Loader variant="spinner" className="text-[32px]" />
+        <div className="max-w-container-max mx-auto space-y-8">
+          <div className="space-y-3 text-center">
+            <Skeleton className="mx-auto h-4 w-24" />
+            <Skeleton className="mx-auto h-8 w-56" />
+            <SkeletonText lines={3} className="mx-auto max-w-2xl" />
+          </div>
+          <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+            <Skeleton className="h-[520px] w-full" />
+            <div className="space-y-4 rounded-3xl border border-outline-variant/20 bg-surface-container-low p-8 shadow-soft">
+              <Skeleton className="h-10 w-40" />
+              <SkeletonText lines={4} />
+              <Skeleton className="h-12 w-full rounded-full" />
+            </div>
+          </div>
         </div>
       </div>
     );

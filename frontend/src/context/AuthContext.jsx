@@ -19,7 +19,7 @@ const authReducer = (state, action) => {
         ...state,
         loading: false,
         user: action.payload.user,
-        token: action.payload.token,
+        token: action.payload.token ?? state.token,
         error: null,
       };
     case 'AUTH_FAILURE':
@@ -107,6 +107,44 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   }, []);
 
+  const updateProfile = useCallback(async (payload) => {
+    dispatch({ type: 'AUTH_REQUEST' });
+
+    try {
+      const response = await api.put('/auth/profile', payload);
+      const updatedUser = response.data?.data;
+
+      dispatch({
+        type: 'AUTH_SUCCESS',
+        payload: {
+          user: updatedUser,
+        },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || 'Unable to update profile';
+      dispatch({ type: 'AUTH_FAILURE', payload: message });
+      throw new Error(message);
+    }
+  }, []);
+
+  const changePassword = useCallback(async (payload) => {
+    dispatch({ type: 'AUTH_REQUEST' });
+
+    try {
+      await api.put('/auth/change-password', payload);
+      dispatch({ type: 'AUTH_SUCCESS', payload: { user: state.user } });
+      return true;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || 'Unable to change password';
+      dispatch({ type: 'AUTH_FAILURE', payload: message });
+      throw new Error(message);
+    }
+  }, [state.user]);
+
   const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
   }, []);
@@ -117,9 +155,11 @@ export const AuthProvider = ({ children }) => {
       register,
       login,
       logout,
+      updateProfile,
+      changePassword,
       clearError,
     }),
-    [state, register, login, logout, clearError]
+    [state, register, login, logout, updateProfile, changePassword, clearError]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
