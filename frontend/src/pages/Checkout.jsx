@@ -81,10 +81,10 @@ const Checkout = () => {
   }
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-      <div className="max-w-container-max mx-auto grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <div className="mx-auto grid max-w-container-max gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
-          <div className="rounded-3xl bg-surface-container-low p-8">
+          <div className="rounded-[2rem] border border-outline-variant/30 bg-surface-container-low/80 p-8 shadow-soft">
             <h1 className="text-headline-lg font-headline-lg text-primary">Checkout</h1>
             <p className="mt-2 text-body-md text-on-surface-variant">Please review your order and provide your shipping details.</p>
           </div>
@@ -106,11 +106,11 @@ const Checkout = () => {
 
               {error ? <p className="text-sm text-error">{error}</p> : null}
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <Button type="button" variant="ghost" onClick={() => navigate('/cart')}>
                   Back to cart
                 </Button>
-                <Button type="submit" variant="primary" disabled={loading}>
+                <Button type="submit" variant="primary" disabled={loading} loading={loading}>
                   {loading ? 'Placing order...' : 'Place order'}
                 </Button>
               </div>
@@ -119,22 +119,24 @@ const Checkout = () => {
         </div>
 
         <aside className="space-y-4">
-          <Card variant="panel" className="p-6">
+          <Card variant="summary" className="p-6">
             <h2 className="text-headline-sm font-headline-sm text-primary">Order Summary</h2>
             <div className="mt-4 space-y-3">
               {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span>{item.name} × {item.quantity}</span>
+                <div key={item.id} className="flex items-center justify-between text-sm text-on-surface-variant">
+                  <span>
+                    {item.name} × {item.quantity}
+                  </span>
                   <span>${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-6 border-t border-outline-variant/40 pt-4 space-y-2">
-              <div className="flex justify-between text-body-md">
+            <div className="mt-6 space-y-2 border-t border-outline-variant/40 pt-4">
+              <div className="flex justify-between text-body-md text-on-surface-variant">
                 <span>Items ({totalItems})</span>
                 <span>{formattedSubtotal}</span>
               </div>
-              <div className="flex justify-between text-body-md">
+              <div className="flex justify-between text-body-md text-on-surface-variant">
                 <span>Shipping</span>
                 <span>Free</span>
               </div>

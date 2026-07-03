@@ -59,12 +59,12 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-        <div className="max-w-container-max mx-auto">
+      <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+        <div className="mx-auto max-w-container-max">
           <EmptyState
             icon="person"
             title="Your profile is empty"
-            description="Sign in to manage your account details."
+            description="Sign in to manage your account details, orders, and security preferences."
             actionLabel="Sign in"
             actionTo="/login"
           />
@@ -74,9 +74,9 @@ const Profile = () => {
   }
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-      <div className="max-w-container-max mx-auto space-y-6">
-        <div className="rounded-3xl bg-surface-container-low p-8">
+    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <div className="mx-auto max-w-container-max space-y-6">
+        <div className="rounded-[2rem] border border-outline-variant/30 bg-surface-container-low/80 p-8 shadow-soft">
           <h1 className="text-headline-lg font-headline-lg text-primary">Profile</h1>
           <p className="mt-2 text-body-md text-on-surface-variant">Manage your account details and security.</p>
         </div>

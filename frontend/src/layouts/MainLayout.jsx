@@ -1,12 +1,12 @@
-import { Outlet } from "react-router-dom";
-import TopNavBar from "./TopNavBar";
-import Footer from "./Footer";
+import { Outlet } from 'react-router-dom';
+import TopNavBar from './TopNavBar';
+import Footer from './Footer';
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-surface-container-lowest text-on-surface antialiased selection:bg-primary selection:text-on-primary flex flex-col">
+    <div className="flex min-h-screen flex-col bg-surface-container-lowest text-on-surface antialiased selection:bg-primary selection:text-on-primary transition-colors duration-300 dark:bg-inverse-surface dark:text-inverse-on-surface">
       <TopNavBar />
-      <main className="flex-grow pt-16">
+      <main className="flex-grow pt-20">
         <Outlet />
       </main>
       <Footer />

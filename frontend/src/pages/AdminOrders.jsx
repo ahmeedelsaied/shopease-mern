@@ -71,7 +71,7 @@ const AdminOrders = () => {
   };
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
       <div className="mx-auto max-w-container-max space-y-8">
         <div>
           <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>
@@ -87,20 +87,39 @@ const AdminOrders = () => {
         ) : !orders.length ? (
           <EmptyState title="No orders found" description="Orders will appear here once customers place them." icon="receipt_long" />
         ) : (
-          <div className="space-y-4">
-            {orders.map((order) => (
-              <Card key={order._id} variant="panel" className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h2 className="text-headline-sm font-headline-sm text-primary">{order.orderNumber}</h2>
-                  <p className="text-body-md text-on-surface-variant">{order.user?.name || 'Customer'}</p>
-                  <p className="mt-2 text-sm text-on-surface-variant">Status: {order.status} · Total: ${order.total}</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Button variant="secondary" onClick={() => openDetails(order)}>View Details</Button>
-                  <Button variant="primary" onClick={() => handleDelete(order._id)}>Delete</Button>
-                </div>
-              </Card>
-            ))}
+          <div className="overflow-hidden rounded-[2rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-outline-variant/40 text-left">
+                <thead className="sticky top-0 z-10 bg-surface-container-low text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+                  <tr>
+                    <th className="px-4 py-4">Order</th>
+                    <th className="px-4 py-4">Customer</th>
+                    <th className="px-4 py-4">Status</th>
+                    <th className="px-4 py-4">Total</th>
+                    <th className="px-4 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20 bg-surface-container-lowest">
+                  {orders.map((order) => (
+                    <tr key={order._id} className="odd:bg-surface-container-lowest even:bg-surface-container-low transition-colors hover:bg-surface-container-high">
+                      <td className="px-4 py-4">
+                        <div className="font-medium text-primary">{order.orderNumber}</div>
+                        <div className="text-sm text-on-surface-variant">{order.items?.length || 0} items</div>
+                      </td>
+                      <td className="px-4 py-4 text-on-surface-variant">{order.user?.name || 'Customer'}</td>
+                      <td className="px-4 py-4 capitalize text-on-surface-variant">{order.status}</td>
+                      <td className="px-4 py-4 text-on-surface-variant">${order.total}</td>
+                      <td className="px-4 py-4">
+                        <div className="flex justify-end gap-2">
+                          <Button size="sm" variant="secondary" onClick={() => openDetails(order)}>View</Button>
+                          <Button size="sm" variant="primary" onClick={() => handleDelete(order._id)}>Delete</Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

@@ -6,7 +6,7 @@ const CategoryFilter = ({ categories, selectedCategory, onSelect }) => {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 overflow-x-auto pb-1 hide-scrollbar">
+    <div className="flex flex-wrap items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
       {categories.map((category) => (
         <Button
           key={category}

@@ -37,7 +37,7 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
       <div className="mx-auto max-w-container-max space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
                       {stat.key === 'revenue' ? `$${dashboard.revenue?.toFixed(2) ?? '0.00'}` : dashboard[stat.key] ?? 0}
                     </p>
                   </div>
-                  <span className="material-symbols-outlined text-[32px] text-primary">{stat.icon}</span>
+                  <span className="material-symbols-outlined rounded-full bg-primary/10 p-3 text-[28px] text-primary">{stat.icon}</span>
                 </div>
               </Card>
             ))}

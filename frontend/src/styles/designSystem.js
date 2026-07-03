@@ -20,23 +20,23 @@ export const colors = {
   outline: '#7e7576',
   'outline-variant': '#cfc4c5',
   'surface-tint': '#5e5e5e',
-  primary: '#000000',
+  primary: '#0f172a',
   'on-primary': '#ffffff',
-  'primary-container': '#1b1b1b',
-  'on-primary-container': '#848484',
+  'primary-container': '#1e293b',
+  'on-primary-container': '#cbd5e1',
   'inverse-primary': '#c6c6c6',
-  secondary: '#005cba',
+  secondary: '#2563eb',
   'on-secondary': '#ffffff',
-  'secondary-container': '#5095fe',
-  'on-secondary-container': '#002d61',
-  tertiary: '#000000',
+  'secondary-container': '#dbeafe',
+  'on-secondary-container': '#1d4ed8',
+  tertiary: '#111827',
   'on-tertiary': '#ffffff',
-  'tertiary-container': '#1a1c1d',
-  'on-tertiary-container': '#838486',
-  error: '#ba1a1a',
+  'tertiary-container': '#1f2937',
+  'on-tertiary-container': '#d1d5db',
+  error: '#b42318',
   'on-error': '#ffffff',
-  'error-container': '#ffdad6',
-  'on-error-container': '#93000a',
+  'error-container': '#fee4e2',
+  'on-error-container': '#b42318',
   'primary-fixed': '#e2e2e2',
   'primary-fixed-dim': '#c6c6c6',
   'on-primary-fixed': '#1b1b1b',
@@ -127,19 +127,21 @@ export const spacing = {
 };
 
 export const borderRadius = {
-  sm: '0.25rem',
-  DEFAULT: '0.5rem',
-  md: '0.75rem',
-  lg: '1rem',
+  sm: '0.5rem',
+  DEFAULT: '0.75rem',
+  md: '1rem',
+  lg: '1.25rem',
   xl: '1.5rem',
-  '2xl': '1rem',
+  '2xl': '1.75rem',
+  '3xl': '2rem',
   full: '9999px',
 };
 
 export const shadows = {
-  invisible: '0 20px 40px rgba(0, 0, 0, 0.06)',
-  soft: '0 20px 40px rgba(0, 0, 0, 0.04)',
-  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+  invisible: '0 20px 40px rgba(15, 23, 42, 0.06)',
+  soft: '0 16px 30px rgba(15, 23, 42, 0.06)',
+  lg: '0 24px 60px rgba(15, 23, 42, 0.10)',
+  xl: '0 30px 80px rgba(15, 23, 42, 0.14)',
 };
 
 export const elevation = {
@@ -163,63 +165,47 @@ export const transitions = {
 
 export const components = {
   button: {
-    base: 'inline-flex items-center justify-center text-label-md font-label-md transition-all duration-200 active:scale-[0.98]',
-    primary:
-      'bg-primary text-on-primary hover:opacity-80 active:scale-[0.98]',
-    primarySolid:
-      'bg-primary text-on-primary hover:opacity-90 active:scale-[0.98]',
-    secondary:
-      'border border-outline bg-transparent text-primary hover:bg-surface-container-low active:scale-[0.98]',
-    ghost:
-      'bg-transparent text-primary border border-surface-variant hover:bg-surface-container-low active:scale-[0.98]',
-    chip:
-      'px-5 py-2 rounded-full text-label-sm font-label-sm whitespace-nowrap transition-transform active:scale-[0.98]',
-    chipActive: 'bg-primary text-on-primary',
-    chipInactive:
-      'bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors',
-    icon: 'hover:opacity-70 transition-opacity active:scale-[0.98]',
+    base: 'inline-flex items-center justify-center gap-2 rounded-full border border-transparent text-label-md font-label-md transition-all duration-200 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10',
+    primary: 'bg-primary text-on-primary shadow-sm hover:bg-primary/90',
+    primarySolid: 'bg-primary text-on-primary shadow-sm hover:bg-primary/90',
+    secondary: 'border border-outline-variant bg-surface-container-low/70 text-primary hover:bg-surface-container-low hover:shadow-sm',
+    ghost: 'bg-transparent text-primary hover:bg-surface-container-low',
+    chip: 'px-5 py-2 rounded-full text-label-sm font-label-sm whitespace-nowrap transition-transform active:scale-[0.98]',
+    chipActive: 'bg-primary text-on-primary shadow-sm',
+    chipInactive: 'bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors',
+    icon: 'inline-flex items-center justify-center rounded-full p-2 text-primary transition-all duration-200 hover:bg-surface-container-low hover:shadow-sm active:scale-[0.98]',
     sizes: {
-      default: 'px-8 py-3 rounded-full',
-      compact: 'py-3 px-6 rounded',
-      bag: 'py-4 px-6 rounded-full',
-      checkout: 'py-4 px-6 rounded-lg uppercase tracking-widest',
+      default: 'px-5 py-3 min-h-11',
+      compact: 'px-4 py-2.5 min-h-10',
+      bag: 'px-6 py-4 min-h-12',
+      checkout: 'px-6 py-4 min-h-12 uppercase tracking-[0.2em]',
+      sm: 'px-3 py-2 min-h-9 text-sm',
     },
   },
   input: {
-    floating:
-      'peer w-full bg-transparent border-0 border-b border-surface-variant focus:border-secondary focus:ring-0 px-0 py-unit text-body-lg font-body-lg text-on-surface placeholder-transparent transition-colors duration-200',
-    floatingLabel:
-      'absolute left-0 -top-4 text-label-sm font-label-sm text-on-surface-variant transition-all peer-placeholder-shown:text-body-lg peer-placeholder-shown:top-2 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:text-secondary cursor-text',
-    underline:
-      'w-full bg-transparent border-0 border-b border-outline-variant focus:border-secondary focus:ring-0 pb-unit text-body-md font-body-md text-on-surface placeholder-outline-variant transition-colors duration-200 outline-none',
-    label:
-      'text-label-sm font-label-sm text-on-surface-variant',
+    floating: 'peer w-full rounded-2xl border border-outline-variant bg-surface-container-lowest px-4 py-3 text-body-md font-body-md text-on-surface shadow-sm outline-none transition-all duration-200 placeholder:text-transparent focus:border-secondary focus:ring-4 focus:ring-secondary/10',
+    floatingLabel: 'absolute left-4 top-3 text-label-sm font-label-sm text-on-surface-variant transition-all peer-placeholder-shown:text-body-md peer-placeholder-shown:top-3 peer-focus:-top-4 peer-focus:text-label-sm peer-focus:text-secondary cursor-text',
+    underline: 'w-full rounded-2xl border border-outline-variant bg-surface-container-lowest px-4 py-3 text-body-md font-body-md text-on-surface shadow-sm outline-none transition-all duration-200 placeholder:text-outline-variant focus:border-secondary focus:ring-4 focus:ring-secondary/10',
+    label: 'text-label-sm font-label-sm text-on-surface-variant',
   },
   card: {
-    product:
-      'bg-system-gray rounded-xl overflow-hidden',
-    panel:
-      'bg-surface-container-low p-gutter rounded-lg',
-    summary:
-      'bg-surface-container-low rounded-xl p-8 border border-outline-variant/30',
-    login:
-      'bg-surface-container-lowest rounded-xl p-stack-lg border border-surface-variant backdrop-blur-2xl shadow-invisible',
-    featured:
-      'bg-surface-container overflow-hidden rounded-2xl',
+    product: 'overflow-hidden rounded-[1.75rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft transition-all duration-200 hover:-translate-y-1 hover:shadow-lg',
+    panel: 'rounded-[1.75rem] border border-outline-variant/30 bg-surface-container-lowest p-6 shadow-soft',
+    summary: 'rounded-[1.75rem] border border-outline-variant/30 bg-surface-container-low p-8 shadow-soft',
+    login: 'rounded-[2rem] border border-outline-variant/40 bg-surface-container-lowest p-8 shadow-lg backdrop-blur-xl',
+    featured: 'overflow-hidden rounded-[1.75rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft',
   },
   modal: {
     overlay: 'fixed inset-0 z-[150] bg-inverse-surface/20 backdrop-blur-sm',
-    panel:
-      'bg-surface-container-lowest rounded-xl p-stack-lg border border-surface-variant backdrop-blur-2xl shadow-invisible',
+    panel: 'rounded-[2rem] border border-outline-variant/40 bg-surface-container-lowest p-6 shadow-xl backdrop-blur-2xl',
   },
   toast: {
-    pill: 'bg-white/80 backdrop-blur-md border border-outline-variant/30 px-6 py-3 rounded-full shadow-lg text-body-md',
-    status:
-      'bg-surface-container-highest text-on-surface px-gutter py-unit rounded shadow-lg flex items-center gap-unit text-label-md font-label-md',
+    pill: 'rounded-full border border-outline-variant/30 bg-surface-container-lowest/80 px-6 py-3 text-body-md shadow-lg backdrop-blur-md',
+    status: 'flex items-center gap-2 rounded-2xl bg-surface-container-highest px-4 py-3 text-label-md font-label-md text-on-surface shadow-lg',
   },
   loader: {
     skeleton: 'bg-surface-container-high animate-pulse',
-    skeletonBlock: 'bg-surface-container-high rounded-xl animate-pulse',
+    skeletonBlock: 'bg-surface-container-high rounded-[1.5rem] animate-pulse',
   },
 };
 
@@ -250,6 +236,7 @@ export const tailwindTheme = {
   boxShadow: {
     invisible: shadows.invisible,
     soft: shadows.soft,
+    lg: shadows.lg,
   },
   maxWidth: {
     'container-max': spacing['container-max'],

@@ -59,7 +59,7 @@ const AdminUsers = () => {
   };
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
       <div className="mx-auto max-w-container-max space-y-8">
         <div>
           <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>
@@ -75,20 +75,34 @@ const AdminUsers = () => {
         ) : !users.length ? (
           <EmptyState title="No users found" description="There are no registered users yet." icon="person_off" />
         ) : (
-          <div className="space-y-4">
-            {users.map((user) => (
-              <Card key={user._id} variant="panel" className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h2 className="text-headline-sm font-headline-sm text-primary">{user.name}</h2>
-                  <p className="text-body-md text-on-surface-variant">{user.email}</p>
-                  <p className="mt-2 text-sm text-on-surface-variant">Role: {user.role}</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Button variant="secondary" onClick={() => { setSelectedUser(user); setRole(user.role); }}>Edit Role</Button>
-                  <Button variant="primary" onClick={() => handleDelete(user._id)}>Delete</Button>
-                </div>
-              </Card>
-            ))}
+          <div className="overflow-hidden rounded-[2rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-outline-variant/40 text-left">
+                <thead className="sticky top-0 z-10 bg-surface-container-low text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+                  <tr>
+                    <th className="px-4 py-4">Name</th>
+                    <th className="px-4 py-4">Email</th>
+                    <th className="px-4 py-4">Role</th>
+                    <th className="px-4 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20 bg-surface-container-lowest">
+                  {users.map((user) => (
+                    <tr key={user._id} className="odd:bg-surface-container-lowest even:bg-surface-container-low transition-colors hover:bg-surface-container-high">
+                      <td className="px-4 py-4 font-medium text-primary">{user.name}</td>
+                      <td className="px-4 py-4 text-on-surface-variant">{user.email}</td>
+                      <td className="px-4 py-4 capitalize text-on-surface-variant">{user.role}</td>
+                      <td className="px-4 py-4">
+                        <div className="flex justify-end gap-2">
+                          <Button size="sm" variant="secondary" onClick={() => { setSelectedUser(user); setRole(user.role); }}>Edit Role</Button>
+                          <Button size="sm" variant="primary" onClick={() => handleDelete(user._id)}>Delete</Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

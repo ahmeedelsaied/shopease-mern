@@ -49,13 +49,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-margin-mobile md:px-margin-desktop py-stack-lg">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-margin-mobile py-stack-lg md:px-margin-desktop">
       <Card variant="login" className="w-full max-w-md">
         <div className="space-y-6">
           <div>
-            <h1 className="text-headline-lg font-headline-lg text-primary">Welcome back</h1>
+            <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-secondary">Welcome back</p>
+            <h1 className="mt-2 text-headline-lg font-headline-lg text-primary">Sign in to ShopEase</h1>
             <p className="mt-stack-sm text-body-md text-on-surface-variant">
-              Sign in to access your ShopEase account.
+              Access your account, orders, and saved preferences in one place.
             </p>
           </div>
 
@@ -81,18 +82,16 @@ const Login = () => {
               autoComplete="current-password"
             />
 
-            {(localError || error) && (
-              <p className="text-error text-body-sm">{localError || error}</p>
-            )}
+            {(localError || error) && <p className="text-sm text-error">{localError || error}</p>}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading} loading={loading}>
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
 
-          <p className="text-body-sm text-on-surface-variant text-center">
+          <p className="text-center text-body-sm text-on-surface-variant">
             Don’t have an account?{' '}
-            <Link to="/register" className="text-primary font-semibold">
+            <Link to="/register" className="font-semibold text-primary">
               Create one
             </Link>
           </p>

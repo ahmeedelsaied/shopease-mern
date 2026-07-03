@@ -9,7 +9,7 @@ const SearchBar = ({ searchQuery, onChange }) => {
         value={searchQuery}
         onChange={(event) => onChange(event.target.value)}
         placeholder="Search by name"
-        className="bg-surface-container-low"
+        className="bg-surface-container-lowest"
       />
     </div>
   );

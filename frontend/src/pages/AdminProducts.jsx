@@ -106,7 +106,7 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
       <div className="mx-auto max-w-container-max space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -125,20 +125,39 @@ const AdminProducts = () => {
         ) : !products.length ? (
           <EmptyState title="No products found" description="Create a product to get started." icon="inventory_2" />
         ) : (
-          <div className="space-y-4">
-            {products.map((product) => (
-              <Card key={product._id} variant="panel" className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h2 className="text-headline-sm font-headline-sm text-primary">{product.name}</h2>
-                  <p className="text-body-md text-on-surface-variant">{product.category}</p>
-                  <p className="mt-2 text-sm text-on-surface-variant">Price: ${product.price} · Stock: {product.stock}</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Button variant="secondary" onClick={() => openEditModal(product)}>Edit</Button>
-                  <Button variant="primary" onClick={() => handleDelete(product._id)}>Delete</Button>
-                </div>
-              </Card>
-            ))}
+          <div className="overflow-hidden rounded-[2rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-outline-variant/40 text-left">
+                <thead className="sticky top-0 z-10 bg-surface-container-low text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+                  <tr>
+                    <th className="px-4 py-4">Name</th>
+                    <th className="px-4 py-4">Category</th>
+                    <th className="px-4 py-4">Price</th>
+                    <th className="px-4 py-4">Stock</th>
+                    <th className="px-4 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20 bg-surface-container-lowest">
+                  {products.map((product) => (
+                    <tr key={product._id} className="odd:bg-surface-container-lowest even:bg-surface-container-low transition-colors hover:bg-surface-container-high">
+                      <td className="px-4 py-4">
+                        <div className="font-medium text-primary">{product.name}</div>
+                        <div className="text-sm text-on-surface-variant">{product.description}</div>
+                      </td>
+                      <td className="px-4 py-4 text-on-surface-variant">{product.category}</td>
+                      <td className="px-4 py-4 text-on-surface-variant">${product.price}</td>
+                      <td className="px-4 py-4 text-on-surface-variant">{product.stock}</td>
+                      <td className="px-4 py-4">
+                        <div className="flex justify-end gap-2">
+                          <Button size="sm" variant="secondary" onClick={() => openEditModal(product)}>Edit</Button>
+                          <Button size="sm" variant="primary" onClick={() => handleDelete(product._id)}>Delete</Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

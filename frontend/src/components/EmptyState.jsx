@@ -11,15 +11,15 @@ const EmptyState = ({
   actionTo,
   className = '',
 }) => {
-  const content = (
-    <div className={cn('rounded-3xl border border-outline-variant/30 bg-surface-container-low p-10 text-center shadow-soft', className)}>
+  return (
+    <div className={cn('rounded-[2rem] border border-outline-variant/30 bg-gradient-to-br from-surface-container-low to-surface-container-lowest p-10 text-center shadow-soft', className)}>
       {icon ? (
-        <div className="mb-4 flex justify-center">
-          <span className="material-symbols-outlined text-[40px] text-primary">{icon}</span>
+        <div className="mb-5 flex justify-center">
+          <span className="material-symbols-outlined rounded-full bg-primary/10 p-4 text-[40px] text-primary">{icon}</span>
         </div>
       ) : null}
       <h2 className="text-headline-sm font-headline-sm text-primary">{title}</h2>
-      <p className="mt-3 text-body-md text-on-surface-variant">{description}</p>
+      <p className="mx-auto mt-3 max-w-md text-body-md text-on-surface-variant">{description}</p>
       {actionLabel ? (
         <div className="mt-6 flex justify-center">
           {onAction ? (
@@ -35,8 +35,6 @@ const EmptyState = ({
       ) : null}
     </div>
   );
-
-  return content;
 };
 
 export default EmptyState;

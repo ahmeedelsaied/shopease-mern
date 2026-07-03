@@ -16,10 +16,7 @@ const Card = ({
   ...props
 }) => {
   return (
-    <Component
-      className={cn(variantMap[variant], className)}
-      {...props}
-    >
+    <Component className={cn(variantMap[variant], className)} {...props}>
       {children}
     </Component>
   );
