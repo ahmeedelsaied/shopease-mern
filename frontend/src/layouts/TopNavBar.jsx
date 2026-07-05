@@ -5,6 +5,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import { cn, components } from '../styles/designSystem';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../context/WishlistContext';
 
 const navItems = [
   { label: 'Home', to: 'hero' },
@@ -21,6 +22,7 @@ const navItems = [
 const TopNavBar = () => {
   const { user, logout } = useAuth();
   const { totalItems } = useCart();
+  const { itemCount: wishlistCount } = useWishlist();
   const [accountOpen, setAccountOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('light');
@@ -153,9 +155,14 @@ const TopNavBar = () => {
             ) : null}
           </Link>
 
-          <button type="button" aria-label="View wishlist" className={components.button.icon}>
+          <Link to="/wishlist" aria-label="Wishlist" className={cn(components.button.icon, 'relative')}>
             <span className="material-symbols-outlined text-[18px]">favorite</span>
-          </button>
+            {wishlistCount > 0 ? (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-rose-500 px-1 text-[11px] font-semibold text-white">
+                {wishlistCount}
+              </span>
+            ) : null}
+          </Link>
 
           <div className="relative" ref={accountMenuRef}>
             <button

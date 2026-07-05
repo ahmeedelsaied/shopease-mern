@@ -8,6 +8,7 @@ import AdminRoute from './AdminRoute';
 const HomePage = lazy(() => import('../pages/HomePage'));
 const ProductDetails = lazy(() => import('../pages/ProductDetails'));
 const Cart = lazy(() => import('../pages/Cart'));
+const Wishlist = lazy(() => import('../pages/Wishlist'));
 const Checkout = lazy(() => import('../pages/Checkout'));
 const OrderSuccess = lazy(() => import('../pages/OrderSuccess'));
 const Orders = lazy(() => import('../pages/Orders'));
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route index element={<HomePage />} />
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="wishlist" element={<Wishlist />} />
           <Route
             path="checkout"
             element={
