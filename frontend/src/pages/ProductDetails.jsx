@@ -6,6 +6,8 @@ import Button from '../components/ui/Button';
 import Toast from '../components/ui/Toast';
 import { Skeleton, SkeletonText } from '../components/ui/Skeleton';
 import { useCart } from '../context/CartContext';
+import ProductReviews from '../components/ProductReviews';
+import RatingStars from '../components/RatingStars';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -13,6 +15,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showToast, setShowToast] = useState(false);
+  const [reviewSummary, setReviewSummary] = useState(null);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -22,7 +25,13 @@ const ProductDetails = () => {
 
       try {
         const response = await api.get(`/products/${id}`);
-        setProduct(response.data?.data ?? null);
+        const productData = response.data?.data ?? null;
+        setProduct(productData);
+        setReviewSummary({
+          averageRating: productData?.averageRating ?? productData?.rating ?? 0,
+          reviewsCount: productData?.reviewsCount ?? 0,
+          ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+        });
       } catch (fetchError) {
         setError(
           fetchError?.response?.data?.message ||
@@ -76,6 +85,8 @@ const ProductDetails = () => {
 
   const formattedPrice = `$${product.price.toFixed(2)}`;
   const stockLabel = product.stock > 0 ? `${product.stock} in stock` : 'Out of stock';
+  const averageRating = reviewSummary?.averageRating ?? product.averageRating ?? product.rating ?? 0;
+  const reviewsCount = reviewSummary?.reviewsCount ?? product.reviewsCount ?? 0;
 
   return (
     <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
@@ -117,8 +128,9 @@ const ProductDetails = () => {
                 <span className="text-label-sm font-label-sm uppercase tracking-[0.2em]">
                   Rating
                 </span>
+                <RatingStars value={averageRating} readonly size="sm" />
                 <span className="text-body-md font-body-md">
-                  {product.rating?.toFixed(1) ?? '0.0'} ★
+                  {averageRating.toFixed(1)} ({reviewsCount} review{reviewsCount === 1 ? '' : 's'})
                 </span>
               </div>
             </div>
@@ -153,6 +165,12 @@ const ProductDetails = () => {
             </div>
           </Card>
         </div>
+
+        <ProductReviews
+          productId={product._id}
+          initialSummary={reviewSummary}
+          onSummaryChange={setReviewSummary}
+        />
       </div>
       <Toast
         message="Product added to cart"

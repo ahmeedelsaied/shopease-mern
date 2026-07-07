@@ -7,6 +7,7 @@ import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 import { ensureDefaultAdmin } from './controllers/authController.js';
 
@@ -53,6 +54,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use(errorHandler);
 
