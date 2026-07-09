@@ -199,10 +199,6 @@ export const components = {
     overlay: 'fixed inset-0 z-[150] bg-inverse-surface/20 backdrop-blur-sm',
     panel: 'rounded-[2rem] border border-outline-variant/40 bg-surface-container-lowest p-6 shadow-xl backdrop-blur-2xl',
   },
-  toast: {
-    pill: 'rounded-full border border-outline-variant/30 bg-surface-container-lowest/80 px-6 py-3 text-body-md shadow-lg backdrop-blur-md',
-    status: 'flex items-center gap-2 rounded-2xl bg-surface-container-highest px-4 py-3 text-label-md font-label-md text-on-surface shadow-lg',
-  },
   loader: {
     skeleton: 'bg-surface-container-high animate-pulse',
     skeletonBlock: 'bg-surface-container-high rounded-[1.5rem] animate-pulse',

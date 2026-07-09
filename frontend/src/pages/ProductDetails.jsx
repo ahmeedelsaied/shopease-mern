@@ -3,20 +3,21 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Toast from '../components/ui/Toast';
-import { Skeleton, SkeletonText } from '../components/ui/Skeleton';
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
+import { ProductDetailsSkeleton } from '../components/ui/Skeleton';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import ProductReviews from '../components/ProductReviews';
 import RatingStars from '../components/RatingStars';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showToast, setShowToast] = useState(false);
   const [reviewSummary, setReviewSummary] = useState(null);
   const { addToCart } = useCart();
+  const toast = useToast();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -48,25 +49,7 @@ const ProductDetails = () => {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-        <div className="max-w-container-max mx-auto space-y-8">
-          <div className="space-y-3 text-center">
-            <Skeleton className="mx-auto h-4 w-24" />
-            <Skeleton className="mx-auto h-8 w-56" />
-            <SkeletonText lines={3} className="mx-auto max-w-2xl" />
-          </div>
-          <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr]">
-            <Skeleton className="h-[520px] w-full" />
-            <div className="space-y-4 rounded-3xl border border-outline-variant/20 bg-surface-container-low p-8 shadow-soft">
-              <Skeleton className="h-10 w-40" />
-              <SkeletonText lines={4} />
-              <Skeleton className="h-12 w-full rounded-full" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <ProductDetailsSkeleton />;
   }
 
   if (error) {
@@ -105,11 +88,12 @@ const ProductDetails = () => {
 
         <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] items-start">
           <Card variant="product" className="overflow-hidden shadow-soft">
-            <img
+            <ImageWithSkeleton
               src={product.image}
               alt={product.name}
               loading="lazy"
-              className="w-full h-[520px] object-cover"
+              decoding="async"
+              wrapperClassName="h-[520px] w-full"
             />
           </Card>
 
@@ -144,7 +128,7 @@ const ProductDetails = () => {
                 onClick={() => {
                   if (product.stock > 0) {
                     addToCart(product);
-                    setShowToast(true);
+                    toast.success('Product added to cart');
                   }
                 }}
               >
@@ -172,11 +156,6 @@ const ProductDetails = () => {
           onSummaryChange={setReviewSummary}
         />
       </div>
-      <Toast
-        message="Product added to cart"
-        isVisible={showToast}
-        onClose={() => setShowToast(false)}
-      />
     </div>
   );
 };

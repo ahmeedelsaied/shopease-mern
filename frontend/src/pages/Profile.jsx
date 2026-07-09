@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
-import Toast from '../components/ui/Toast';
 import EmptyState from '../components/EmptyState';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Profile = () => {
-  const { user, updateProfile, changePassword, loading, error, clearError } = useAuth();
+  const { user, updateProfile, changePassword, loading, error } = useAuth();
+  const toast = useToast();
   const [profileForm, setProfileForm] = useState({ name: '', email: '' });
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '' });
-  const [successMessage, setSuccessMessage] = useState('');
   const [formError, setFormError] = useState('');
 
   useEffect(() => {
@@ -23,17 +23,18 @@ const Profile = () => {
   const handleProfileSubmit = async (event) => {
     event.preventDefault();
     setFormError('');
-    setSuccessMessage('');
 
     if (!profileForm.name.trim() || !profileForm.email.trim()) {
       setFormError('Name and email are required');
+      toast.warning('Name and email are required');
       return;
     }
 
     try {
       await updateProfile(profileForm);
-      setSuccessMessage('Profile updated successfully');
+      toast.success('Profile updated successfully');
     } catch (updateError) {
+      toast.error(updateError.message);
       setFormError(updateError.message);
     }
   };
@@ -41,18 +42,19 @@ const Profile = () => {
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     setFormError('');
-    setSuccessMessage('');
 
     if (!passwordForm.currentPassword || !passwordForm.newPassword) {
       setFormError('Both password fields are required');
+      toast.warning('Both password fields are required');
       return;
     }
 
     try {
       await changePassword(passwordForm);
       setPasswordForm({ currentPassword: '', newPassword: '' });
-      setSuccessMessage('Password updated successfully');
+      toast.success('Password updated successfully');
     } catch (passwordError) {
+      toast.error(passwordError.message);
       setFormError(passwordError.message);
     }
   };
@@ -153,17 +155,6 @@ const Profile = () => {
         </div>
       </div>
 
-      <Toast
-        message={successMessage || formError || error || ''}
-        isVisible={Boolean(successMessage || formError || error)}
-        onClose={() => {
-          setSuccessMessage('');
-          setFormError('');
-          clearError();
-        }}
-        icon={successMessage ? 'check_circle' : 'error'}
-        variant="status"
-      />
     </div>
   );
 };

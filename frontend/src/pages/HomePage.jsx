@@ -6,6 +6,8 @@ import ProductGrid from '../components/ProductGrid';
 import Pagination from '../components/Pagination';
 import ProductFiltersPanel from '../components/ProductFiltersPanel';
 import Button from '../components/ui/Button';
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
+import { CategorySkeleton, ProductCardSkeleton, Skeleton } from '../components/ui/Skeleton';
 
 const DEFAULT_PAGE_SIZE = 9;
 const DEFAULT_SORT = 'newest';
@@ -46,7 +48,7 @@ const HomePage = () => {
     hasNextPage: false,
     hasPreviousPage: false,
   });
-  const [initialLoading, setInitialLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [catalogLoading, setCatalogLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -472,8 +474,11 @@ const HomePage = () => {
               View all
             </Link>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {categoryCards.map((category) => (
+          {initialLoading ? (
+            <CategorySkeleton />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {categoryCards.map((category) => (
               <button
                 key={category.name}
                 type="button"
@@ -486,8 +491,9 @@ const HomePage = () => {
                   <p className="text-body-md text-on-surface-variant">{category.description}</p>
                 </div>
               </button>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         <section id="featured" className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -507,18 +513,21 @@ const HomePage = () => {
               </Link>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {featuredProducts.map((product) => (
+              {initialLoading ? Array.from({ length: 3 }).map((_, index) => (
+                <ProductCardSkeleton key={index} />
+              )) : featuredProducts.map((product) => (
                 <Link
                   key={product._id}
                   to={`/products/${product._id}`}
                   className="group rounded-[1.5rem] border border-outline-variant/30 bg-surface-container-low p-4 transition-all hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <img
+                  <ImageWithSkeleton
                     src={product.image}
                     alt={product.name}
                     loading="lazy"
                     decoding="async"
-                    className="aspect-square w-full rounded-[1rem] object-cover transition-transform duration-500 group-hover:scale-105"
+                    wrapperClassName="aspect-square w-full rounded-[1rem]"
+                    className="transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="mt-3 space-y-1">
                     <p className="text-sm font-semibold text-primary">{product.name}</p>
@@ -538,7 +547,15 @@ const HomePage = () => {
               Upgrade your setup with premium essentials and enjoy complimentary delivery on select pieces.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {dealProducts.map((product) => (
+              {initialLoading ? Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="rounded-[1.25rem] border border-outline-variant/30 bg-surface-container-low/10 p-3 backdrop-blur-lg"
+                >
+                  <Skeleton className="h-5 w-32 bg-surface-container-low/30" />
+                  <Skeleton className="mt-2 h-4 w-20 bg-surface-container-low/30" />
+                </div>
+              )) : dealProducts.map((product) => (
                 <div
                   key={product._id}
                   className="rounded-[1.25rem] border border-outline-variant/30 bg-surface-container-low/10 p-3 backdrop-blur-lg"
@@ -564,18 +581,20 @@ const HomePage = () => {
             </Link>
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {newArrivals.map((product) => (
+            {initialLoading ? Array.from({ length: 4 }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            )) : newArrivals.map((product) => (
               <Link
                 key={product._id}
                 to={`/products/${product._id}`}
                 className="overflow-hidden rounded-[1.75rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
-                <img
+                <ImageWithSkeleton
                   src={product.image}
                   alt={product.name}
                   loading="lazy"
                   decoding="async"
-                  className="aspect-[4/5] w-full object-cover"
+                  wrapperClassName="aspect-[4/5] w-full"
                 />
                 <div className="space-y-2 p-5">
                   <p className="text-sm font-semibold text-secondary">{product.category}</p>

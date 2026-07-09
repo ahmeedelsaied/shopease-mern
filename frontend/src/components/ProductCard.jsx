@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Card from './ui/Card';
+import ImageWithSkeleton from './ui/ImageWithSkeleton';
 import { useWishlist } from '../context/WishlistContext';
 import { cn } from '../styles/designSystem';
 
@@ -19,14 +20,15 @@ const ProductCard = ({ product }) => {
     <Card variant="product" className="group flex h-full flex-col overflow-hidden">
       <div className="relative">
         <Link to={`/products/${productId}`} className="block" aria-label={`View details for ${product.name}`}>
-          <div className="relative aspect-[4/5] overflow-hidden bg-surface-container-low">
-            <img
+          <ImageWithSkeleton
               src={product.image}
               alt={product.name}
               loading="lazy"
               decoding="async"
-              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              wrapperClassName="relative aspect-[4/5]"
+              className="transition-transform duration-500 ease-out group-hover:scale-105"
             />
+          <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
               <span className="rounded-full border border-outline-variant/40 bg-surface-container-lowest/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant backdrop-blur">
                 {product.category}

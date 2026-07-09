@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Toast from '../components/ui/Toast';
+import { useToast } from '../context/ToastContext';
 
 const OrderSuccess = () => {
   const { orderId } = useParams();
   const location = useLocation();
-  const [toastMessage, setToastMessage] = useState('');
+  const { success } = useToast();
+  const shownToastRef = useRef(false);
 
   useEffect(() => {
-    if (location.state?.toastMessage) {
-      setToastMessage(location.state.toastMessage);
+    if (location.state?.toastMessage && !shownToastRef.current) {
+      shownToastRef.current = true;
+      success(location.state.toastMessage);
     }
-  }, [location.state]);
+  }, [location.state, success]);
 
   return (
     <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
@@ -37,8 +39,6 @@ const OrderSuccess = () => {
           </div>
         </Card>
       </div>
-
-      <Toast message={toastMessage} isVisible={Boolean(toastMessage)} onClose={() => setToastMessage('')} />
     </div>
   );
 };

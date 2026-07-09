@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import api from '../services/api';
 import { useAuth } from './AuthContext';
-import { ToastContainer } from '../components/ui/Toast';
+import { useToast } from './ToastContext';
 
 const WishlistContext = createContext(null);
 
@@ -40,18 +40,14 @@ export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [toastList, setToastList] = useState([]);
+  const { addToast } = useToast();
   const authSyncedRef = useRef(false);
   const serverReadyRef = useRef(false);
   const itemsRef = useRef([]);
 
-  const pushToast = useCallback((message) => {
-    const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    setToastList((prev) => [...prev, { id, message }]);
-    window.setTimeout(() => {
-      setToastList((prev) => prev.filter((entry) => entry.id !== id));
-    }, 2600);
-  }, []);
+  const pushToast = useCallback((message, type = 'success') => {
+    addToast({ message, type });
+  }, [addToast]);
 
   useEffect(() => {
     try {
@@ -214,7 +210,6 @@ export const WishlistProvider = ({ children }) => {
   return (
     <WishlistContext.Provider value={value}>
       {children}
-      <ToastContainer toasts={toastList} />
     </WishlistContext.Provider>
   );
 };

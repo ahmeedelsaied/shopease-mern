@@ -6,6 +6,7 @@ import { cn, components } from '../styles/designSystem';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useToast } from '../context/ToastContext';
 
 const navItems = [
   { label: 'Home', to: 'hero' },
@@ -23,6 +24,7 @@ const TopNavBar = () => {
   const { user, logout } = useAuth();
   const { totalItems } = useCart();
   const { itemCount: wishlistCount } = useWishlist();
+  const toast = useToast();
   const [accountOpen, setAccountOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('light');
@@ -63,6 +65,7 @@ const TopNavBar = () => {
   const handleLogout = () => {
     setAccountOpen(false);
     logout();
+    toast.info('Signed out successfully');
     navigate('/login', { replace: true });
   };
 

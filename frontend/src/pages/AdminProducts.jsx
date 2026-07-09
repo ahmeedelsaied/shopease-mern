@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
-import Card from '../components/ui/Card';
-import Loader from '../components/ui/Loader';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
+import { TableSkeleton } from '../components/ui/Skeleton';
+import { useToast } from '../context/ToastContext';
 
 const emptyForm = {
   name: '',
@@ -25,7 +25,7 @@ const AdminProducts = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [form, setForm] = useState(emptyForm);
-  const [toast, setToast] = useState('');
+  const toast = useToast();
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -80,16 +80,16 @@ const AdminProducts = () => {
 
       if (editingProduct) {
         await api.put(`/admin/products/${editingProduct._id}`, payload);
-        setToast('Product updated successfully');
+        toast.success('Product updated successfully');
       } else {
         await api.post('/admin/products', payload);
-        setToast('Product created successfully');
+        toast.success('Product created successfully');
       }
 
       setModalOpen(false);
       fetchProducts();
     } catch (submitError) {
-      setToast(submitError?.response?.data?.message || 'Unable to save product');
+      toast.error(submitError?.response?.data?.message || 'Unable to save product');
     }
   };
 
@@ -98,10 +98,10 @@ const AdminProducts = () => {
 
     try {
       await api.delete(`/admin/products/${productId}`);
-      setToast('Product deleted successfully');
+      toast.success('Product deleted successfully');
       fetchProducts();
     } catch (deleteError) {
-      setToast(deleteError?.response?.data?.message || 'Unable to delete product');
+      toast.error(deleteError?.response?.data?.message || 'Unable to delete product');
     }
   };
 
@@ -116,10 +116,8 @@ const AdminProducts = () => {
           <Button variant="primary" onClick={openCreateModal}>Create Product</Button>
         </div>
 
-        {toast ? <div className="rounded-2xl bg-primary/10 p-4 text-sm text-primary">{toast}</div> : null}
-
         {loading ? (
-          <Card variant="panel" className="p-6"><Loader lines={6} /></Card>
+          <TableSkeleton rows={6} columns={5} />
         ) : error ? (
           <EmptyState title="Products unavailable" description={error} icon="inventory_2" />
         ) : !products.length ? (

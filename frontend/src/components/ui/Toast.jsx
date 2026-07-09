@@ -1,88 +1,77 @@
-import { useEffect, useState } from 'react';
-import { cn, components } from '../../styles/designSystem';
+import { memo } from 'react';
+import { cn } from '../../styles/designSystem';
 
-const Toast = ({
-  message,
-  variant = 'status',
-  icon = 'check_circle',
-  isVisible = false,
-  onClose,
-  duration = 3000,
-  className = '',
-}) => {
-  const [active, setActive] = useState(false);
+const toastStyles = {
+  success: {
+    icon: 'check_circle',
+    className: 'border-emerald-500/30 bg-emerald-50 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-100',
+  },
+  error: {
+    icon: 'error',
+    className: 'border-error/30 bg-error-container text-error dark:bg-error/20 dark:text-red-100',
+  },
+  warning: {
+    icon: 'warning',
+    className: 'border-amber-500/30 bg-amber-50 text-amber-800 dark:bg-amber-500/15 dark:text-amber-100',
+  },
+  info: {
+    icon: 'info',
+    className: 'border-secondary/30 bg-secondary-container text-on-secondary-container dark:bg-secondary/20 dark:text-blue-100',
+  },
+};
 
-  useEffect(() => {
-    if (!isVisible) {
-      setActive(false);
-      return undefined;
-    }
-
-    setActive(true);
-    const timer = setTimeout(() => {
-      setActive(false);
-      onClose?.();
-    }, duration);
-
-    return () => clearTimeout(timer);
-  }, [isVisible, duration, onClose]);
-
-  if (!isVisible && !active) return null;
-
-  if (variant === 'pill') {
-    return (
-      <div
-        className={cn(
-          'fixed bottom-8 right-8 z-[200]',
-          className
-        )}
-        role="status"
-        aria-live="polite"
-      >
-        <div className={components.toast.pill}>{message}</div>
-      </div>
-    );
-  }
+const ToastItem = memo(({ toast, onDismiss }) => {
+  const style = toastStyles[toast.type] || toastStyles.info;
 
   return (
     <div
       className={cn(
-        'fixed bottom-stack-lg right-margin-mobile md:right-margin-desktop z-50',
-        !active ? 'toast-enter hidden' : 'toast-enter-active',
-        className
+        'pointer-events-auto flex w-full items-start gap-3 rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-xl transition-all duration-300 ease-out animate-[toast-in_260ms_ease-out]',
+        'sm:max-w-sm',
+        style.className
       )}
-      role="status"
-      aria-live="polite"
+      role={toast.type === 'error' ? 'alert' : 'status'}
+      aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
+      aria-atomic="true"
     >
-      <div className={components.toast.status}>
-        {icon && (
-          <span className="material-symbols-outlined text-secondary">{icon}</span>
-        )}
-        <span>{message}</span>
-      </div>
+      <span className="material-symbols-outlined mt-0.5 text-[20px]" aria-hidden="true">
+        {style.icon}
+      </span>
+      <p className="min-w-0 flex-1 text-sm font-medium leading-6">{toast.message}</p>
+      <button
+        type="button"
+        onClick={() => onDismiss(toast.id)}
+        className="rounded-full p-1 transition-colors hover:bg-surface-container-lowest/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+        aria-label="Dismiss notification"
+      >
+        <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
+          close
+        </span>
+      </button>
     </div>
   );
-};
+});
 
-const ToastContainer = ({ toasts = [], className = '' }) => {
+ToastItem.displayName = 'ToastItem';
+
+const ToastContainer = ({ toasts = [], onDismiss = () => {}, className = '' }) => {
   if (!toasts.length) return null;
 
   return (
     <div
       className={cn(
-        'fixed bottom-8 right-8 z-[200] flex flex-col gap-2',
+        'pointer-events-none fixed inset-x-4 bottom-4 z-[2000] flex flex-col-reverse gap-3 sm:inset-x-auto sm:bottom-auto sm:right-6 sm:top-6 sm:w-[min(24rem,calc(100vw-3rem))] sm:flex-col',
         className
       )}
       aria-live="polite"
+      aria-relevant="additions removals"
     >
       {toasts.map((toast) => (
-        <div key={toast.id} className={components.toast.pill}>
-          {toast.message}
-        </div>
+        <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}
     </div>
   );
 };
 
 export { ToastContainer };
-export default Toast;
+

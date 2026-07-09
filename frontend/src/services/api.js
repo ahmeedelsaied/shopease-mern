@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { emitToast } from '../utils/toastBus';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
@@ -21,7 +22,16 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error)
+  (error) => {
+    if (!error.response) {
+      emitToast({
+        type: 'error',
+        message: 'Network error. Please check your connection and try again.',
+      });
+    }
+
+    return Promise.reject(error);
+  }
 );
 
 export default api;

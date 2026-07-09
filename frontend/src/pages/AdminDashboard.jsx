@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import Card from '../components/ui/Card';
-import Loader from '../components/ui/Loader';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
+import { DashboardSkeleton } from '../components/ui/Skeleton';
 
 const stats = [
   { key: 'users', label: 'Total Users', icon: 'group' },
@@ -52,13 +52,7 @@ const AdminDashboard = () => {
         </div>
 
         {loading ? (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {stats.map((stat) => (
-              <Card key={stat.key} variant="panel" className="p-6">
-                <Loader lines={3} />
-              </Card>
-            ))}
-          </div>
+          <DashboardSkeleton count={stats.length} />
         ) : error ? (
           <EmptyState title="Dashboard unavailable" description={error} icon="error" />
         ) : !dashboard ? (

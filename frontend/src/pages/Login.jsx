@@ -4,10 +4,12 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Login = () => {
   const navigate = useNavigate();
   const { user, login, loading, error, clearError } = useAuth();
+  const toast = useToast();
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [localError, setLocalError] = useState('');
 
@@ -42,8 +44,10 @@ const Login = () => {
 
     try {
       await login({ email, password });
+      toast.success('Signed in successfully');
       navigate('/', { replace: true });
     } catch (submitError) {
+      toast.error(submitError.message);
       setLocalError(submitError.message);
     }
   };

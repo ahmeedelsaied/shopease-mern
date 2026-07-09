@@ -3,7 +3,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import api from '../services/api';
 import { Link } from 'react-router-dom';
-import { Skeleton, SkeletonCard, SkeletonText } from '../components/ui/Skeleton';
+import { OrdersSkeleton } from '../components/ui/Skeleton';
 import EmptyState from '../components/EmptyState';
 
 const Orders = () => {
@@ -29,21 +29,7 @@ const Orders = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
-        <div className="max-w-container-max mx-auto space-y-6">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-48" />
-            <SkeletonText lines={2} className="max-w-md" />
-          </div>
-          <div className="grid gap-4">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonCard key={index} className="p-4" />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <OrdersSkeleton />;
   }
 
   return (

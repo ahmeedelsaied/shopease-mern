@@ -1,6 +1,5 @@
 import ProductCard from './ProductCard';
-import Card from './ui/Card';
-import Loader from './ui/Loader';
+import { ProductCardSkeleton } from './ui/Skeleton';
 import EmptyState from './EmptyState';
 
 const ProductGrid = ({ products, loading, error }) => {
@@ -8,11 +7,7 @@ const ProductGrid = ({ products, loading, error }) => {
     return (
       <div className="grid w-full min-w-0 grid-cols-1 gap-gutter md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {Array.from({ length: 8 }).map((_, index) => (
-          <Card key={index} variant="product" className="overflow-hidden">
-            <div className="relative aspect-[4/5] bg-surface-container-low">
-              <Loader variant="product" className="h-full" />
-            </div>
-          </Card>
+          <ProductCardSkeleton key={index} />
         ))}
       </div>
     );

@@ -1,16 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
-import Toast from '../components/ui/Toast';
 import EmptyState from '../components/EmptyState';
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
+import { useToast } from '../context/ToastContext';
 
 const Cart = () => {
   const navigate = useNavigate();
   const { cartItems, subtotal, totalItems, increaseQuantity, decreaseQuantity, removeFromCart, clearCart } = useCart();
-  const [toastMessage, setToastMessage] = useState('');
+  const toast = useToast();
 
   const isEmpty = !cartItems || cartItems.length === 0;
 
@@ -44,7 +45,13 @@ const Cart = () => {
           <div className="space-y-4 lg:col-span-2">
             {cartItems.map((item) => (
               <Card key={item.id} variant="panel" className="flex flex-col gap-4 p-4 md:flex-row md:items-center">
-                <img src={item.image} alt={item.name} className="h-24 w-24 rounded-[1.25rem] object-cover" />
+                <ImageWithSkeleton
+                  src={item.image}
+                  alt={item.name}
+                  loading="lazy"
+                  decoding="async"
+                  wrapperClassName="h-24 w-24 shrink-0 rounded-[1.25rem]"
+                />
                 <div className="flex-1">
                   <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                     <div>
@@ -66,7 +73,7 @@ const Cart = () => {
                       className="ml-1 text-error"
                       onClick={() => {
                         removeFromCart(item.id);
-                        setToastMessage(`${item.name} removed from cart`);
+                        toast.info(`${item.name} removed from cart`);
                       }}
                     >
                       Remove
@@ -93,7 +100,7 @@ const Cart = () => {
                 className="w-full"
                 onClick={() => {
                   clearCart();
-                  setToastMessage('Cart cleared');
+                  toast.warning('Cart cleared');
                 }}
               >
                 Clear cart
@@ -102,8 +109,6 @@ const Cart = () => {
           </aside>
         </div>
       </div>
-
-      <Toast message={toastMessage} isVisible={Boolean(toastMessage)} onClose={() => setToastMessage('')} />
     </div>
   );
 };

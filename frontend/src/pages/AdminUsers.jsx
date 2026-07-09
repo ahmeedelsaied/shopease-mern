@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
-import Card from '../components/ui/Card';
-import Loader from '../components/ui/Loader';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
+import { TableSkeleton } from '../components/ui/Skeleton';
+import { useToast } from '../context/ToastContext';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const AdminUsers = () => {
   const [error, setError] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [role, setRole] = useState('user');
-  const [toast, setToast] = useState('');
+  const toast = useToast();
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -38,11 +38,11 @@ const AdminUsers = () => {
 
     try {
       await api.put(`/admin/users/${selectedUser._id}/role`, { role });
-      setToast('Role updated successfully');
+      toast.success('Role updated successfully');
       setSelectedUser(null);
       fetchUsers();
     } catch (updateError) {
-      setToast(updateError?.response?.data?.message || 'Unable to update role');
+      toast.error(updateError?.response?.data?.message || 'Unable to update role');
     }
   };
 
@@ -51,10 +51,10 @@ const AdminUsers = () => {
 
     try {
       await api.delete(`/admin/users/${userId}`);
-      setToast('User deleted successfully');
+      toast.success('User deleted successfully');
       fetchUsers();
     } catch (deleteError) {
-      setToast(deleteError?.response?.data?.message || 'Unable to delete user');
+      toast.error(deleteError?.response?.data?.message || 'Unable to delete user');
     }
   };
 
@@ -66,10 +66,8 @@ const AdminUsers = () => {
           <h1 className="text-headline-lg font-headline-lg text-primary">Users Management</h1>
         </div>
 
-        {toast ? <div className="rounded-2xl bg-primary/10 p-4 text-sm text-primary">{toast}</div> : null}
-
         {loading ? (
-          <Card variant="panel" className="p-6"><Loader lines={6} /></Card>
+          <TableSkeleton rows={6} columns={4} />
         ) : error ? (
           <EmptyState title="Users unavailable" description={error} icon="group_off" />
         ) : !users.length ? (

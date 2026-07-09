@@ -6,8 +6,8 @@ import Button from './ui/Button';
 import Card from './ui/Card';
 import EmptyState from './EmptyState';
 import RatingStars from './RatingStars';
-import Toast from './ui/Toast';
-import { Skeleton, SkeletonText } from './ui/Skeleton';
+import { ReviewSkeleton } from './ui/Skeleton';
+import { useToast } from '../context/ToastContext';
 
 const emptyDistribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
@@ -45,23 +45,6 @@ const buildSummary = (reviews) => {
 
   return { averageRating, reviewsCount, ratingDistribution };
 };
-
-const ReviewSkeleton = () => (
-  <div className="space-y-4">
-    {Array.from({ length: 3 }).map((_, index) => (
-      <Card key={index} variant="panel" className="p-5">
-        <div className="flex gap-4">
-          <Skeleton className="h-11 w-11 rounded-full" />
-          <div className="flex-1 space-y-3">
-            <Skeleton className="h-5 w-40" />
-            <Skeleton className="h-4 w-32" />
-            <SkeletonText lines={2} />
-          </div>
-        </div>
-      </Card>
-    ))}
-  </div>
-);
 
 const ReviewForm = ({ initialRating = 0, initialComment = '', submitLabel, onCancel, onSubmit, submitting }) => {
   const [rating, setRating] = useState(initialRating);
@@ -119,8 +102,8 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [editingId, setEditingId] = useState('');
-  const [toast, setToast] = useState('');
   const [error, setError] = useState('');
+  const toast = useToast();
 
   const currentUserId = getUserId(user);
 
@@ -183,11 +166,11 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
       const savedReviews = nextReviews.map((review) => (review._id === optimisticReview._id ? savedReview : review));
       setReviews(savedReviews);
       publishSummary(savedReviews, response.data?.summary);
-      setToast('Review added');
+      toast.success('Review added');
     } catch (submitError) {
       setReviews(previousReviews);
       publishSummary(previousReviews);
-      setToast(submitError?.response?.data?.message || 'Unable to add review');
+      toast.error(submitError?.response?.data?.message || 'Unable to add review');
     } finally {
       setSubmitting(false);
     }
@@ -212,11 +195,11 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
       setReviews(savedReviews);
       publishSummary(savedReviews, response.data?.summary);
       setEditingId('');
-      setToast('Review updated');
+      toast.success('Review updated');
     } catch (submitError) {
       setReviews(previousReviews);
       publishSummary(previousReviews);
-      setToast(submitError?.response?.data?.message || 'Unable to update review');
+      toast.error(submitError?.response?.data?.message || 'Unable to update review');
     } finally {
       setSubmitting(false);
     }
@@ -232,11 +215,11 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
     try {
       const response = await api.delete(`/reviews/${reviewId}`);
       publishSummary(nextReviews, response.data?.summary);
-      setToast('Review deleted');
+      toast.success('Review deleted');
     } catch (submitError) {
       setReviews(previousReviews);
       publishSummary(previousReviews);
-      setToast(submitError?.response?.data?.message || 'Unable to delete review');
+      toast.error(submitError?.response?.data?.message || 'Unable to delete review');
     }
   };
 
@@ -378,8 +361,6 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
           })}
         </div>
       )}
-
-      <Toast message={toast} isVisible={Boolean(toast)} onClose={() => setToast('')} />
     </section>
   );
 };

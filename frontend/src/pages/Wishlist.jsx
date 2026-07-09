@@ -3,16 +3,8 @@ import EmptyState from '../components/EmptyState';
 import ProductCard from '../components/ProductCard';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import { SkeletonCard } from '../components/ui/Skeleton';
+import { WishlistSkeleton } from '../components/ui/Skeleton';
 import { useWishlist } from '../context/WishlistContext';
-
-const WishlistSkeleton = () => (
-  <div className="grid grid-cols-1 gap-gutter sm:grid-cols-2 xl:grid-cols-3">
-    {Array.from({ length: 6 }).map((_, index) => (
-      <SkeletonCard key={index} />
-    ))}
-  </div>
-);
 
 const Wishlist = () => {
   const { wishlistItems, itemCount, loading, hydrated, clearWishlist } = useWishlist();

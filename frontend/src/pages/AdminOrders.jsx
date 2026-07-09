@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
-import Card from '../components/ui/Card';
-import Loader from '../components/ui/Loader';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
+import { TableSkeleton } from '../components/ui/Skeleton';
+import { useToast } from '../context/ToastContext';
 
 const statusOptions = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
@@ -15,7 +15,7 @@ const AdminOrders = () => {
   const [error, setError] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [status, setStatus] = useState('pending');
-  const [toast, setToast] = useState('');
+  const toast = useToast();
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -41,7 +41,7 @@ const AdminOrders = () => {
       setSelectedOrder(response.data?.data ?? order);
       setStatus(response.data?.data?.status || 'pending');
     } catch (fetchError) {
-      setToast(fetchError?.response?.data?.message || 'Unable to load order details');
+      toast.error(fetchError?.response?.data?.message || 'Unable to load order details');
     }
   };
 
@@ -50,11 +50,11 @@ const AdminOrders = () => {
 
     try {
       await api.put(`/admin/orders/${selectedOrder._id}/status`, { status });
-      setToast('Order status updated successfully');
+      toast.success('Order status updated successfully');
       setSelectedOrder(null);
       fetchOrders();
     } catch (updateError) {
-      setToast(updateError?.response?.data?.message || 'Unable to update order status');
+      toast.error(updateError?.response?.data?.message || 'Unable to update order status');
     }
   };
 
@@ -63,10 +63,10 @@ const AdminOrders = () => {
 
     try {
       await api.delete(`/admin/orders/${orderId}`);
-      setToast('Order deleted successfully');
+      toast.success('Order deleted successfully');
       fetchOrders();
     } catch (deleteError) {
-      setToast(deleteError?.response?.data?.message || 'Unable to delete order');
+      toast.error(deleteError?.response?.data?.message || 'Unable to delete order');
     }
   };
 
@@ -78,10 +78,8 @@ const AdminOrders = () => {
           <h1 className="text-headline-lg font-headline-lg text-primary">Orders Management</h1>
         </div>
 
-        {toast ? <div className="rounded-2xl bg-primary/10 p-4 text-sm text-primary">{toast}</div> : null}
-
         {loading ? (
-          <Card variant="panel" className="p-6"><Loader lines={6} /></Card>
+          <TableSkeleton rows={6} columns={5} />
         ) : error ? (
           <EmptyState title="Orders unavailable" description={error} icon="receipt_long" />
         ) : !orders.length ? (

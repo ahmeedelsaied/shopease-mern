@@ -4,10 +4,12 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Register = () => {
   const navigate = useNavigate();
   const { user, register, loading, error, clearError } = useAuth();
+  const toast = useToast();
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -57,8 +59,10 @@ const Register = () => {
 
     try {
       await register({ name, email, password });
+      toast.success('Account created successfully');
       navigate('/', { replace: true });
     } catch (submitError) {
+      toast.error(submitError.message);
       setLocalError(submitError.message);
     }
   };

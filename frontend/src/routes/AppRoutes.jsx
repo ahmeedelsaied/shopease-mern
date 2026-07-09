@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
-import Loader from '../components/ui/Loader';
+import { DashboardSkeleton } from '../components/ui/Skeleton';
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
 
@@ -23,8 +23,8 @@ const AdminOrders = lazy(() => import('../pages/AdminOrders'));
 
 const RouteFallback = () => (
   <div className="flex min-h-[50vh] items-center justify-center px-6 py-16">
-    <div className="w-full max-w-md rounded-[2rem] border border-outline-variant/40 bg-surface-container-lowest/80 p-6 shadow-soft backdrop-blur-xl">
-      <Loader lines={4} className="space-y-3" />
+    <div className="w-full max-w-4xl">
+      <DashboardSkeleton count={4} />
     </div>
   </div>
 );

@@ -3,4 +3,5 @@ export { default as Input } from './Input';
 export { default as Card } from './Card';
 export { default as Modal } from './Modal';
 export { default as Loader } from './Loader';
-export { default as Toast, ToastContainer } from './Toast';
+export { ToastContainer } from './Toast';
+export { default as ImageWithSkeleton } from './ImageWithSkeleton';
