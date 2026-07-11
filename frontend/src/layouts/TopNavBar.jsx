@@ -1,24 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Link as ScrollLink } from 'react-scroll';
 import { cn, components } from '../styles/designSystem';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useToast } from '../context/ToastContext';
-
-const navItems = [
-  { label: 'Home', to: 'hero' },
-  { label: 'Shop', to: 'products' },
-  { label: 'Categories', to: 'categories' },
-  { label: 'Featured', to: 'featured' },
-  { label: 'Deals', to: 'deals' },
-  { label: 'New Arrivals', to: 'new-arrivals' },
-  { label: 'Brands', to: 'brands' },
-  { label: 'About', to: 'about' },
-  { label: 'Contact', to: 'contact' },
-];
+import { NAV_ITEMS, navigateToSection } from '../utils/navigation';
 
 const TopNavBar = () => {
   const { user, logout } = useAuth();
@@ -91,6 +79,22 @@ const TopNavBar = () => {
     document.documentElement.style.colorScheme = nextTheme;
   };
 
+  /**
+   * Handle clicks on section navigation links (Home, Featured, etc.).
+   * Navigates to "/" first if not already there, then scrolls.
+   */
+  const handleSectionNav = useCallback(
+    (sectionId) => {
+      setMobileMenuOpen(false);
+      navigateToSection({
+        sectionId,
+        navigate,
+        pathname: location.pathname,
+      });
+    },
+    [navigate, location.pathname],
+  );
+
   // compute dropdown position when opening
   useEffect(() => {
     if (!accountOpen) return;
@@ -118,7 +122,7 @@ const TopNavBar = () => {
   return (
     <nav className="sticky top-0 z-[1000] w-full border-b border-outline-variant/30 bg-surface/80 backdrop-blur-3xl dark:bg-inverse-surface/80 dark:border-outline-variant/30">
       <div className="mx-auto flex max-w-container-max flex-wrap items-center justify-between gap-3 px-margin-mobile py-3 md:px-margin-desktop">
-        <Link to="/" className="flex items-center gap-3 rounded-full px-2 py-1 text-primary transition-colors hover:text-secondary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10">
+        <Link to="/" aria-label="ShopEase – go to home" className="flex items-center gap-3 rounded-full px-2 py-1 text-primary transition-colors hover:text-secondary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10">
           <span className="flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant/40 bg-surface-container-lowest/70 shadow-sm">
             <svg viewBox="0 0 64 64" className="h-6 w-6" aria-hidden="true">
               <path d="M16 18c0-4 3-7 7-7h18c4 0 7 3 7 7v2c0 6-4 10-8 13l-4 3v4h8v4H20v-4h8v-4l-4-3c-4-3-8-7-8-13v-2Z" fill="currentColor" />
@@ -223,32 +227,47 @@ const TopNavBar = () => {
         </div>
       </div>
 
-      <div className="border-t border-outline-variant/20 bg-surface-container-low/70 px-margin-mobile py-3 backdrop-blur-xl md:px-margin-desktop">
+      <div className="border-t border-outline-variant/20 bg-surface-container-low/70 px-margin-mobile py-3 backdrop-blur-xl md:px-margin-desktop" role="navigation" aria-label="Main sections">
         <div className="mx-auto flex max-w-container-max flex-wrap items-center justify-center gap-2 md:gap-3">
-          {navItems.map((item) => (
-            <ScrollLink
+          {NAV_ITEMS.map((item) => (
+            <button
               key={item.label}
-              to={item.to}
-              spy={true}
-              smooth={true}
-              offset={-100}
-              duration={500}
+              type="button"
+              onClick={() => handleSectionNav(item.sectionId)}
               className="cursor-pointer rounded-full px-3 py-2 text-sm font-medium text-on-surface-variant transition-all duration-200 hover:bg-surface-container-high hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10"
             >
               {item.label}
-            </ScrollLink>
+            </button>
           ))}
         </div>
       </div>
 
       {mobileMenuOpen ? (
-        <div className="border-t border-outline-variant/20 bg-surface-container-lowest/95 px-margin-mobile py-4 shadow-xl backdrop-blur-xl md:hidden">
+        <div className="border-t border-outline-variant/20 bg-surface-container-lowest/95 px-margin-mobile py-4 shadow-xl backdrop-blur-xl md:hidden" role="navigation" aria-label="Mobile navigation menu">
           <div className="mx-auto flex max-w-container-max flex-col gap-2">
-            {navItems.map((item) => (
-              <ScrollLink key={item.label} to={item.to} spy={true} smooth={true} offset={-100} duration={500} className="cursor-pointer rounded-2xl px-3 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10" onClick={() => setMobileMenuOpen(false)}>
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => handleSectionNav(item.sectionId)}
+                className="cursor-pointer rounded-2xl px-3 py-2 text-left text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10"
+              >
                 {item.label}
-              </ScrollLink>
+              </button>
             ))}
+            <div className="my-2 border-t border-outline-variant/20" role="separator" />
+            <Link to="/wishlist" className="rounded-2xl px-3 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10" onClick={() => setMobileMenuOpen(false)}>
+              Wishlist
+            </Link>
+            <Link to="/cart" className="rounded-2xl px-3 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10" onClick={() => setMobileMenuOpen(false)}>
+              Cart
+            </Link>
+            <Link to="/profile" className="rounded-2xl px-3 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10" onClick={() => setMobileMenuOpen(false)}>
+              Profile
+            </Link>
+            <Link to="/orders" className="rounded-2xl px-3 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10" onClick={() => setMobileMenuOpen(false)}>
+              Orders
+            </Link>
           </div>
         </div>
       ) : null}

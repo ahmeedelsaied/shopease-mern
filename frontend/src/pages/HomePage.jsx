@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
 import Pagination from '../components/Pagination';
 import ProductFiltersPanel from '../components/ProductFiltersPanel';
+import { SortDropdown, FilterChips } from '../components/filters';
 import Button from '../components/ui/Button';
 import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
 import { CategorySkeleton, ProductCardSkeleton, Skeleton } from '../components/ui/Skeleton';
+import useScrollToSection from '../hooks/useScrollToSection';
+import useProductFilters from '../hooks/useProductFilters';
+import { navigateToSection, HOME_SECTIONS } from '../utils/navigation';
 
 const DEFAULT_PAGE_SIZE = 9;
 const DEFAULT_SORT = 'newest';
@@ -36,6 +40,7 @@ const buildApiParams = (filters) => ({
 
 const HomePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -105,6 +110,12 @@ const HomePage = () => {
     [categories]
   );
 
+  const { activeChips, sortOptions } = useProductFilters(
+    filters,
+    priceBounds,
+    categoriesForFilter,
+  );
+
   const featuredProducts = useMemo(
     () => allProducts.filter((product) => product.featured).slice(0, 3),
     [allProducts]
@@ -150,17 +161,8 @@ const HomePage = () => {
     [searchParams, setSearchParams]
   );
 
-  useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    if (!hash) return;
-
-    const element = document.getElementById(hash);
-    if (element) {
-      window.requestAnimationFrame(() => {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
-  }, [location.hash]);
+  /* Scroll to section when navigating with a hash (e.g. from /cart → /#featured) */
+  useScrollToSection(location.pathname, location.hash);
 
   useEffect(() => {
     const loadAllProducts = async () => {
@@ -342,6 +344,37 @@ const HomePage = () => {
     );
   }, [updateSearchParams]);
 
+  // Maps a chip key (from useProductFilters.activeChips) back to the URL
+  // params that must be reset to clear that single filter.
+  const handleClearSingleFilter = useCallback(
+    (key) => {
+      switch (key) {
+        case 'search':
+          setSearchInput('');
+          updateSearchParams({ search: undefined, page: 1 });
+          break;
+        case 'category':
+          updateSearchParams({ category: DEFAULT_CATEGORY, page: 1 });
+          break;
+        case 'price':
+          updateSearchParams({ minPrice: undefined, maxPrice: undefined, page: 1 });
+          break;
+        case 'rating':
+          updateSearchParams({ rating: DEFAULT_RATING, page: 1 });
+          break;
+        case 'featured':
+          updateSearchParams({ featured: undefined, page: 1 });
+          break;
+        case 'inStock':
+          updateSearchParams({ inStock: undefined, page: 1 });
+          break;
+        default:
+          break;
+      }
+    },
+    [updateSearchParams]
+  );
+
   const totalProducts = catalogMeta.totalProducts;
   const totalPages = catalogMeta.totalPages;
   const currentPage = catalogMeta.currentPage;
@@ -367,12 +400,13 @@ const HomePage = () => {
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link
-                  to="/#featured"
-                  className="rounded-full bg-surface-container-lowest px-5 py-3 text-sm font-semibold text-primary transition-transform hover:-translate-y-0.5"
+                <button
+                  type="button"
+                  onClick={() => navigateToSection({ sectionId: HOME_SECTIONS.FEATURED, navigate, pathname: location.pathname })}
+                  className="rounded-full bg-surface-container-lowest px-5 py-3 text-sm font-semibold text-primary transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10"
                 >
                   Explore featured
-                </Link>
+                </button>
                 <Link
                   to="/cart"
                   className="rounded-full border border-outline-variant/20 bg-surface-container-low/10 px-5 py-3 text-sm font-semibold text-on-primary backdrop-blur-md transition-transform hover:-translate-y-0.5"
@@ -423,22 +457,11 @@ const HomePage = () => {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <div className="min-w-56">
-                <label className="mb-2 block text-label-sm font-label-sm text-on-surface-variant">
-                  Sort
-                </label>
-                <select
+                <SortDropdown
+                  options={sortOptions}
                   value={filters.sort}
-                  onChange={(event) => handleSortChange(event.target.value)}
-                  className="w-full rounded-2xl border border-outline-variant bg-surface-container-lowest px-4 py-3 text-body-md text-on-surface shadow-sm outline-none transition-all duration-200 focus:border-secondary focus:ring-4 focus:ring-secondary/10"
-                >
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
-                  <option value="price_asc">Price: low to high</option>
-                  <option value="price_desc">Price: high to low</option>
-                  <option value="rating">Top rated</option>
-                  <option value="name_asc">Name: A to Z</option>
-                  <option value="name_desc">Name: Z to A</option>
-                </select>
+                  onChange={handleSortChange}
+                />
               </div>
               <Button
                 type="button"
@@ -674,7 +697,6 @@ const HomePage = () => {
                   filters={filters}
                   priceBounds={priceBounds}
                   onCategoryChange={handleCategorySelect}
-                  onSortChange={handleSortChange}
                   onMinPriceChange={handleMinPriceChange}
                   onMaxPriceChange={handleMaxPriceChange}
                   onRatingChange={handleRatingChange}
@@ -686,6 +708,11 @@ const HomePage = () => {
                 />
 
                 <div className="space-y-4" id="products">
+                  <FilterChips
+                    chips={activeChips}
+                    onClear={handleClearSingleFilter}
+                    onClearAll={handleClearFilters}
+                  />
                   <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-outline-variant/30 bg-surface-container-low p-4">
                     <div className="space-y-1">
                       <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">

@@ -1,11 +1,25 @@
 import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { navigateToSection, HOME_SECTIONS } from '../utils/navigation';
 
 const Footer = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSectionClick = (sectionId) => (event) => {
+    event.preventDefault();
+    navigateToSection({
+      sectionId,
+      navigate,
+      pathname: location.pathname,
+    });
+  };
+
   return (
     <footer className="mt-stack-xl w-full border-t border-outline-variant/40 bg-surface-container-low/80 py-stack-xl backdrop-blur-xl dark:bg-inverse-surface/80 dark:border-outline-variant/40">
       <div className="mx-auto grid max-w-container-max gap-8 px-margin-mobile md:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] md:px-margin-desktop">
         <div className="space-y-4">
-          <Link to="/" className="flex items-center gap-3 text-primary transition-colors hover:text-secondary">
+          <Link to="/" aria-label="ShopEase – go to home" className="flex items-center gap-3 text-primary transition-colors hover:text-secondary">
             <span className="flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant/40 bg-surface-container-lowest/70 shadow-sm">
               <svg viewBox="0 0 64 64" className="h-6 w-6" aria-hidden="true">
                 <path d="M16 18c0-4 3-7 7-7h18c4 0 7 3 7 7v2c0 6-4 10-8 13l-4 3v4h8v4H20v-4h8v-4l-4-3c-4-3-8-7-8-13v-2Z" fill="currentColor" />
@@ -21,17 +35,17 @@ const Footer = () => {
 
         <div className="space-y-3">
           <h3 className="text-label-lg font-label-lg uppercase tracking-[0.22em] text-on-surface">Company</h3>
-          <ul className="space-y-2 text-body-md text-on-surface-variant">
-            <li><Link to="/#about" className="transition-colors hover:text-primary">About</Link></li>
-            <li><Link to="/#brands" className="transition-colors hover:text-primary">Brands</Link></li>
-            <li><Link to="/#contact" className="transition-colors hover:text-primary">Contact</Link></li>
+          <ul className="space-y-2 text-body-md text-on-surface-variant" role="list">
+            <li><Link to={`/#${HOME_SECTIONS.ABOUT}`} onClick={handleSectionClick(HOME_SECTIONS.ABOUT)} className="transition-colors hover:text-primary">About</Link></li>
+            <li><Link to={`/#${HOME_SECTIONS.BRANDS}`} onClick={handleSectionClick(HOME_SECTIONS.BRANDS)} className="transition-colors hover:text-primary">Brands</Link></li>
+            <li><Link to={`/#${HOME_SECTIONS.CONTACT}`} onClick={handleSectionClick(HOME_SECTIONS.CONTACT)} className="transition-colors hover:text-primary">Contact</Link></li>
           </ul>
         </div>
 
         <div className="space-y-3">
           <h3 className="text-label-lg font-label-lg uppercase tracking-[0.22em] text-on-surface">Support</h3>
-          <ul className="space-y-2 text-body-md text-on-surface-variant">
-            <li><Link to="/#deals" className="transition-colors hover:text-primary">Deals</Link></li>
+          <ul className="space-y-2 text-body-md text-on-surface-variant" role="list">
+            <li><Link to={`/#${HOME_SECTIONS.DEALS}`} onClick={handleSectionClick(HOME_SECTIONS.DEALS)} className="transition-colors hover:text-primary">Deals</Link></li>
             <li><Link to="/orders" className="transition-colors hover:text-primary">Orders</Link></li>
             <li><Link to="/profile" className="transition-colors hover:text-primary">Account</Link></li>
           </ul>
