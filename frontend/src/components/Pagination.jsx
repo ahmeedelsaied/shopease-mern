@@ -50,6 +50,17 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '' }) =
           variant="secondary"
           size="sm"
           disabled={currentPage <= 1}
+          onClick={() => onPageChange(1)}
+          aria-label="First page"
+        >
+          <span className="material-symbols-outlined text-[18px]">first_page</span>
+        </Button>
+
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          disabled={currentPage <= 1}
           onClick={() => onPageChange(currentPage - 1)}
           aria-label="Previous page"
         >
@@ -89,6 +100,17 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '' }) =
           aria-label="Next page"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+        </Button>
+
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          disabled={currentPage >= totalPages}
+          onClick={() => onPageChange(totalPages)}
+          aria-label="Last page"
+        >
+          <span className="material-symbols-outlined text-[18px]">last_page</span>
         </Button>
       </div>
     </nav>

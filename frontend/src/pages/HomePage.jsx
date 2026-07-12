@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-do
 import api from '../services/api';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
+import ProductResultsBar from '../components/ProductResultsBar';
 import Pagination from '../components/Pagination';
 import ProductFiltersPanel from '../components/ProductFiltersPanel';
 import { SortDropdown, FilterChips } from '../components/filters';
@@ -11,6 +12,7 @@ import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
 import { CategorySkeleton, ProductCardSkeleton, Skeleton } from '../components/ui/Skeleton';
 import useScrollToSection from '../hooks/useScrollToSection';
 import useProductFilters from '../hooks/useProductFilters';
+import useDebounce from '../hooks/useDebounce';
 import { navigateToSection, HOME_SECTIONS } from '../utils/navigation';
 
 const DEFAULT_PAGE_SIZE = 9;
@@ -58,6 +60,11 @@ const HomePage = () => {
   const [error, setError] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  // URL is the source of truth for the active search; the input box owns only
+  // the ephemeral keystroke buffer. We debounce that buffer before pushing it
+  // into the URL so the product list refreshes once per pause, not per keystroke.
+  const [debouncedSearch] = useDebounce(searchInput, 300);
 
   const priceBounds = useMemo(() => {
     if (!allProducts.length) {
@@ -252,19 +259,21 @@ const HomePage = () => {
   }, [activeQuery, filters]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const productsSection = document.getElementById('products');
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, [filters.page]);
 
+  // Push the debounced search term into the URL (the single source of truth).
+  // Going from URL → input is handled by the sync effect above; this effect
+  // owns only input → URL, so we skip the write when they already match.
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const trimmed = searchInput.trim();
-      if (trimmed !== filters.search) {
-        updateSearchParams({ search: trimmed || undefined, page: 1 }, { replace: true });
-      }
-    }, 500);
-
-    return () => window.clearTimeout(timer);
-  }, [filters.search, searchInput, updateSearchParams]);
+    const trimmed = debouncedSearch.trim();
+    if (trimmed !== filters.search) {
+      updateSearchParams({ search: trimmed || undefined, page: 1 }, { replace: true });
+    }
+  }, [debouncedSearch, filters.search, updateSearchParams]);
 
   const handleCategorySelect = useCallback(
     (category) => {
@@ -713,25 +722,22 @@ const HomePage = () => {
                     onClear={handleClearSingleFilter}
                     onClearAll={handleClearFilters}
                   />
-                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-outline-variant/30 bg-surface-container-low p-4">
-                    <div className="space-y-1">
-                      <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">
-                        Results
-                      </p>
-                      <p className="text-body-md text-on-surface-variant">
-                        Page {catalogMeta.currentPage} of {catalogMeta.totalPages}
-                      </p>
-                    </div>
-                    <div className="text-body-md text-on-surface-variant">
-                      Showing {catalogProducts.length} of {totalProducts}
-                    </div>
-                  </div>
-
-                  <ProductGrid
-                    products={catalogProducts}
-                    loading={catalogLoading || initialLoading}
-                    error={error}
+                  <ProductResultsBar
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    pageSize={catalogMeta.pageSize}
+                    total={totalProducts}
                   />
+
+                  <div key={activeQuery} className="animate-content-in">
+                    <ProductGrid
+                      products={catalogProducts}
+                      loading={catalogLoading || initialLoading}
+                      error={error}
+                      searchTerm={filters.search}
+                      onClearFilters={handleClearFilters}
+                    />
+                  </div>
 
                   <Pagination
                     currentPage={currentPage}

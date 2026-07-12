@@ -1,10 +1,12 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import Card from './ui/Card';
 import ImageWithSkeleton from './ui/ImageWithSkeleton';
+import Highlight from './Highlight';
 import { useWishlist } from '../context/WishlistContext';
 import { cn } from '../styles/designSystem';
 
-const ProductCard = ({ product }) => {
+const ProductCard = memo(({ product, searchTerm = '' }) => {
   const productId = product._id || product.id;
   const isInStock = product.stock > 0;
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -31,7 +33,7 @@ const ProductCard = ({ product }) => {
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
               <span className="rounded-full border border-outline-variant/40 bg-surface-container-lowest/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-on-surface-variant backdrop-blur">
-                {product.category}
+                <Highlight text={product.category} term={searchTerm} />
               </span>
               <span className={`mr-12 rounded-full px-3 py-1 text-xs font-semibold ${isInStock ? 'bg-emerald-500/90 text-on-primary' : 'bg-rose-500/90 text-on-primary'}`}>
                 {isInStock ? 'In stock' : 'Sold out'}
@@ -75,9 +77,9 @@ const ProductCard = ({ product }) => {
 
         <div className="space-y-2">
           <Link to={`/products/${productId}`} className="block rounded-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10">
-            <h3 className="text-headline-md font-headline-md text-primary transition-colors hover:text-secondary">{product.name}</h3>
+            <h3 className="text-headline-md font-headline-md text-primary transition-colors hover:text-secondary"><Highlight text={product.name} term={searchTerm} /></h3>
           </Link>
-          <p className="line-clamp-3 text-body-md leading-7 text-on-surface-variant">{product.description}</p>
+          <p className="line-clamp-3 text-body-md leading-7 text-on-surface-variant"><Highlight text={product.description} term={searchTerm} /></p>
         </div>
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-2">
@@ -89,6 +91,8 @@ const ProductCard = ({ product }) => {
       </div>
     </Card>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;
