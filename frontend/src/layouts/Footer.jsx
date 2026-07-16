@@ -47,6 +47,7 @@ const Footer = () => {
           <ul className="space-y-2 text-body-md text-on-surface-variant" role="list">
             <li><Link to={`/#${HOME_SECTIONS.DEALS}`} onClick={handleSectionClick(HOME_SECTIONS.DEALS)} className="transition-colors hover:text-primary">Deals</Link></li>
             <li><Link to="/orders" className="transition-colors hover:text-primary">Orders</Link></li>
+            <li><Link to="/recently-viewed" className="transition-colors hover:text-primary">Recently Viewed</Link></li>
             <li><Link to="/profile" className="transition-colors hover:text-primary">Account</Link></li>
           </ul>
         </div>

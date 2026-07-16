@@ -6,6 +6,7 @@ import Button from '../components/ui/Button';
 import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
 import { ProductDetailsSkeleton } from '../components/ui/Skeleton';
 import { useCart } from '../context/CartContext';
+import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 import { useToast } from '../context/ToastContext';
 import ProductReviews from '../components/ProductReviews';
 import RatingStars from '../components/RatingStars';
@@ -17,6 +18,7 @@ const ProductDetails = () => {
   const [error, setError] = useState('');
   const [reviewSummary, setReviewSummary] = useState(null);
   const { addToCart } = useCart();
+  const { addRecentlyViewed } = useRecentlyViewed();
   const toast = useToast();
 
   useEffect(() => {
@@ -28,6 +30,9 @@ const ProductDetails = () => {
         const response = await api.get(`/products/${id}`);
         const productData = response.data?.data ?? null;
         setProduct(productData);
+        if (productData) {
+          addRecentlyViewed(productData);
+        }
         setReviewSummary({
           averageRating: productData?.averageRating ?? productData?.rating ?? 0,
           reviewsCount: productData?.reviewsCount ?? 0,

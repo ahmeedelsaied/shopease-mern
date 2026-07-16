@@ -5,6 +5,7 @@ import api from '../services/api';
 import { Link } from 'react-router-dom';
 import { OrdersSkeleton } from '../components/ui/Skeleton';
 import EmptyState from '../components/EmptyState';
+import OrderTimeline from '../components/OrderTimeline';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -76,10 +77,20 @@ const Orders = () => {
                     })}
                   </p>
                 </div>
-                <div className="text-left md:text-right">
+                <div className="flex flex-col items-start gap-2 md:items-end">
                   <p className="text-headline-sm font-headline-sm text-primary">${(order.total || 0).toFixed(2)}</p>
-                  <p className="mt-1 text-sm capitalize text-on-surface-variant">{order.status}</p>
+                  <p className="text-sm capitalize text-on-surface-variant">{order.status}</p>
+                  <Link to={`/orders/${order._id}`}>
+                    <Button variant="secondary" size="sm">Track order</Button>
+                  </Link>
                 </div>
+              </div>
+              <div className="mt-6 border-t border-outline-variant/30 pt-5">
+                <OrderTimeline
+                  status={order.status}
+                  timestamps={order.statusHistory}
+                  updatedAt={order.updatedAt}
+                />
               </div>
             </Card>
           ))}

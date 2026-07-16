@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import CheckoutSteps from '../components/CheckoutSteps';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import api from '../services/api';
 
 const initialForm = {
@@ -21,9 +23,13 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, subtotal, totalItems, clearCart } = useCart();
   const { user } = useAuth();
+  const toast = useToast();
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // Guards against double submission: the button is disabled while loading,
+  // but a ref also blocks any re-entrant call (rapid double-click before paint).
+  const submittingRef = useRef(false);
 
   const isEmpty = !cartItems?.length;
 
@@ -42,6 +48,9 @@ const Checkout = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+
     setError('');
     setLoading(true);
 
@@ -70,9 +79,12 @@ const Checkout = () => {
       clearCart();
       navigate(`/order-success/${response.data.data._id}`, { state: { toastMessage: 'Order placed successfully' } });
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Unable to place order');
+      const message = err.response?.data?.message || err.message || 'Unable to place order';
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
+      submittingRef.current = false;
     }
   };
 
@@ -88,6 +100,8 @@ const Checkout = () => {
             <h1 className="text-headline-lg font-headline-lg text-primary">Checkout</h1>
             <p className="mt-2 text-body-md text-on-surface-variant">Please review your order and provide your shipping details.</p>
           </div>
+
+          <CheckoutSteps current="shipping" className="mb-2" />
 
           <Card variant="panel" className="p-6">
             <h2 className="text-headline-sm font-headline-sm text-primary">Shipping Information</h2>

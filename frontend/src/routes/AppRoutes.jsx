@@ -9,9 +9,11 @@ const HomePage = lazy(() => import('../pages/HomePage'));
 const ProductDetails = lazy(() => import('../pages/ProductDetails'));
 const Cart = lazy(() => import('../pages/Cart'));
 const Wishlist = lazy(() => import('../pages/Wishlist'));
+const RecentlyViewed = lazy(() => import('../pages/RecentlyViewed'));
 const Checkout = lazy(() => import('../pages/Checkout'));
 const OrderSuccess = lazy(() => import('../pages/OrderSuccess'));
 const Orders = lazy(() => import('../pages/Orders'));
+const OrderDetails = lazy(() => import('../pages/OrderDetails'));
 const Profile = lazy(() => import('../pages/Profile'));
 const Login = lazy(() => import('../pages/Login'));
 const Register = lazy(() => import('../pages/Register'));
@@ -38,6 +40,7 @@ const AppRoutes = () => {
           <Route path="products/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="wishlist" element={<Wishlist />} />
+          <Route path="recently-viewed" element={<RecentlyViewed />} />
           <Route
             path="checkout"
             element={
@@ -59,6 +62,14 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute>
                 <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="orders/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetails />
               </ProtectedRoute>
             }
           />

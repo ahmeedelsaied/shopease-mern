@@ -6,6 +6,7 @@ import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { useToast } from '../context/ToastContext';
+import OrderTimeline from '../components/OrderTimeline';
 
 const statusOptions = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
@@ -136,6 +137,13 @@ const AdminOrders = () => {
                     {item.name} × {item.quantity}
                   </div>
                 ))}
+              </div>
+              <div className="rounded-2xl bg-surface-container-low/60 p-4">
+                <OrderTimeline
+                  status={selectedOrder.status}
+                  timestamps={selectedOrder.statusHistory}
+                  updatedAt={selectedOrder.updatedAt}
+                />
               </div>
               <Input label="Status" value={status} onChange={(event) => setStatus(event.target.value)} />
               <div className="flex justify-end gap-3">

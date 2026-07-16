@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
+import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
 import ProductResultsBar from '../components/ProductResultsBar';
@@ -13,6 +14,7 @@ import { CategorySkeleton, ProductCardSkeleton, Skeleton } from '../components/u
 import useScrollToSection from '../hooks/useScrollToSection';
 import useProductFilters from '../hooks/useProductFilters';
 import useDebounce from '../hooks/useDebounce';
+import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 import { navigateToSection, HOME_SECTIONS } from '../utils/navigation';
 
 const DEFAULT_PAGE_SIZE = 9;
@@ -60,6 +62,7 @@ const HomePage = () => {
   const [error, setError] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { recentlyViewedItems: recentProducts, hydrated: recentHydrated, itemCount: recentCount } = useRecentlyViewed();
 
   // URL is the source of truth for the active search; the input box owns only
   // the ephemeral keystroke buffer. We debounce that buffer before pushing it
@@ -637,6 +640,27 @@ const HomePage = () => {
             ))}
           </div>
         </section>
+
+        {recentHydrated && recentCount > 0 ? (
+          <section id="recently-viewed" className="space-y-4">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">
+                  Pick up where you left off
+                </p>
+                <h2 className="text-headline-lg font-headline-lg text-primary">Recently viewed</h2>
+              </div>
+              <Link to="/recently-viewed" className="text-sm font-semibold text-secondary transition-colors hover:text-primary">
+                View all
+              </Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {recentProducts.slice(0, 4).map((product) => (
+                <ProductCard key={product._id || product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section id="brands" className="rounded-[2rem] border border-outline-variant/30 bg-surface-container-low/80 p-6 shadow-soft backdrop-blur-xl">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">

@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
+import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
 import { ToastProvider } from './context/ToastContext';
 import AppRoutes from './routes/AppRoutes';
 
@@ -14,7 +15,9 @@ function App() {
           <AppProvider>
             <CartProvider>
               <WishlistProvider>
-                <AppRoutes />
+                <RecentlyViewedProvider>
+                  <AppRoutes />
+                </RecentlyViewedProvider>
               </WishlistProvider>
             </CartProvider>
           </AppProvider>
