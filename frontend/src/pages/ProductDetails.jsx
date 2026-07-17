@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import ImageWithSkeleton from '../components/ui/ImageWithSkeleton';
+import ProductGallery from '../components/product/ProductGallery';
 import { ProductDetailsSkeleton } from '../components/ui/Skeleton';
 import { useCart } from '../context/CartContext';
 import { useRecentlyViewed } from '../context/RecentlyViewedContext';
@@ -92,15 +92,7 @@ const ProductDetails = () => {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] items-start">
-          <Card variant="product" className="overflow-hidden shadow-soft">
-            <ImageWithSkeleton
-              src={product.image}
-              alt={product.name}
-              loading="lazy"
-              decoding="async"
-              wrapperClassName="h-[520px] w-full"
-            />
-          </Card>
+          <ProductGallery product={product} />
 
           <Card variant="panel" className="space-y-8 p-8">
             <div className="space-y-4">
