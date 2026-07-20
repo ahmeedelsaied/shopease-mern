@@ -100,6 +100,79 @@
     animation: gallery-fade 0.4s ease-out both;
   }
 
+  /* Order success — celebratory confetti (CSS-only, no dependency).
+     Each piece is positioned by --confetti-x and delayed by --confetti-delay
+     (both set inline by <Confetti />). The animation falls off the page after
+     ~2.5s; the parent then unmounts the pieces. */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-10%) rotate(0deg);
+      opacity: 1;
+    }
+
+    100% {
+      transform:
+        translateX(var(--confetti-x, 0))
+        translateY(110vh)
+        rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  .confetti {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .confetti__piece {
+    position: absolute;
+    top: 0;
+    left: var(--confetti-left, 50%);
+    width: 10px;
+    height: 14px;
+    background: var(--confetti-color, #2563eb);
+    border-radius: 2px;
+    animation: confetti-fall 2.5s ease-out forwards;
+    animation-delay: var(--confetti-delay, 0s);
+  }
+
+  /* Order success — pop-in checkmark. */
+  @keyframes success-pop {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    60% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-success-pop {
+    animation: success-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Respect reduced-motion preferences: disabled celebratory animation. */
+  @media (prefers-reduced-motion: reduce) {
+    .confetti__piece,
+    .animate-success-pop {
+      animation: none;
+    }
+
+    .confetti {
+      display: none;
+    }
+  }
+
   .glass-panel {
     background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(20px);

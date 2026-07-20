@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 import asyncHandler from '../utils/asyncHandler.js';
+import { isValidOrderStatus, TERMINAL_STATUSES } from '../constants/orderStatus.js';
 
 const getAdminDashboard = asyncHandler(async (req, res) => {
   const [users, products, orders] = await Promise.all([
@@ -174,10 +175,10 @@ const getOrderDetails = asyncHandler(async (req, res) => {
 });
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
+  const { status, note } = req.body;
   const { id } = req.params;
 
-  if (!['pending', 'processing', 'shipped', 'delivered', 'cancelled'].includes(status)) {
+  if (!isValidOrderStatus(status)) {
     res.status(400);
     throw new Error('Invalid order status');
   }
@@ -188,7 +189,24 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     throw new Error('Order not found');
   }
 
-  order.status = status;
+  if (TERMINAL_STATUSES.includes(order.status)) {
+    res.status(409);
+    throw new Error(`Order is already in a terminal state (${order.status})`);
+  }
+
+  // History is append-only: a log entry is pushed only when the status
+  // actually changes, so re-sending the same status is idempotent and does
+  // not duplicate the log. `order.status` and `statusHistory` always move
+  // together.
+  if (order.status !== status) {
+    order.status = status;
+    order.statusHistory.push({
+      status,
+      note: note || undefined,
+      changedBy: req.user._id,
+    });
+  }
+
   await order.save();
 
   res.status(200).json({

@@ -29,6 +29,7 @@ router.delete('/products/:id', deleteProduct);
 router.get('/orders', getOrders);
 router.get('/orders/:id', getOrderDetails);
 router.put('/orders/:id/status', updateOrderStatus);
+router.patch('/orders/:id/status', updateOrderStatus);
 router.delete('/orders/:id', deleteOrder);
 
 export default router;

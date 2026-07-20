@@ -26,6 +26,12 @@ const createOrder = asyncHandler(async (req, res) => {
     paymentMethod,
     subtotal,
     total,
+    statusHistory: [
+      {
+        status: 'pending',
+        changedBy: req.user._id,
+      },
+    ],
   });
 
   res.status(201).json({
