@@ -5,6 +5,7 @@ import Card from '../components/ui/Card';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import { DashboardSkeleton } from '../components/ui/Skeleton';
+import { DashboardStatCard, DashboardGrid, BestSellerSection, LatestOrdersSection, LatestUsersSection } from '../components/dashboard';
 
 const stats = [
   { key: 'users', label: 'Total Users', icon: 'group' },
@@ -13,8 +14,14 @@ const stats = [
   { key: 'revenue', label: 'Total Revenue', icon: 'payments' },
 ];
 
+const formatCurrency = (value) =>
+  value != null && !Number.isNaN(Number(value))
+    ? `$${Number(value).toFixed(2)}`
+    : '—';
+
 const AdminDashboard = () => {
   const [dashboard, setDashboard] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -24,8 +31,12 @@ const AdminDashboard = () => {
       setError('');
 
       try {
-        const response = await api.get('/admin/dashboard');
-        setDashboard(response.data?.data ?? null);
+        const [dashboardRes, analyticsRes] = await Promise.all([
+          api.get('/admin/dashboard'),
+          api.get('/admin/analytics'),
+        ]);
+        setDashboard(dashboardRes.data?.data ?? null);
+        setAnalytics(analyticsRes.data?.data ?? null);
       } catch (fetchError) {
         setError(fetchError?.response?.data?.message || 'Unable to load dashboard');
       } finally {
@@ -58,21 +69,70 @@ const AdminDashboard = () => {
         ) : !dashboard ? (
           <EmptyState title="No dashboard data" description="There is no data available to show yet." icon="dashboard" />
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {stats.map((stat) => (
-              <Card key={stat.key} variant="panel" className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">{stat.label}</p>
-                    <p className="mt-3 text-headline-lg font-headline-lg text-primary">
-                      {stat.key === 'revenue' ? `$${dashboard.revenue?.toFixed(2) ?? '0.00'}` : dashboard[stat.key] ?? 0}
-                    </p>
-                  </div>
-                  <span className="material-symbols-outlined rounded-full bg-primary/10 p-3 text-[28px] text-primary">{stat.icon}</span>
+          <>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {stats.map((stat) => (
+                <DashboardStatCard
+                  key={stat.key}
+                  label={stat.label}
+                  value={stat.key === 'revenue' ? dashboard.revenue : dashboard[stat.key]}
+                  icon={stat.icon}
+                  isCurrency={stat.key === 'revenue'}
+                />
+              ))}
+            </div>
+
+            {analytics && (
+              <>
+                <DashboardGrid columns="4">
+                  <DashboardStatCard
+                    label="Today's Revenue"
+                    value={analytics.todayRevenue}
+                    icon="payments"
+                    tone="revenue"
+                    isCurrency
+                  />
+                  <DashboardStatCard
+                    label="Today's Orders"
+                    value={analytics.todayOrders}
+                    icon="receipt_long"
+                    tone="pending"
+                  />
+                  <DashboardStatCard
+                    label="Pending Orders"
+                    value={analytics.pendingOrders}
+                    icon="hourglass_empty"
+                    tone="pending"
+                  />
+                  <DashboardStatCard
+                    label="Delivered Orders"
+                    value={analytics.deliveredOrders}
+                    icon="package_2"
+                    tone="delivered"
+                  />
+                  <DashboardStatCard
+                    label="Cancelled Orders"
+                    value={analytics.cancelledOrders}
+                    icon="cancel"
+                    tone="cancelled"
+                  />
+                  <DashboardStatCard
+                    label="Avg Order Value"
+                    value={analytics.averageOrderValue}
+                    icon="analytics"
+                    tone="info"
+                    isCurrency
+                  />
+                </DashboardGrid>
+
+                <div className="space-y-6">
+                  <BestSellerSection bestSeller={analytics.bestSeller} />
+                  <LatestOrdersSection latestOrders={analytics.latestOrders} />
+                  <LatestUsersSection latestUsers={analytics.latestUsers} />
                 </div>
-              </Card>
-            ))}
-          </div>
+              </>
+            )}
+          </>
         )}
       </div>
     </div>
