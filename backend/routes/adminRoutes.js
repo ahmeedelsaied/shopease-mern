@@ -15,6 +15,7 @@ import {
   deleteOrder,
 } from '../controllers/adminController.js';
 import { getAdminAnalytics } from '../controllers/analyticsController.js';
+import { getAdminAnalyticsCharts } from '../controllers/analyticsChartsController.js';
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.use(protect, admin);
 
 router.get('/dashboard', getAdminDashboard);
 router.get('/analytics', getAdminAnalytics);
+router.get('/analytics/charts', getAdminAnalyticsCharts);
 router.get('/users', getUsers);
 router.put('/users/:id/role', updateUserRole);
 router.delete('/users/:id', deleteUser);

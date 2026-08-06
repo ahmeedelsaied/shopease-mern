@@ -5,7 +5,7 @@ import Card from '../components/ui/Card';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import { DashboardSkeleton } from '../components/ui/Skeleton';
-import { DashboardStatCard, DashboardGrid, BestSellerSection, LatestOrdersSection, LatestUsersSection } from '../components/dashboard';
+import { DashboardStatCard, DashboardGrid, BestSellerSection, LatestOrdersSection, LatestUsersSection, AnalyticsSection } from '../components/dashboard';
 
 const stats = [
   { key: 'users', label: 'Total Users', icon: 'group' },
@@ -130,6 +130,8 @@ const AdminDashboard = () => {
                   <LatestOrdersSection latestOrders={analytics.latestOrders} />
                   <LatestUsersSection latestUsers={analytics.latestUsers} />
                 </div>
+
+                <AnalyticsSection />
               </>
             )}
           </>

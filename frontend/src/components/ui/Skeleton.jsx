@@ -253,6 +253,23 @@ const DashboardSkeleton = ({ count = 4 }) => (
   </div>
 );
 
+/**
+ * ChartSkeleton – single chart panel placeholder. Mirrors the `DashboardSection`
+ * card chassis (rounded-[1.75rem] / border / surface / shadow / p-6) so the
+ * loading state visually fuses with the populated cards rather than flashing a
+ * generic rectangle. The inner tall skeleton reserves the chart's height so
+ * the grid does not jump when real data lands.
+ */
+const ChartSkeleton = ({ height = 280 }) => (
+  <div
+    className="rounded-[1.75rem] border border-outline-variant/30 bg-surface-container-lowest p-6 shadow-soft"
+    aria-busy="true"
+  >
+    <Skeleton className="mb-4 h-4 w-40" />
+    <Skeleton className="w-full rounded-xl" style={{ height }} />
+  </div>
+);
+
 const SkeletonCard = ProductCardSkeleton;
 
 export {
@@ -269,6 +286,7 @@ export {
   CategorySkeleton,
   TableSkeleton,
   DashboardSkeleton,
+  ChartSkeleton,
 };
 
 export default Skeleton;
