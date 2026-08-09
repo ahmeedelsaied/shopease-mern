@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
+import SEO from '../components/SEO';
+import { getSiteUrl } from '../seo/seoDefaults';
+import { buildProductJsonLd } from '../seo/productJsonLd';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ProductGallery from '../components/product/ProductGallery';
@@ -76,8 +79,24 @@ const ProductDetails = () => {
   const averageRating = reviewSummary?.averageRating ?? product.averageRating ?? product.rating ?? 0;
   const reviewsCount = reviewSummary?.reviewsCount ?? product.reviewsCount ?? 0;
 
+  const canonical = `${getSiteUrl()}/products/${product._id}`;
+  // useMemo'd so the JSON-LD payload object identity stays stable while `product`
+  // is unchanged, avoiding an unnecessary script-node swap on parent re-renders.
+  const productJsonLd = useMemo(
+    () => buildProductJsonLd(product, { siteUrl: getSiteUrl() }),
+    [product]
+  );
+
   return (
     <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+      <SEO
+        title={product.name}
+        description={product.description}
+        canonical={canonical}
+        image={product.image}
+        type="product"
+        jsonLd={productJsonLd}
+      />
       <div className="max-w-container-max mx-auto space-y-8">
         <div className="space-y-3 text-center">
           <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">

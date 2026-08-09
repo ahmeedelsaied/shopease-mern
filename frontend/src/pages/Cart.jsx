@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import SEO from '../components/SEO';
+import { NOINDEX_ROBOTS } from '../seo/seoDefaults';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import EmptyState from '../components/EmptyState';
@@ -20,6 +22,7 @@ const Cart = () => {
   if (isEmpty) {
     return (
       <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+        <SEO title="Shopping Cart" robots={NOINDEX_ROBOTS} />
         <div className="mx-auto max-w-container-max">
           <EmptyState
             icon="shopping_cart"
@@ -35,6 +38,7 @@ const Cart = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="Shopping Cart" robots={NOINDEX_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-6">
         <div className="flex flex-col gap-2">
           <h1 className="text-headline-lg font-headline-lg text-primary">Shopping Cart</h1>

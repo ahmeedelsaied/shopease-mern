@@ -4,6 +4,8 @@ import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
+import SEO from '../components/SEO';
+import { NOINDEX_FOLLOW_ROBOTS } from '../seo/seoDefaults';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { useToast } from '../context/ToastContext';
 
@@ -107,6 +109,7 @@ const AdminProducts = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="Admin Products" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>

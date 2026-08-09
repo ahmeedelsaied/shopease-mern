@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
+import SEO from '../components/SEO';
+import { NOINDEX_ROBOTS } from '../seo/seoDefaults';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -54,6 +56,7 @@ const Login = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-margin-mobile py-stack-lg md:px-margin-desktop">
+      <SEO title="Sign In" robots={NOINDEX_ROBOTS} />
       <Card variant="login" className="w-full max-w-md">
         <div className="space-y-6">
           <div>
@@ -95,9 +98,9 @@ const Login = () => {
 
           <p className="text-center text-body-sm text-on-surface-variant">
             Don’t have an account?{' '}
-            <Link to="/register" className="font-semibold text-primary">
+            <Lcink to="/register" className="font-semibold text-primary">
               Create one
-            </Link>
+            </Lcink>
           </p>
         </div>
       </Card>

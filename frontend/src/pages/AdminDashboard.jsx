@@ -4,6 +4,8 @@ import api from '../services/api';
 import Card from '../components/ui/Card';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
+import SEO from '../components/SEO';
+import { NOINDEX_FOLLOW_ROBOTS } from '../seo/seoDefaults';
 import { DashboardSkeleton } from '../components/ui/Skeleton';
 import { DashboardStatCard, DashboardGrid, BestSellerSection, LatestOrdersSection, LatestUsersSection, AnalyticsSection } from '../components/dashboard';
 
@@ -49,6 +51,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="Admin Dashboard" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>

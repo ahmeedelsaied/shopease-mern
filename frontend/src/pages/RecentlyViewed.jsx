@@ -3,6 +3,8 @@ import EmptyState from '../components/EmptyState';
 import ProductCard from '../components/ProductCard';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import SEO from '../components/SEO';
+import { NOINDEX_ROBOTS } from '../seo/seoDefaults';
 import { WishlistSkeleton } from '../components/ui/Skeleton';
 import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 
@@ -13,6 +15,7 @@ const RecentlyViewed = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="Recently Viewed" robots={NOINDEX_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-2">

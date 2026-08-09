@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import SEO from '../components/SEO';
+import { NOINDEX_ROBOTS } from '../seo/seoDefaults';
 import api from '../services/api';
 import { Link } from 'react-router-dom';
 import { OrdersSkeleton } from '../components/ui/Skeleton';
@@ -35,6 +37,7 @@ const Orders = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="My Orders" robots={NOINDEX_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>

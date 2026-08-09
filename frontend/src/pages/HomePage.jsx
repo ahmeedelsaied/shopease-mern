@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
+import SEO from '../components/SEO';
+import { DEFAULT_SEO } from '../seo/seoDefaults';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
@@ -393,6 +395,7 @@ const HomePage = () => {
 
   return (
     <div className="px-margin-mobile py-6 sm:py-8 md:px-margin-desktop lg:py-10">
+      <SEO title="" description={DEFAULT_SEO.description} />
       <div className="mx-auto max-w-container-max space-y-6 sm:space-y-8 lg:space-y-10">
         <section
           id="hero"

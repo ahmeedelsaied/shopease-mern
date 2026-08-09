@@ -1,0 +1,22 @@
+# ShopEase robots.txt
+# Allow the public storefront; block private account areas and the admin console.
+
+User-agent: *
+
+# Public, indexable storefront
+Allow: /
+
+# Private / personal — not for search engines
+Disallow: /admin
+Disallow: /cart
+Disallow: /wishlist
+Disallow: /recently-viewed
+Disallow: /orders
+Disallow: /profile
+Disallow: /login
+Disallow: /register
+Disallow: /checkout
+Disallow: /order-success
+
+# Sitemap: uncomment and set your production domain once VITE_SITE_URL is configured.
+# Sitemap: https://your-domain.example/sitemap.xml

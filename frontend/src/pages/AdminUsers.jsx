@@ -4,6 +4,8 @@ import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
+import SEO from '../components/SEO';
+import { NOINDEX_FOLLOW_ROBOTS } from '../seo/seoDefaults';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { useToast } from '../context/ToastContext';
 
@@ -60,6 +62,7 @@ const AdminUsers = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="Admin Users" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div>
           <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>

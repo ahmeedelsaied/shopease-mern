@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import SEO from '../components/SEO';
+import { NOINDEX_ROBOTS } from '../seo/seoDefaults';
 import EmptyState from '../components/EmptyState';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -62,6 +64,7 @@ const Profile = () => {
   if (!user) {
     return (
       <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+        <SEO title="My Profile" robots={NOINDEX_ROBOTS} />
         <div className="mx-auto max-w-container-max">
           <EmptyState
             icon="person"
@@ -77,6 +80,7 @@ const Profile = () => {
 
   return (
     <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <SEO title="My Profile" robots={NOINDEX_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-6">
         <div className="rounded-[2rem] border border-outline-variant/30 bg-surface-container-low/80 p-8 shadow-soft">
           <h1 className="text-headline-lg font-headline-lg text-primary">Profile</h1>

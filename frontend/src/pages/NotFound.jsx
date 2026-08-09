@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
+import SEO from '../components/SEO';
+import { NOINDEX_ROBOTS } from '../seo/seoDefaults';
 
 const NotFound = () => {
   return (
     <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+      <SEO title="Page Not Found" robots={NOINDEX_ROBOTS} />
       <div className="max-w-container-max mx-auto">
         <div className="rounded-3xl border border-outline-variant/30 bg-surface-container-low p-10 text-center shadow-soft">
           <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">404</p>
