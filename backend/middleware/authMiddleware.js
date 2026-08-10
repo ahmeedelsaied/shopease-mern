@@ -11,7 +11,9 @@ const protect = asyncHandler(async (req, res, next) => {
 
   if (!token) {
     res.status(401);
-    throw new Error('Not authorized, token missing');
+    const error = new Error('Not authorized, token missing');
+    error.authCode = 'AUTH_TOKEN_MISSING';
+    throw error;
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -19,7 +21,9 @@ const protect = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     res.status(401);
-    throw new Error('User not found');
+    const error = new Error('User not found');
+    error.authCode = 'AUTH_USER_NOT_FOUND';
+    throw error;
   }
 
   req.user = user;

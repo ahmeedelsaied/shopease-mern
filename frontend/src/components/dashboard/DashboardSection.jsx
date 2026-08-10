@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { cn } from '../../styles/designSystem';
+import Card from '../ui/Card';
 
 /**
  * DashboardSection – reusable card wrapper for analytics sections. Renders a

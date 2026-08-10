@@ -31,13 +31,13 @@ const NAV_BUTTON_BASE =
  */
 const ProductLightbox = ({
   isOpen,
-  images,
+  images = [],
   index,
   onClose,
   onNext,
   onPrevious,
   dialogRef,
-  swipeProps,
+  swipeProps = {},
 }) => {
   if (!isOpen || images.length === 0) return null;
 

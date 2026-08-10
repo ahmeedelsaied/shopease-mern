@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import { DashboardSkeleton } from '../components/ui/Skeleton';
+import RouteErrorBoundary from '../components/RouteErrorBoundary';
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
 
@@ -32,9 +33,12 @@ const RouteFallback = () => (
 );
 
 const AppRoutes = () => {
+  const location = useLocation();
+
   return (
-    <Suspense fallback={<RouteFallback />}>
-      <Routes>
+    <RouteErrorBoundary resetKey={`${location.pathname}${location.search}`}>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="products/:id" element={<ProductDetails />} />
@@ -117,8 +121,9 @@ const AppRoutes = () => {
           <Route path="register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Route>
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+    </RouteErrorBoundary>
   );
 };
 

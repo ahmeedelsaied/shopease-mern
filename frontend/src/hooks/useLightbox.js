@@ -42,6 +42,16 @@ export default function useLightbox(count, onClose) {
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
   const previous = useCallback(() => goTo(index - 1), [goTo, index]);
 
+  useEffect(() => {
+    if (count <= 0) {
+      setIsOpen(false);
+      setIndex(0);
+      return;
+    }
+
+    setIndex((currentIndex) => currentIndex % count);
+  }, [count]);
+
   const open = useCallback(
     (openIndex = 0) => {
       previouslyFocusedRef.current =
@@ -103,11 +113,12 @@ export default function useLightbox(count, onClose) {
       }
     };
 
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, handleClose, next, previous, trapFocus]);

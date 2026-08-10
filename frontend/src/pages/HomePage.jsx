@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import SEO from '../components/SEO';
@@ -62,7 +62,13 @@ const HomePage = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [catalogLoading, setCatalogLoading] = useState(false);
   const [error, setError] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  // Seed the local input buffer from the URL on mount. Without this, returning
+  // from a product page briefly debounces an empty buffer and replaces a valid
+  // `?search=` history entry before the URL-to-input sync effect can run.
+  const [searchInput, setSearchInput] = useState(
+    () => searchParams.get('search') ?? searchParams.get('q') ?? ''
+  );
+  const syncingSearchFromUrl = useRef(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { recentlyViewedItems: recentProducts, hydrated: recentHydrated, itemCount: recentCount } = useRecentlyViewed();
 
@@ -201,6 +207,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
+    syncingSearchFromUrl.current = true;
     setSearchInput(filters.search);
   }, [filters.search]);
 
@@ -275,6 +282,13 @@ const HomePage = () => {
   // owns only input → URL, so we skip the write when they already match.
   useEffect(() => {
     const trimmed = debouncedSearch.trim();
+
+    if (syncingSearchFromUrl.current) {
+      if (trimmed !== filters.search) return;
+      syncingSearchFromUrl.current = false;
+      return;
+    }
+
     if (trimmed !== filters.search) {
       updateSearchParams({ search: trimmed || undefined, page: 1 }, { replace: true });
     }
@@ -340,15 +354,16 @@ const HomePage = () => {
   );
 
   const handleClearFilters = useCallback(() => {
+    syncingSearchFromUrl.current = true;
     setSearchInput('');
     updateSearchParams(
       {
         search: undefined,
-        category: DEFAULT_CATEGORY,
-        sort: DEFAULT_SORT,
+        category: undefined,
+        sort: undefined,
         minPrice: undefined,
         maxPrice: undefined,
-        rating: DEFAULT_RATING,
+        rating: undefined,
         featured: undefined,
         inStock: undefined,
         page: undefined,

@@ -4,18 +4,31 @@ import Card from './ui/Card';
 import ImageWithSkeleton from './ui/ImageWithSkeleton';
 import Highlight from './Highlight';
 import { useWishlist } from '../context/WishlistContext';
+import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import { cn } from '../styles/designSystem';
 
 const ProductCard = memo(({ product, searchTerm = '' }) => {
   const productId = product._id || product.id;
   const isInStock = product.stock > 0;
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { addToCart } = useCart();
+  const toast = useToast();
   const wished = isInWishlist(product);
 
   const handleWishlistToggle = (event) => {
     event.preventDefault();
     event.stopPropagation();
     toggleWishlist(product);
+  };
+
+  const handleAddToCart = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (isInStock) {
+      addToCart(product);
+      toast.success('Product added to cart');
+    }
   };
 
   return (
@@ -84,8 +97,18 @@ const ProductCard = memo(({ product, searchTerm = '' }) => {
 
         <div className="mt-auto flex items-center justify-between gap-3 pt-2">
           <p className="text-headline-md font-headline-md text-primary">${product.price.toFixed(2)}</p>
-          <button type="button" className="rounded-full border border-outline-variant/40 bg-surface-container-low px-3 py-2 text-sm font-semibold text-primary transition-colors hover:bg-surface-container-high">
-            Add
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!isInStock}
+            className={cn(
+              'rounded-full border border-outline-variant/40 px-3 py-2 text-sm font-semibold transition-colors',
+              isInStock
+                ? 'bg-surface-container-low text-primary hover:bg-surface-container-high'
+                : 'bg-surface-container-low/50 text-on-surface-variant/50 cursor-not-allowed'
+            )}
+          >
+            {isInStock ? 'Add' : 'Out of stock'}
           </button>
         </div>
       </div>

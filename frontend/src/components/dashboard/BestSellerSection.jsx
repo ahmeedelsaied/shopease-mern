@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import ImageWithSkeleton from '../ui/ImageWithSkeleton';
 import DashboardSection from './DashboardSection';
-import { cn, components } from '../../styles/designSystem';
+import { cn } from '../../styles/designSystem';
 
 const formatCurrency = (value) =>
   value != null && !Number.isNaN(Number(value))

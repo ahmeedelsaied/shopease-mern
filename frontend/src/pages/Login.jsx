@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
@@ -10,16 +10,20 @@ import { useToast } from '../context/ToastContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, login, loading, error, clearError } = useAuth();
   const toast = useToast();
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [localError, setLocalError] = useState('');
+  const redirectTo = location.state?.from?.pathname?.startsWith('/')
+    ? `${location.state.from.pathname}${location.state.from.search || ''}${location.state.from.hash || ''}`
+    : '/';
 
   useEffect(() => {
     if (user) {
-      navigate('/', { replace: true });
+      navigate(redirectTo, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, redirectTo]);
 
   useEffect(() => {
     clearError();
@@ -47,7 +51,6 @@ const Login = () => {
     try {
       await login({ email, password });
       toast.success('Signed in successfully');
-      navigate('/', { replace: true });
     } catch (submitError) {
       toast.error(submitError.message);
       setLocalError(submitError.message);
@@ -98,9 +101,9 @@ const Login = () => {
 
           <p className="text-center text-body-sm text-on-surface-variant">
             Don’t have an account?{' '}
-            <Lcink to="/register" className="font-semibold text-primary">
+            <Link to="/register" className="font-semibold text-primary">
               Create one
-            </Lcink>
+            </Link>
           </p>
         </div>
       </Card>

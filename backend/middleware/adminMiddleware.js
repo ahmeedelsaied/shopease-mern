@@ -3,12 +3,16 @@ import asyncHandler from '../utils/asyncHandler.js';
 const admin = asyncHandler(async (req, res, next) => {
   if (!req.user) {
     res.status(401);
-    throw new Error('Not authorized');
+    const error = new Error('Not authorized');
+    error.authCode = 'AUTH_TOKEN_MISSING';
+    throw error;
   }
 
   if (req.user.role !== 'admin') {
     res.status(403);
-    throw new Error('Admin access required');
+    const error = new Error('Admin access required');
+    error.authCode = 'ADMIN_ACCESS_REQUIRED';
+    throw error;
   }
 
   next();

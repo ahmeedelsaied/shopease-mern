@@ -6,6 +6,7 @@ import { getSiteUrl } from '../seo/seoDefaults';
 import { buildProductJsonLd } from '../seo/productJsonLd';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import EmptyState from '../components/EmptyState';
 import ProductGallery from '../components/product/ProductGallery';
 import { ProductDetailsSkeleton } from '../components/ui/Skeleton';
 import { useCart } from '../context/CartContext';
@@ -19,45 +20,90 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [notFound, setNotFound] = useState(false);
   const [reviewSummary, setReviewSummary] = useState(null);
   const { addToCart } = useCart();
   const { addRecentlyViewed } = useRecentlyViewed();
   const toast = useToast();
 
+  const productJsonLd = useMemo(
+    () => buildProductJsonLd(product, { siteUrl: getSiteUrl() }),
+    [product]
+  );
+
   useEffect(() => {
+    let isCurrent = true;
+
     const loadProduct = async () => {
       setLoading(true);
       setError('');
+      setNotFound(false);
+      setProduct(null);
+      setReviewSummary(null);
 
       try {
         const response = await api.get(`/products/${id}`);
         const productData = response.data?.data ?? null;
-        setProduct(productData);
-        if (productData) {
-          addRecentlyViewed(productData);
+
+        if (!isCurrent) return;
+
+        if (!productData) {
+          setNotFound(true);
+          return;
         }
+
+        setProduct(productData);
+        addRecentlyViewed(productData);
         setReviewSummary({
-          averageRating: productData?.averageRating ?? productData?.rating ?? 0,
-          reviewsCount: productData?.reviewsCount ?? 0,
+          averageRating: productData.averageRating ?? productData.rating ?? 0,
+          reviewsCount: productData.reviewsCount ?? 0,
           ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
         });
       } catch (fetchError) {
+        if (!isCurrent) return;
+
+        if (fetchError?.response?.status === 404) {
+          setNotFound(true);
+          return;
+        }
+
         setError(
           fetchError?.response?.data?.message ||
             'Unable to load product details. Please try again.'
         );
       } finally {
-        setLoading(false);
+        if (isCurrent) setLoading(false);
       }
     }; 
 
-    if (id) {
-      loadProduct();
+    if (!id) {
+      setNotFound(true);
+      setLoading(false);
+      return undefined;
     }
-  }, [id]);
+
+    loadProduct();
+    return () => {
+      isCurrent = false;
+    };
+  }, [id, addRecentlyViewed]);
 
   if (loading) {
     return <ProductDetailsSkeleton />;
+  }
+
+  if (notFound) {
+    return (
+      <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+        <EmptyState
+          icon="search_off"
+          title="Product not found"
+          description="This product is no longer available or the link is invalid."
+          actionLabel="Browse products"
+          actionTo="/"
+        />
+      </div>
+    );
   }
 
   if (error) {
@@ -71,42 +117,57 @@ const ProductDetails = () => {
   }
 
   if (!product) {
-    return null;
+    return (
+      <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+        <EmptyState
+          icon="error"
+          title="Product unavailable"
+          description="We could not display this product. Please return to the catalogue and try again."
+          actionLabel="Browse products"
+          actionTo="/"
+        />
+      </div>
+    );
   }
 
-  const formattedPrice = `$${product.price.toFixed(2)}`;
-  const stockLabel = product.stock > 0 ? `${product.stock} in stock` : 'Out of stock';
-  const averageRating = reviewSummary?.averageRating ?? product.averageRating ?? product.rating ?? 0;
-  const reviewsCount = reviewSummary?.reviewsCount ?? product.reviewsCount ?? 0;
+  const numericPrice = Number(product.price);
+  const price = Number.isFinite(numericPrice) && numericPrice >= 0 ? numericPrice : 0;
+  const numericStock = Number(product.stock);
+  const stock = Number.isFinite(numericStock) && numericStock > 0 ? numericStock : 0;
+  const rawRating = Number(reviewSummary?.averageRating ?? product.averageRating ?? product.rating ?? 0);
+  const averageRating = Number.isFinite(rawRating) ? Math.min(Math.max(rawRating, 0), 5) : 0;
+  const rawReviewsCount = Number(reviewSummary?.reviewsCount ?? product.reviewsCount ?? 0);
+  const reviewsCount = Number.isFinite(rawReviewsCount) && rawReviewsCount > 0 ? rawReviewsCount : 0;
+  const productId = product._id ?? product.id ?? id;
+  const name = product.name || 'Product';
+  const description = product.description || 'No description is available for this product.';
+  const category = product.category || 'Uncategorised';
+  const image = product.image || (Array.isArray(product.images) ? product.images.find(Boolean) : undefined);
+  const formattedPrice = `$${price.toFixed(2)}`;
+  const stockLabel = stock > 0 ? `${stock} in stock` : 'Out of stock';
 
-  const canonical = `${getSiteUrl()}/products/${product._id}`;
-  // useMemo'd so the JSON-LD payload object identity stays stable while `product`
-  // is unchanged, avoiding an unnecessary script-node swap on parent re-renders.
-  const productJsonLd = useMemo(
-    () => buildProductJsonLd(product, { siteUrl: getSiteUrl() }),
-    [product]
-  );
+  const canonical = `${getSiteUrl()}/products/${productId}`;
 
   return (
     <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
       <SEO
-        title={product.name}
-        description={product.description}
+        title={name}
+        description={description}
         canonical={canonical}
-        image={product.image}
+        image={image}
         type="product"
         jsonLd={productJsonLd}
       />
       <div className="max-w-container-max mx-auto space-y-8">
         <div className="space-y-3 text-center">
           <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">
-            {product.category}
+            {category}
           </p>
           <h1 className="text-headline-lg font-headline-lg text-primary">
-            {product.name}
+            {name}
           </h1>
           <p className="max-w-2xl mx-auto text-body-lg font-body-lg text-on-surface-variant">
-            {product.description}
+            {description}
           </p>
         </div>
 
@@ -140,23 +201,23 @@ const ProductDetails = () => {
                 type="button"
                 variant="primary"
                 className="w-full disabled:cursor-not-allowed disabled:opacity-60"
-                disabled={product.stock === 0}
+                disabled={stock === 0}
                 onClick={() => {
-                  if (product.stock > 0) {
+                  if (stock > 0) {
                     addToCart(product);
                     toast.success('Product added to cart');
                   }
                 }}
               >
-                {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                {stock > 0 ? 'Add to Cart' : 'Out of Stock'}
               </Button>
             </div>
 
             <div className="space-y-3 text-body-md font-body-md text-on-surface-variant">
-              <p>{product.description}</p>
+              <p>{description}</p>
               <p>
                 <span className="font-semibold text-on-surface">Category:</span>{' '}
-                {product.category}
+                {category}
               </p>
               <p>
                 <span className="font-semibold text-on-surface">Featured:</span>{' '}
@@ -167,7 +228,7 @@ const ProductDetails = () => {
         </div>
 
         <ProductReviews
-          productId={product._id}
+          productId={productId}
           initialSummary={reviewSummary}
           onSummaryChange={setReviewSummary}
         />

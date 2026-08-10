@@ -18,13 +18,12 @@ import ProductLightbox from './ProductLightbox';
 const buildGalleryImages = (product) => {
   const baseAlt = product?.name ?? 'Product image';
 
-  if (Array.isArray(product?.images) && product.images.length > 0) {
-    return product.images.map((src) => ({ src, alt: baseAlt }));
-  }
-  if (product?.image) {
-    return [{ src: product.image, alt: baseAlt }];
-  }
-  return [];
+  const sourceImages = Array.isArray(product?.images) && product.images.length > 0
+    ? product.images
+    : [product?.image];
+
+  return [...new Set(sourceImages.filter((src) => typeof src === 'string' && src.trim()))]
+    .map((src) => ({ src, alt: baseAlt }));
 };
 
 /**

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { emitToast } from '../utils/toastBus';
+import { getStoredToken, handleExpiredAuth, isTokenFailureCode } from './authStorage';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
@@ -11,9 +12,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('shopease_token') || localStorage.getItem('token');
+    const token = getStoredToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete config.headers.Authorization;
     }
     return config;
   },
@@ -23,7 +26,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (!error.response) {
+    const status = error.response?.status;
+    const code = error.response?.data?.code;
+
+    if (status === 401 && isTokenFailureCode(code)) {
+      handleExpiredAuth();
+    } else if (!error.response) {
       emitToast({
         type: 'error',
         message: 'Network error. Please check your connection and try again.',

@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useCallback } from 'react';
 import api from '../services/api';
+import {
+  AUTH_EXPIRED_EVENT,
+  clearStoredAuth,
+  persistAuth,
+  readStoredAuth,
+} from '../services/authStorage';
 
 const AuthContext = createContext();
 
@@ -35,25 +41,23 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState, () => {
-    const storedUser = localStorage.getItem('shopease_user');
-    const storedToken = localStorage.getItem('shopease_token');
+    const storedAuth = readStoredAuth();
 
     return {
       ...initialState,
-      user: storedUser ? JSON.parse(storedUser) : null,
-      token: storedToken || null,
+      user: storedAuth?.user ?? null,
+      token: storedAuth?.token ?? null,
     };
   });
 
   useEffect(() => {
-    if (state.user && state.token) {
-      localStorage.setItem('shopease_user', JSON.stringify(state.user));
-      localStorage.setItem('shopease_token', state.token);
-    } else {
-      localStorage.removeItem('shopease_user');
-      localStorage.removeItem('shopease_token');
-    }
-  }, [state.user, state.token]);
+    const handleAuthExpired = () => {
+      dispatch({ type: 'LOGOUT' });
+    };
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+  }, []);
 
   const register = useCallback(async (payload) => {
     dispatch({ type: 'AUTH_REQUEST' });
@@ -61,6 +65,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post('/auth/register', payload);
       const { data, token } = response.data;
+
+      persistAuth(data, token);
 
       dispatch({
         type: 'AUTH_SUCCESS',
@@ -86,6 +92,8 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login', payload);
       const { data, token } = response.data;
 
+      persistAuth(data, token);
+
       dispatch({
         type: 'AUTH_SUCCESS',
         payload: {
@@ -104,6 +112,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = useCallback(() => {
+    clearStoredAuth();
     dispatch({ type: 'LOGOUT' });
   }, []);
 
@@ -113,6 +122,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.put('/auth/profile', payload);
       const updatedUser = response.data?.data;
+
+      persistAuth(updatedUser, state.token);
 
       dispatch({
         type: 'AUTH_SUCCESS',
@@ -128,13 +139,14 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: 'AUTH_FAILURE', payload: message });
       throw new Error(message);
     }
-  }, []);
+  }, [state.token]);
 
   const changePassword = useCallback(async (payload) => {
     dispatch({ type: 'AUTH_REQUEST' });
 
     try {
       await api.put('/auth/change-password', payload);
+      persistAuth(state.user, state.token);
       dispatch({ type: 'AUTH_SUCCESS', payload: { user: state.user } });
       return true;
     } catch (error) {
@@ -143,7 +155,7 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: 'AUTH_FAILURE', payload: message });
       throw new Error(message);
     }
-  }, [state.user]);
+  }, [state.token, state.user]);
 
   const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
