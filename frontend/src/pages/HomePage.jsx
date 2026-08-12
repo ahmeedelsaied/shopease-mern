@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import SEO from '../components/SEO';
-import { DEFAULT_SEO } from '../seo/seoDefaults';
+import { DEFAULT_SEO, getSiteUrl } from '../seo/seoDefaults';
+import { buildWebsiteJsonLd } from '../seo/websiteJsonLd';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
@@ -71,6 +72,11 @@ const HomePage = () => {
   const syncingSearchFromUrl = useRef(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { recentlyViewedItems: recentProducts, hydrated: recentHydrated, itemCount: recentCount } = useRecentlyViewed();
+
+  // Schema.org WebSite + Organization graph for the storefront. Pure of any
+  // network state — built once from the site defaults + configured site URL,
+  // never fabricated data. Re-rendered only if the env origin ever changes.
+  const websiteJsonLd = useMemo(() => buildWebsiteJsonLd({ siteUrl: getSiteUrl() }), []);
 
   // URL is the source of truth for the active search; the input box owns only
   // the ephemeral keystroke buffer. We debounce that buffer before pushing it
@@ -410,7 +416,7 @@ const HomePage = () => {
 
   return (
     <div className="px-margin-mobile py-6 sm:py-8 md:px-margin-desktop lg:py-10">
-      <SEO title="" description={DEFAULT_SEO.description} />
+      <SEO title="" description={DEFAULT_SEO.description} jsonLd={websiteJsonLd} />
       <div className="mx-auto max-w-container-max space-y-6 sm:space-y-8 lg:space-y-10">
         <section
           id="hero"

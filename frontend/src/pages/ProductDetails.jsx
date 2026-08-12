@@ -4,6 +4,7 @@ import api from '../services/api';
 import SEO from '../components/SEO';
 import { getSiteUrl } from '../seo/seoDefaults';
 import { buildProductJsonLd } from '../seo/productJsonLd';
+import { buildBreadcrumbJsonLd, combineJsonLd } from '../seo/websiteJsonLd';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import EmptyState from '../components/EmptyState';
@@ -148,6 +149,20 @@ const ProductDetails = () => {
 
   const canonical = `${getSiteUrl()}/products/${productId}`;
 
+  // Compose the Product graph (built once at the top of the component from the
+  // real product doc) with a BreadcrumbList (Home -> category -> product name).
+  // Both feed real product/_id values only; combineJsonLd drops any null so the
+  // JSON-LD is simply omitted when the data is unavailable.
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd({
+    siteUrl: getSiteUrl(),
+    items: [
+      { name: 'Home', path: '/' },
+      { name: category, path: `/?category=${encodeURIComponent(category)}` },
+      { name, path: `/products/${productId}` },
+    ],
+  });
+  const combinedJsonLd = combineJsonLd([productJsonLd, breadcrumbJsonLd]);
+
   return (
     <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
       <SEO
@@ -156,7 +171,7 @@ const ProductDetails = () => {
         canonical={canonical}
         image={image}
         type="product"
-        jsonLd={productJsonLd}
+        jsonLd={combinedJsonLd}
       />
       <div className="max-w-container-max mx-auto space-y-8">
         <div className="space-y-3 text-center">

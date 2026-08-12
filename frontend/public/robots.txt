@@ -1,4 +1,11 @@
-# ShopEase robots.txt
+# ShopEase robots.txt (static fallback)
+#
+# A backend-generated robots.txt is the canonical source — see
+# GET /api/robots.txt (served from the storefront root via the Vite dev proxy /
+# a reverse proxy in production). This static fallback ships in the built bundle
+# so the file is still present if a deployment serves the frontend assets
+# directly without proxying robots.txt to the backend.
+#
 # Allow the public storefront; block private account areas and the admin console.
 
 User-agent: *
@@ -18,5 +25,6 @@ Disallow: /register
 Disallow: /checkout
 Disallow: /order-success
 
-# Sitemap: uncomment and set your production domain once VITE_SITE_URL is configured.
-# Sitemap: https://your-domain.example/sitemap.xml
+# Sitemap: served by the backend at the storefront root via the dev proxy /
+# reverse proxy in production. Use an absolute URL in real deployments.
+Sitemap: /sitemap.xml

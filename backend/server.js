@@ -8,6 +8,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import seoRoutes from './routes/seoRoutes.js';
 import errorHandler from './middleware/errorHandler.js';
 import { ensureDefaultAdmin } from './controllers/authController.js';
 
@@ -55,6 +56,10 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/reviews', reviewRoutes);
+// Public SEO infrastructure (sitemap.xml + robots.txt). Mounted under /api so
+// the endpoints live at /api/sitemap.xml and /api/robots.txt; the frontend dev
+// server proxies the storefront root paths onto these (see frontend vite.config.js).
+app.use('/api', seoRoutes);
 
 app.use(errorHandler);
 
