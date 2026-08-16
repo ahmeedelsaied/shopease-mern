@@ -178,6 +178,13 @@ const HomePage = () => {
         } else {
           next.set(key, String(value));
         }
+
+        // `search` is the canonical catalog query key. Remove the legacy
+        // navbar key whenever search state is written so two URL sources
+        // cannot compete during back/forward navigation.
+        if (key === 'search') {
+          next.delete('q');
+        }
       });
 
       setSearchParams(next, { replace });
@@ -213,9 +220,20 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
+    const legacySearch = searchParams.get('q');
+    const canonicalSearch = searchParams.get('search');
+
+    if (legacySearch && !canonicalSearch) {
+      const next = new URLSearchParams(searchParams);
+      next.delete('q');
+      next.set('search', legacySearch);
+      setSearchParams(next, { replace: true });
+      return;
+    }
+
     syncingSearchFromUrl.current = true;
     setSearchInput(filters.search);
-  }, [filters.search]);
+  }, [filters.search, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (activeQuery) {

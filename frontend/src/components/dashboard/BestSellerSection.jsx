@@ -36,7 +36,7 @@ const BestSellerSection = ({ bestSeller }) => {
       subtitle={`${bestSeller.unitsSold.toLocaleString()} units sold · ${formatCurrency(bestSeller.revenue)} revenue`}
     >
       <Link
-        to={bestSeller.productId ? `/admin/products/${bestSeller.productId}` : '#'}
+        to="/admin/products"
         className="block group"
       >
         <div className="flex items-start gap-4">

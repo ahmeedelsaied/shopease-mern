@@ -1,9 +1,9 @@
 /**
  * useScrollToSection – React hook
  *
- * Reads the URL hash on mount and scrolls to the corresponding
- * section on the home page.  Clears the hash after scrolling so
- * that repeated clicks on the same link still work.
+ * Reads the URL hash and scrolls to the corresponding section on the home
+ * page. Repeated clicks on the same link are handled by the navigation helper,
+ * while distinct hashes and browser history transitions are handled here.
  */
 
 import { useEffect, useRef } from 'react';
@@ -14,27 +14,28 @@ import { isHomePage, isHomeSection, scrollElementIntoView } from '../utils/navig
  * @param {string} hash     - `location.hash`
  */
 export default function useScrollToSection(pathname, hash) {
-  const hasScrolledRef = useRef(false);
+  const handledHashRef = useRef('');
 
   useEffect(() => {
     /* Only handle hashes when on the home page. */
     if (!isHomePage(pathname)) {
-      hasScrolledRef.current = false;
+      handledHashRef.current = '';
       return;
     }
 
     const sectionId = hash.replace('#', '');
     if (!sectionId || !isHomeSection(sectionId)) {
-      hasScrolledRef.current = false;
+      handledHashRef.current = '';
       return;
     }
 
-    /* Prevent duplicate scroll on the same hash. */
-    if (hasScrolledRef.current) {
+    /* Prevent duplicate scroll for the same hash, but allow a new hash or
+       a back/forward transition to run again. */
+    if (handledHashRef.current === hash) {
       return;
     }
 
-    hasScrolledRef.current = true;
+    handledHashRef.current = hash;
 
     /* Small delay to let lazy content render. */
     const timerId = setTimeout(() => {

@@ -9,6 +9,8 @@ const generateToken = (id) => {
   });
 };
 
+const normalizeEmail = (value) => String(value || '').trim().toLowerCase();
+
 const buildUserResponse = (user) => ({
   _id: user._id,
   name: user.name,
@@ -18,13 +20,15 @@ const buildUserResponse = (user) => ({
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  const normalizedEmail = normalizeEmail(email);
+  const normalizedName = String(name || '').trim();
 
-  if (!name || !email || !password) {
+  if (!normalizedName || !normalizedEmail || !password) {
     res.status(400);
     throw new Error('Name, email, and password are required');
   }
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ email: normalizedEmail });
   if (existingUser) {
     res.status(400);
     throw new Error('Email already in use');
@@ -34,8 +38,8 @@ const registerUser = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const user = await User.create({
-    name,
-    email,
+    name: normalizedName,
+    email: normalizedEmail,
     password: hashedPassword,
   });
 
@@ -53,13 +57,14 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail = normalizeEmail(email);
 
-  if (!email || !password) {
+  if (!normalizedEmail || !password) {
     res.status(400);
     throw new Error('Email and password are required');
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email: normalizedEmail }).select('+password');
 
   if (!user) {
     res.status(401);
@@ -94,12 +99,12 @@ const getProfile = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   const { name, email } = req.body;
 
-  if (!name || !email) {
+  if (!String(name || '').trim() || !String(email || '').trim()) {
     res.status(400);
     throw new Error('Name and email are required');
   }
 
-  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedEmail = normalizeEmail(email);
   const emailRegex = /.+@.+\..+/;
 
   if (!emailRegex.test(normalizedEmail)) {
@@ -119,7 +124,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  user.name = name.trim();
+  user.name = String(name).trim();
   user.email = normalizedEmail;
   await user.save();
 
@@ -177,14 +182,14 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 const ensureDefaultAdmin = async () => {
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminEmail = normalizeEmail(process.env.ADMIN_EMAIL);
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (!adminEmail || !adminPassword) {
     return;
   }
 
-  const existingUser = await User.findOne({ email: adminEmail.toLowerCase() });
+  const existingUser = await User.findOne({ email: adminEmail });
 
   if (existingUser) {
     if (existingUser.role !== 'admin') {
@@ -198,8 +203,8 @@ const ensureDefaultAdmin = async () => {
   const hashedPassword = await bcrypt.hash(adminPassword, salt);
 
   await User.create({
-    name: process.env.ADMIN_NAME || 'Admin',
-    email: adminEmail.toLowerCase(),
+    name: String(process.env.ADMIN_NAME || 'Admin').trim(),
+    email: adminEmail,
     password: hashedPassword,
     role: 'admin',
   });

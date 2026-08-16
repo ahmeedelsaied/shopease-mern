@@ -34,8 +34,8 @@ const STATUS_BADGE = {
 
 /**
  * LatestOrdersSection – renders a compact list of the 5 most recent orders.
- * Each row links to the admin order detail page. Uses the same status-badge
- * colour semantics as OrderTimeline for visual consistency.
+ * Each row links to the admin order-management page. Uses the same
+ * status-badge colour semantics as OrderTimeline for visual consistency.
  */
 const LatestOrdersSection = ({ latestOrders = [] }) => {
   if (!latestOrders.length) {
@@ -56,7 +56,7 @@ const LatestOrdersSection = ({ latestOrders = [] }) => {
           return (
             <Link
               key={order.orderNumber}
-              to={`/admin/orders/${order._id}`}
+              to="/admin/orders"
               className="flex flex-wrap items-center justify-between gap-4 p-4 hover:bg-surface-container-low/50 transition-colors"
             >
               <div className="min-w-0 flex-1 space-y-1">

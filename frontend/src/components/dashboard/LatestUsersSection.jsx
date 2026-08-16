@@ -24,8 +24,8 @@ const ROLE_BADGE = {
 
 /**
  * LatestUsersSection – renders a compact list of the 5 most recent registered
- * users. Each row links to the admin user detail page. Role badge colours
- * match the semantic palette (admin = rose, user = emerald).
+ * users. Each row links to the admin user-management page. Role badge
+ * colours match the semantic palette (admin = rose, user = emerald).
  */
 const LatestUsersSection = ({ latestUsers = [] }) => {
   if (!latestUsers.length) {
@@ -46,7 +46,7 @@ const LatestUsersSection = ({ latestUsers = [] }) => {
           return (
             <Link
               key={user._id}
-              to={`/admin/users/${user._id}`}
+              to="/admin/users"
               className="flex flex-wrap items-center justify-between gap-4 p-4 hover:bg-surface-container-low/50 transition-colors"
             >
               <div className="min-w-0 flex-1 space-y-1">

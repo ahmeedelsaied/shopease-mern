@@ -69,7 +69,7 @@ export function isHomeSection(sectionId) {
 /**
  * Navigate to a home-page section from anywhere in the app.
  *
- * - If already on the home page → scroll directly.
+ * - If already on the home page → update the hash/history and scroll.
  * - If on another page → navigate to `"/"` with a hash, then let
  *   the `useScrollToSection` hook pick it up after mount.
  *
@@ -82,12 +82,19 @@ export function isHomeSection(sectionId) {
 export function navigateToSection({ sectionId, navigate, pathname, onBeforeNavigate }) {
   if (!sectionId) return;
 
-  /* Already on the home page – just scroll. */
+  /* Already on the home page – keep the section in browser history. */
   if (isHomePage(pathname)) {
-    const scrolled = scrollElementIntoView(sectionId);
-    /* If section not found (e.g. lazy content), fall back to top. */
-    if (!scrolled) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const nextLocation = `${pathname || '/'}${window.location.search}#${sectionId}`;
+    const sameHash = window.location.hash === `#${sectionId}`;
+    navigate(nextLocation, { replace: false });
+
+    // React Router may not re-run the hash effect when the same hash is
+    // clicked twice. Scroll directly in that case while retaining the entry.
+    if (sameHash) {
+      const scrolled = scrollElementIntoView(sectionId);
+      if (!scrolled) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
     return;
   }

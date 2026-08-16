@@ -60,7 +60,7 @@ const TopNavBar = () => {
   const handleSearch = (event) => {
     event.preventDefault();
     const query = searchValue.trim();
-    const nextPath = query ? `/?q=${encodeURIComponent(query)}` : '/';
+    const nextPath = query ? `/?search=${encodeURIComponent(query)}` : '/';
     navigate(nextPath);
     setSearchValue('');
     setTimeout(() => {
