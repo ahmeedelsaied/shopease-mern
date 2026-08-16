@@ -24,4 +24,23 @@ export const ORDER_STATUSES = [
 
 export const TERMINAL_STATUSES = ['delivered', 'cancelled'];
 
+// Delivered orders represent completed sales. Only cancelled orders are
+// excluded from realised-revenue analytics.
+export const NON_REVENUE_STATUSES = ['cancelled'];
+
+// Cancellation is valid from every pre-delivery state. Forward movement follows
+// the documented fulfilment lifecycle; terminal states cannot transition again.
+export const ORDER_STATUS_TRANSITIONS = {
+  pending: ['confirmed', 'cancelled'],
+  confirmed: ['processing', 'cancelled'],
+  processing: ['shipped', 'cancelled'],
+  shipped: ['out_for_delivery', 'cancelled'],
+  out_for_delivery: ['delivered', 'cancelled'],
+  delivered: [],
+  cancelled: [],
+};
+
 export const isValidOrderStatus = (value) => ORDER_STATUSES.includes(value);
+
+export const canTransitionOrderStatus = (fromStatus, toStatus) =>
+  fromStatus === toStatus || ORDER_STATUS_TRANSITIONS[fromStatus]?.includes(toStatus) === true;

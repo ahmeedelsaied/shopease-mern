@@ -84,6 +84,12 @@ const orderSchema = new mongoose.Schema(
       unique: true,
     },
     items: [orderItemSchema],
+    // True only for orders created after stock was successfully reserved. This
+    // prevents cancellation/deletion from restoring unknown legacy quantities.
+    inventoryReserved: {
+      type: Boolean,
+      default: false,
+    },
     shippingAddress: shippingAddressSchema,
     paymentMethod: {
       type: String,

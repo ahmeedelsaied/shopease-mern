@@ -2,16 +2,13 @@ import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import User from '../models/User.js';
 import asyncHandler from '../utils/asyncHandler.js';
-import { TERMINAL_STATUSES } from '../constants/orderStatus.js';
+import { NON_REVENUE_STATUSES } from '../constants/orderStatus.js';
 
 /**
- * Stage that excludes orders whose status will never realise revenue. Using
- * the canonical `TERMINAL_STATUSES` constant keeps this filter in lockstep
- * with the order lifecycle defined in `constants/orderStatus.js` — if a new
- * terminal non-revenue status is added there, this pipeline stops counting it
- * as revenue automatically.
+ * Stage that excludes only statuses that do not realise revenue. Delivered
+ * orders are completed sales and must remain in revenue and sales rankings.
  */
-const excludeTerminalOrders = { status: { $nin: TERMINAL_STATUSES } };
+const excludeNonRevenueOrders = { status: { $nin: NON_REVENUE_STATUSES } };
 
 /**
  * Start of the current calendar day in UTC. Used as the `$gte` bound for the
@@ -37,7 +34,7 @@ const buildOrderSummary = async () => {
     {
       $facet: {
         totals: [
-          { $match: excludeTerminalOrders },
+          { $match: excludeNonRevenueOrders },
           {
             $group: {
               _id: null,
@@ -74,11 +71,11 @@ const buildOrderSummary = async () => {
     (summary.byStatus ?? []).map((entry) => [entry._id, entry.count])
   );
   const todayRows = summary.today ?? [];
-  // Today's revenue excludes terminal orders (consistent with the headline
-  // totals facet above); today's order count includes every status so the
-  // number reflects the day's activity including cancellations.
+  // Today's revenue excludes only cancelled orders (consistent with the
+  // headline totals facet above); today's order count includes every status so
+  // the number reflects the day's activity including cancellations.
   const todayRevenue = todayRows
-    .filter((row) => !TERMINAL_STATUSES.includes(row._id))
+    .filter((row) => !NON_REVENUE_STATUSES.includes(row._id))
     .reduce((sum, row) => sum + (row.revenue || 0), 0);
   const todayOrders = todayRows.reduce((sum, row) => sum + (row.count || 0), 0);
 
@@ -95,14 +92,14 @@ const buildOrderSummary = async () => {
 };
 
 /**
- * Best-selling product by total units sold across non-cancelled orders. One
+ * Best-selling product by total units sold across realised orders. One
  * pipeline `$unwind`s the items array, groups by `productId`, sums quantity,
  * and `$lookup`s the Product for name/image. Returns null when there are no
  * sold items so the UI can render an empty state instead of a phantom card.
  */
 const buildBestSeller = async () => {
   const [bestSeller] = await Order.aggregate([
-    { $match: excludeTerminalOrders },
+    { $match: excludeNonRevenueOrders },
     { $unwind: '$items' },
     {
       $group: {

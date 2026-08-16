@@ -1,15 +1,12 @@
 import Order from '../models/Order.js';
 import asyncHandler from '../utils/asyncHandler.js';
-import { ORDER_STATUSES, TERMINAL_STATUSES } from '../constants/orderStatus.js';
+import { ORDER_STATUSES, NON_REVENUE_STATUSES } from '../constants/orderStatus.js';
 
 /**
- * Filter that excludes orders whose status will never realise revenue. Mirrors
- * `analyticsController.js` so the chart's revenue series is consistent with the
- * KPI cards: cancelled orders count as activity (orders series byStatus) but
- * not as revenue. Keeping the constant local to this controller preserves the
- * single-responsibility boundary (this module owns the chart payload).
+ * Filter that excludes only cancelled orders. Delivered orders are completed
+ * sales and must remain in realised revenue, product, and category analytics.
  */
-const excludeTerminalOrders = { status: { $nin: TERMINAL_STATUSES } };
+const excludeNonRevenueOrders = { status: { $nin: NON_REVENUE_STATUSES } };
 
 /**
  * Start of the current calendar day in UTC. Equivalent to the KPI controller's
@@ -84,7 +81,7 @@ const growthPercent = (current, previous) => {
 
 /**
  * Single `$facet` over the orders collection that yields every chart series in
- * one round-trip: monthly revenue (non-terminal orders), monthly orders (all
+ * one round-trip: monthly revenue (non-cancelled orders), monthly orders (all
  * statuses), weekly orders (all statuses), per-status counts, top products by
  * units, and top categories by revenue. Stages that need item-level grouping
  * (`$unwind` + product join) live in their own facet branch so they don't
@@ -104,7 +101,7 @@ const buildChartAggregation = () => {
     {
       $facet: {
         monthlyRevenue: [
-          { $match: { ...excludeTerminalOrders, createdAt: { $gte: monthlyFrom } } },
+          { $match: { ...excludeNonRevenueOrders, createdAt: { $gte: monthlyFrom } } },
           {
             $group: {
               _id: {
@@ -144,7 +141,7 @@ const buildChartAggregation = () => {
           { $group: { _id: '$status', count: { $sum: 1 } } },
         ],
         topProducts: [
-          { $match: excludeTerminalOrders },
+          { $match: excludeNonRevenueOrders },
           { $unwind: '$items' },
           {
             $group: {
@@ -183,7 +180,7 @@ const buildChartAggregation = () => {
           },
         ],
         topCategories: [
-          { $match: excludeTerminalOrders },
+          { $match: excludeNonRevenueOrders },
           { $unwind: '$items' },
           {
             $lookup: {

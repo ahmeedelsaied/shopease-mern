@@ -3,14 +3,22 @@ import api from '../services/api';
 import EmptyState from '../components/EmptyState';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
-import Input from '../components/ui/Input';
+import SortDropdown from '../components/filters/SortDropdown';
 import SEO from '../components/SEO';
 import { NOINDEX_FOLLOW_ROBOTS } from '../seo/seoDefaults';
 import { TableSkeleton } from '../components/ui/Skeleton';
 import { useToast } from '../context/ToastContext';
 import OrderTimeline from '../components/OrderTimeline';
 
-const statusOptions = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+const statusOptions = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'confirmed', label: 'Confirmed' },
+  { value: 'processing', label: 'Processing' },
+  { value: 'shipped', label: 'Shipped' },
+  { value: 'out_for_delivery', label: 'Out for delivery' },
+  { value: 'delivered', label: 'Delivered' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -148,7 +156,13 @@ const AdminOrders = () => {
                   updatedAt={selectedOrder.updatedAt}
                 />
               </div>
-              <Input label="Status" value={status} onChange={(event) => setStatus(event.target.value)} />
+              <SortDropdown
+                id="admin-order-status"
+                label="Status"
+                options={statusOptions}
+                value={status}
+                onChange={setStatus}
+              />
               <div className="flex justify-end gap-3">
                 <Button variant="secondary" onClick={() => setSelectedOrder(null)}>Close</Button>
                 <Button variant="primary" onClick={handleStatusUpdate}>Update</Button>

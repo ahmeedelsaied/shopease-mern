@@ -3,7 +3,18 @@ import User from '../models/User.js';
 import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 import asyncHandler from '../utils/asyncHandler.js';
-import { isValidOrderStatus, TERMINAL_STATUSES } from '../constants/orderStatus.js';
+import {
+  canTransitionOrderStatus,
+  isValidOrderStatus,
+  NON_REVENUE_STATUSES,
+  TERMINAL_STATUSES,
+} from '../constants/orderStatus.js';
+import {
+  releaseReservedInventory,
+  requireMongoTransactions,
+  runWithOptionalTransaction,
+  runWithRequiredTransaction,
+} from '../utils/orderInventory.js';
 
 const getAdminDashboard = asyncHandler(async (req, res) => {
   const [users, products, orders] = await Promise.all([
@@ -12,7 +23,10 @@ const getAdminDashboard = asyncHandler(async (req, res) => {
     Order.countDocuments(),
   ]);
 
-  const revenue = await Order.aggregate([{ $group: { _id: null, totalRevenue: { $sum: '$total' } } }]);
+  const revenue = await Order.aggregate([
+    { $match: { status: { $nin: NON_REVENUE_STATUSES } } },
+    { $group: { _id: null, totalRevenue: { $sum: '$total' } } },
+  ]);
   const totalRevenue = revenue[0]?.totalRevenue || 0;
 
   res.status(200).json({
@@ -174,16 +188,7 @@ const getOrderDetails = asyncHandler(async (req, res) => {
   });
 });
 
-const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { status, note } = req.body;
-  const { id } = req.params;
-
-  if (!isValidOrderStatus(status)) {
-    res.status(400);
-    throw new Error('Invalid order status');
-  }
-
-  const order = await Order.findById(id);
+const validateOrderStatusChange = ({ order, status, res }) => {
   if (!order) {
     res.status(404);
     throw new Error('Order not found');
@@ -194,6 +199,19 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     throw new Error(`Order is already in a terminal state (${order.status})`);
   }
 
+  if (!canTransitionOrderStatus(order.status, status)) {
+    res.status(409);
+    throw new Error(`Invalid order status transition: ${order.status} -> ${status}`);
+  }
+};
+
+const applyOrderStatusChange = async ({ id, status, note, userId, res, session }) => {
+  const orderQuery = Order.findById(id);
+  if (session) orderQuery.session(session);
+  const order = await orderQuery;
+
+  validateOrderStatusChange({ order, status, res });
+
   // History is append-only: a log entry is pushed only when the status
   // actually changes, so re-sending the same status is idempotent and does
   // not duplicate the log. `order.status` and `statusHistory` always move
@@ -203,11 +221,53 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     order.statusHistory.push({
       status,
       note: note || undefined,
-      changedBy: req.user._id,
+      changedBy: userId,
     });
   }
 
-  await order.save();
+  if (status === 'cancelled') {
+    const released = await releaseReservedInventory(order._id, session ? { session } : {});
+    if (released) {
+      order.inventoryReserved = false;
+    }
+  }
+
+  await order.save(session ? { session } : undefined);
+
+  return order;
+};
+
+const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { status, note } = req.body;
+  const { id } = req.params;
+
+  if (!isValidOrderStatus(status)) {
+    res.status(400);
+    throw new Error('Invalid order status');
+  }
+
+  const applyChange = (session) => applyOrderStatusChange({
+    id,
+    status,
+    note,
+    userId: req.user._id,
+    res,
+    session,
+  });
+
+  let order;
+  if (status === 'cancelled') {
+    requireMongoTransactions(
+      res,
+      'Order cancellation is temporarily unavailable because inventory transactions are not supported by this MongoDB deployment',
+    );
+    order = await runWithRequiredTransaction(applyChange);
+  } else {
+    order = await runWithOptionalTransaction(
+      (session) => applyChange(session),
+      () => applyChange(),
+    );
+  }
 
   res.status(200).json({
     success: true,
@@ -218,11 +278,26 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 const deleteOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const order = await Order.findByIdAndDelete(id);
-  if (!order) {
-    res.status(404);
-    throw new Error('Order not found');
-  }
+  const deleteInScope = async (session) => {
+    const orderQuery = Order.findById(id);
+    if (session) orderQuery.session(session);
+    const order = await orderQuery;
+
+    if (!order) {
+      res.status(404);
+      throw new Error('Order not found');
+    }
+
+    await releaseReservedInventory(order._id, session ? { session } : {});
+    await order.deleteOne(session ? { session } : undefined);
+    return order;
+  };
+
+  requireMongoTransactions(
+    res,
+    'Order deletion is temporarily unavailable because inventory transactions are not supported by this MongoDB deployment',
+  );
+  await runWithRequiredTransaction((session) => deleteInScope(session));
 
   res.status(200).json({
     success: true,

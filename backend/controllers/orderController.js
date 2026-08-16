@@ -1,8 +1,12 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from 'crypto';
 import mongoose from 'mongoose';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import asyncHandler from '../utils/asyncHandler.js';
+import {
+  requireMongoTransactions,
+  runWithRequiredTransaction,
+} from '../utils/orderInventory.js';
 
 const REQUIRED_SHIPPING_FIELDS = ['fullName', 'address', 'city', 'state', 'zipCode', 'phone'];
 
@@ -15,6 +19,63 @@ const normalizeShippingAddress = (shippingAddress) => ({
   phone: String(shippingAddress.phone).trim(),
   ...(shippingAddress.notes?.trim() ? { notes: shippingAddress.notes.trim() } : {}),
 });
+
+const createOrderWithReservation = async ({ request, session } = {}) => {
+  const { items, shippingAddress, paymentMethod } = request;
+  const requestedItems = items.map((item) => ({
+    productId: item?.productId,
+    quantity: Number(item?.quantity),
+  }));
+  const orderItems = [];
+
+  for (const { productId, quantity } of requestedItems) {
+    // The conditional update prevents concurrent checkouts from reserving
+    // more stock than the product currently has.
+    const product = await Product.findOneAndUpdate(
+      { _id: productId, stock: { $gte: quantity } },
+      { $inc: { stock: -quantity } },
+      { new: true, runValidators: true, session },
+    ).lean();
+
+    if (!product) {
+      const productExists = await Product.exists({ _id: productId }).session(session);
+      const statusCode = productExists ? 409 : 404;
+      request.response.status(statusCode);
+      throw new Error(productExists ? `Insufficient stock for ${productId}` : 'Product not found');
+    }
+
+    orderItems.push({
+      productId: product._id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity,
+    });
+  }
+
+  const subtotal = Number(
+    orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2),
+  );
+  const orderPayload = {
+    user: request.userId,
+    orderNumber: `SE-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`,
+    items: orderItems,
+    shippingAddress: normalizeShippingAddress(shippingAddress),
+    paymentMethod,
+    subtotal,
+    total: subtotal,
+    inventoryReserved: true,
+    statusHistory: [
+      {
+        status: 'pending',
+        changedBy: request.userId,
+      },
+    ],
+  };
+
+  const [order] = await Order.create([orderPayload], { session });
+  return order;
+};
 
 const createOrder = asyncHandler(async (req, res) => {
   const { items, shippingAddress, paymentMethod = 'Cash on Delivery' } = req.body;
@@ -47,73 +108,28 @@ const createOrder = asyncHandler(async (req, res) => {
     throw new Error('Order items contain an invalid product or quantity');
   }
 
-  const reservedItems = [];
+  requireMongoTransactions(
+    res,
+    'Order creation is temporarily unavailable because inventory transactions are not supported by this MongoDB deployment',
+  );
 
-  try {
-    const orderItems = [];
+  const order = await runWithRequiredTransaction((session) =>
+    createOrderWithReservation({
+      request: {
+        items,
+        shippingAddress,
+        paymentMethod,
+        userId: req.user._id,
+        response: res,
+      },
+      session,
+    }),
+  );
 
-    for (const { productId, quantity } of requestedItems) {
-      // The conditional update prevents two concurrent checkouts from
-      // reserving more stock than the product currently has.
-      const product = await Product.findOneAndUpdate(
-        { _id: productId, stock: { $gte: quantity } },
-        { $inc: { stock: -quantity } },
-        { new: true, runValidators: true },
-      ).lean();
-
-      if (!product) {
-        const productExists = await Product.exists({ _id: productId });
-        res.status(productExists ? 409 : 404);
-        throw new Error(productExists ? `Insufficient stock for ${productId}` : 'Product not found');
-      }
-
-      reservedItems.push({ productId, quantity });
-      orderItems.push({
-        productId: product._id,
-        name: product.name,
-        image: product.image,
-        price: product.price,
-        quantity,
-      });
-    }
-
-    const subtotal = Number(
-      orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2),
-    );
-    const orderNumber = `SE-${Date.now()}-${randomUUID().slice(0, 8).toUpperCase()}`;
-
-    const order = await Order.create({
-      user: req.user._id,
-      orderNumber,
-      items: orderItems,
-      shippingAddress: normalizeShippingAddress(shippingAddress),
-      paymentMethod,
-      subtotal,
-      total: subtotal,
-      statusHistory: [
-        {
-          status: 'pending',
-          changedBy: req.user._id,
-        },
-      ],
-    });
-
-    res.status(201).json({
-      success: true,
-      data: order,
-    });
-  } catch (error) {
-    // If order validation/creation fails after one or more reservations,
-    // return those quantities so a partial checkout cannot consume stock.
-    if (reservedItems.length) {
-      await Promise.all(
-        reservedItems.map(({ productId, quantity }) =>
-          Product.updateOne({ _id: productId }, { $inc: { stock: quantity } }),
-        ),
-      );
-    }
-    throw error;
-  }
+  res.status(201).json({
+    success: true,
+    data: order,
+  });
 });
 
 const getMyOrders = asyncHandler(async (req, res) => {

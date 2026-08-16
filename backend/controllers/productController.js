@@ -21,6 +21,8 @@ const parsePageValue = (value, fallback) => {
   return parsed && parsed > 0 ? Math.floor(parsed) : fallback;
 };
 
+const MAX_PUBLIC_PAGE_SIZE = 100;
+
 const sortMap = {
   newest: { createdAt: -1 },
   oldest: { createdAt: 1 },
@@ -90,20 +92,23 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const sortKey = typeof sort === 'string' ? sort.toLowerCase() : 'newest';
   const sortOption = sortMap[sortKey] || sortMap.newest;
-  const paginationRequested = page !== undefined || limit !== undefined;
+    const paginationRequested = page !== undefined || limit !== undefined;
   const pageNumber = parsePageValue(page, 1);
 
   const totalProducts = await Product.countDocuments(filter);
   const categories = await Product.distinct('category');
-  const pageSize = paginationRequested
+  const requestedPageSize = paginationRequested
     ? Math.max(1, parsePageValue(limit, 12))
     : Math.max(totalProducts, 1);
+  const pageSize = Math.min(MAX_PUBLIC_PAGE_SIZE, requestedPageSize);
+  const shouldPaginate = paginationRequested || totalProducts > MAX_PUBLIC_PAGE_SIZE;
   const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
   const currentPage = Math.min(pageNumber, totalPages);
-  const skip = paginationRequested ? (currentPage - 1) * pageSize : 0;
+  const skip = shouldPaginate ? (currentPage - 1) * pageSize : 0;
+
   let productQuery = Product.find(filter).sort(sortOption);
 
-  if (paginationRequested) {
+  if (shouldPaginate) {
     productQuery = productQuery.skip(skip).limit(pageSize);
   }
 
