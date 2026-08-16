@@ -1,5 +1,6 @@
-import Product from '../models/Product.js';
+import mongoose from 'mongoose';
 import User from '../models/User.js';
+import Product from '../models/Product.js';
 import asyncHandler from '../utils/asyncHandler.js';
 
 const normalizeProductIds = (productIds = []) => {
@@ -17,6 +18,32 @@ const normalizeProductIds = (productIds = []) => {
   });
 
   return uniqueIds;
+};
+
+export const validateWishlistProductIds = async (productIds, productModel = Product) => {
+  if (!Array.isArray(productIds)) {
+    return { ids: null, error: 'Product ids must be an array' };
+  }
+
+  const ids = normalizeProductIds(productIds);
+  const malformedIds = ids.filter((id) => !mongoose.Types.ObjectId.isValid(id));
+  if (malformedIds.length > 0) {
+    return { ids: null, error: 'Wishlist contains invalid product ids' };
+  }
+
+  if (ids.length === 0) {
+    return { ids, error: null };
+  }
+
+  const products = await productModel.find({ _id: { $in: ids } }).select('_id').lean();
+  const existingIds = new Set(products.map((product) => product._id.toString()));
+  const unavailableIds = ids.filter((id) => !existingIds.has(id));
+
+  if (unavailableIds.length > 0) {
+    return { ids: null, error: 'Wishlist contains unavailable products' };
+  }
+
+  return { ids, error: null };
 };
 
 const getWishlist = asyncHandler(async (req, res) => {
@@ -78,9 +105,15 @@ const removeFromWishlist = asyncHandler(async (req, res) => {
 
 const syncWishlist = asyncHandler(async (req, res) => {
   const { productIds = [] } = req.body;
+  const validation = await validateWishlistProductIds(productIds);
+
+  if (validation.error) {
+    res.status(400);
+    throw new Error(validation.error);
+  }
 
   const user = await User.findById(req.user._id);
-  user.wishlist = normalizeProductIds(productIds);
+  user.wishlist = validation.ids;
   await user.save();
 
   const updatedUser = await User.findById(req.user._id).populate('wishlist');

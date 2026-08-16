@@ -31,44 +31,66 @@ const validateReviewPayload = ({ rating, comment }) => {
   return '';
 };
 
-const calculateReviewSummary = async (productId) => {
-  const reviews = await Review.find({ product: productId }).select('rating');
+export const buildReviewSummary = (reviews = []) => {
   const reviewsCount = reviews.length;
   const averageRating = reviewsCount
     ? Number((reviews.reduce((sum, review) => sum + review.rating, 0) / reviewsCount).toFixed(1))
     : 0;
-  const ratingDistribution = buildRatingDistribution(reviews);
-
-  await Product.findByIdAndUpdate(productId, {
-    averageRating,
-    reviewsCount,
-    rating: averageRating,
-  });
 
   return {
     averageRating,
     reviewsCount,
-    ratingDistribution,
+    ratingDistribution: buildRatingDistribution(reviews),
   };
 };
 
-const getProductReviews = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+export const getProductReviewsData = async ({ productId, productModel = Product, reviewModel = Review }) => {
+  const product = await productModel.findById(productId);
+  if (!product) return null;
 
-  if (!product) {
+  const reviews = await reviewModel.find({ product: productId })
+    .populate('user', 'name role')
+    .sort({ createdAt: -1 });
+
+  return {
+    reviews,
+    summary: buildReviewSummary(reviews),
+  };
+};
+
+export const recalculateProductReviewSummary = async ({
+  productId,
+  reviewModel = Review,
+  productModel = Product,
+}) => {
+  const reviews = await reviewModel.find({ product: productId }).select('rating');
+  const summary = buildReviewSummary(reviews);
+
+  await productModel.findByIdAndUpdate(productId, {
+    averageRating: summary.averageRating,
+    reviewsCount: summary.reviewsCount,
+    // Keep legacy data compatible while treating averageRating as canonical.
+    rating: summary.averageRating,
+  });
+
+  return summary;
+};
+
+const calculateReviewSummary = (productId) =>
+  recalculateProductReviewSummary({ productId });
+
+const getProductReviews = asyncHandler(async (req, res) => {
+  const result = await getProductReviewsData({ productId: req.params.id });
+
+  if (!result) {
     res.status(404);
     throw new Error('Product not found');
   }
 
-  const reviews = await Review.find({ product: req.params.id })
-    .populate('user', 'name role')
-    .sort({ createdAt: -1 });
-  const summary = await calculateReviewSummary(req.params.id);
-
   res.status(200).json({
     success: true,
-    data: reviews,
-    summary,
+    data: result.reviews,
+    summary: result.summary,
   });
 });
 

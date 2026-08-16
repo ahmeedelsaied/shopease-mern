@@ -16,7 +16,6 @@ const emptyForm = {
   image: '',
   category: '',
   stock: '',
-  rating: '0',
   featured: false,
 };
 
@@ -62,7 +61,6 @@ const AdminProducts = () => {
       image: product.image,
       category: product.category,
       stock: product.stock,
-      rating: product.rating ?? '0',
       featured: product.featured ?? false,
     });
     setModalOpen(true);
@@ -76,7 +74,6 @@ const AdminProducts = () => {
         ...form,
         price: Number(form.price),
         stock: Number(form.stock),
-        rating: Number(form.rating),
         featured: Boolean(form.featured),
       };
 
@@ -172,7 +169,6 @@ const AdminProducts = () => {
           <Input label="Image URL" value={form.image} onChange={(event) => setForm({ ...form, image: event.target.value })} required />
           <Input label="Category" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} required />
           <Input label="Stock" type="number" value={form.stock} onChange={(event) => setForm({ ...form, stock: event.target.value })} required />
-          <Input label="Rating" type="number" value={form.rating} onChange={(event) => setForm({ ...form, rating: event.target.value })} />
           <label className="flex items-center gap-2 text-sm text-on-surface-variant">
             <input type="checkbox" checked={form.featured} onChange={(event) => setForm({ ...form, featured: event.target.checked })} />
             Featured product

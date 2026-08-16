@@ -99,7 +99,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, description, price, image, category, stock, rating = 0, featured = false } = req.body;
+  const { name, description, price, image, category, stock, featured = false } = req.body;
 
   if (!name || !description || !price || !image || !category || stock === undefined) {
     res.status(400);
@@ -112,7 +112,6 @@ const createProduct = asyncHandler(async (req, res) => {
     price,
     image,
     category,
-    rating,
     stock,
     featured,
   });
@@ -125,7 +124,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, description, price, image, category, stock, rating, featured } = req.body;
+  const { name, description, price, image, category, stock, featured } = req.body;
 
   const product = await Product.findById(id);
   if (!product) {
@@ -139,7 +138,6 @@ const updateProduct = asyncHandler(async (req, res) => {
   if (image !== undefined) product.image = image;
   if (category !== undefined) product.category = category;
   if (stock !== undefined) product.stock = stock;
-  if (rating !== undefined) product.rating = rating;
   if (featured !== undefined) product.featured = featured;
 
   await product.save();
