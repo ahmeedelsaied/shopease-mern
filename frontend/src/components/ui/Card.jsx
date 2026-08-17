@@ -8,18 +8,8 @@ const variantMap = {
   featured: components.card.featured,
 };
 
-const Card = ({
-  children,
-  variant = 'panel',
-  className = '',
-  as: Component = 'div',
-  ...props
-}) => {
-  return (
-    <Component className={cn(variantMap[variant], className)} {...props}>
-      {children}
-    </Component>
-  );
-};
+const Card = ({ children, variant = 'panel', className = '', as: Component = 'div', ...props }) => (
+  <Component className={cn(variantMap[variant] || variantMap.panel, className)} {...props}>{children}</Component>
+);
 
 export default Card;

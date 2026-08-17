@@ -13,48 +13,15 @@ const variantMap = {
   icon: components.button.icon,
 };
 
-const sizeMap = {
-  sm: 'px-3 py-2 min-h-9 text-sm',
-  md: '',
-  lg: 'px-6 py-4 min-h-12',
-};
+const sizeMap = { sm: 'px-3 py-2 min-h-9 text-sm', md: '', lg: 'px-6 py-4 min-h-12' };
 
-const Button = ({
-  children,
-  variant = 'primary',
-  className = '',
-  type = 'button',
-  icon,
-  loading = false,
-  disabled = false,
-  size = 'md',
-  ...props
-}) => {
+const Button = ({ children, variant = 'primary', className = '', type = 'button', icon, loading = false, disabled = false, size = 'md', ...props }) => {
   const isDisabled = disabled || loading;
   const classes = cn(variantMap[variant] || variantMap.primary, sizeMap[size] || '', className);
-
-  if (variant === 'icon') {
-    return (
-      <button type={type} className={classes} disabled={isDisabled} {...props}>
-        {loading ? (
-          <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
-        ) : icon ? (
-          <span className="material-symbols-outlined text-[18px]">{icon}</span>
-        ) : (
-          children
-        )}
-      </button>
-    );
-  }
-
   return (
     <button type={type} className={classes} disabled={isDisabled} {...props}>
-      {loading ? (
-        <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
-      ) : icon ? (
-        <span className="material-symbols-outlined text-[18px]">{icon}</span>
-      ) : null}
-      {children}
+      {loading ? <span className="material-symbols-outlined animate-spin text-[18px]" aria-hidden="true">progress_activity</span> : icon ? <span className="material-symbols-outlined text-[18px]" aria-hidden="true">{icon}</span> : null}
+      {variant === 'icon' && loading ? null : children}
     </button>
   );
 };

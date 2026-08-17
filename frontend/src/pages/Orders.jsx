@@ -36,16 +36,17 @@ const Orders = () => {
   }
 
   return (
-    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+    <div className="page-shell">
       <SEO title="My Orders" robots={NOINDEX_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-headline-lg font-headline-lg text-primary">My Orders</h1>
-            <p className="mt-2 text-body-md text-on-surface-variant">Track your purchases and delivery status.</p>
+            <p className="eyebrow">Your journey</p>
+            <h1 className="mt-3 font-display-lg text-5xl leading-none text-primary">Orders.</h1>
+            <p className="mt-4 text-body-md text-on-surface-variant">Track your purchases and delivery status.</p>
           </div>
           <Link to="/">
-            <Button variant="ghost">Continue shopping</Button>
+            <Button variant="ghost" icon="arrow_back">Continue shopping</Button>
           </Link>
         </div>
 
@@ -84,7 +85,7 @@ const Orders = () => {
                   <p className="text-headline-sm font-headline-sm text-primary">${(order.total || 0).toFixed(2)}</p>
                   <p className="text-sm capitalize text-on-surface-variant">{order.status}</p>
                   <Link to={`/orders/${order._id}`}>
-                    <Button variant="secondary" size="sm">Track order</Button>
+                    <Button variant="secondary" size="sm" icon="arrow_forward">Track order</Button>
                   </Link>
                 </div>
               </div>

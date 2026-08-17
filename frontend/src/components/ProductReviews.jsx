@@ -76,7 +76,7 @@ const ReviewForm = ({ initialRating = 0, initialComment = '', submitLabel, onCan
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           rows={4}
-          className="w-full resize-none rounded-2xl border border-outline-variant bg-surface-container-lowest px-4 py-3 text-body-md text-on-surface shadow-sm outline-none transition-all duration-200 placeholder:text-on-surface-variant focus:border-secondary focus:ring-4 focus:ring-secondary/10"
+          className="w-full resize-none rounded-2xl border border-outline-variant/60 bg-surface-container-lowest px-4 py-3 text-body-md text-on-surface shadow-sm outline-none transition-all duration-200 placeholder:text-on-surface-variant/60 focus:border-secondary focus:ring-4 focus:ring-secondary/10"
           placeholder="Share what stood out about this product"
           maxLength={1000}
         />
@@ -227,10 +227,10 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
     <section className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Customer reviews</p>
-          <h2 className="text-headline-lg font-headline-lg text-primary">Product ratings</h2>
+          <p className="eyebrow">Customer voice</p>
+          <h2 className="mt-2 font-display-lg text-4xl leading-tight text-primary">Product ratings.</h2>
         </div>
-        <div className="flex items-center gap-3 rounded-full border border-outline-variant/30 bg-surface-container-low px-4 py-2">
+        <div className="flex items-center gap-3 rounded-full border border-secondary/25 bg-secondary-container/30 px-4 py-2.5">
           <RatingStars value={summary.averageRating} readonly size="sm" />
           <span className="text-sm font-semibold text-primary">
             {summary.averageRating.toFixed(1)} ({summary.reviewsCount})
@@ -241,7 +241,7 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
         <Card variant="panel" className="space-y-5 p-6">
           <div>
-            <p className="text-display-lg font-display-lg text-primary">{summary.averageRating.toFixed(1)}</p>
+            <p className="font-display-lg text-6xl leading-none text-primary">{summary.averageRating.toFixed(1)}</p>
             <p className="text-body-md text-on-surface-variant">
               Based on {summary.reviewsCount} review{summary.reviewsCount === 1 ? '' : 's'}
             </p>
@@ -277,7 +277,7 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
           ) : ownReview ? (
             <div className="space-y-4">
               <div>
-                <h3 className="text-headline-sm font-headline-sm text-primary">Your review</h3>
+                <h3 className="font-display-lg text-3xl text-primary">Your review.</h3>
                 <p className="text-body-md text-on-surface-variant">You can edit or delete your review at any time.</p>
               </div>
               {editingId === ownReview._id ? (
@@ -307,7 +307,7 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
           ) : (
             <div className="space-y-4">
               <div>
-                <h3 className="text-headline-sm font-headline-sm text-primary">Write a review</h3>
+                <h3 className="font-display-lg text-3xl text-primary">Write a review.</h3>
                 <p className="text-body-md text-on-surface-variant">One review is allowed per product.</p>
               </div>
               <ReviewForm submitLabel="Submit review" submitting={submitting} onSubmit={handleCreate} />
@@ -341,7 +341,7 @@ const ProductReviews = ({ productId, initialSummary, onSummaryChange }) => {
                   <div className="flex-1 space-y-3">
                     <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                       <div>
-                        <p className="text-body-lg font-body-lg text-primary">{userName}</p>
+                        <p className="text-base font-bold text-primary">{userName}</p>
                         <p className="text-label-sm text-on-surface-variant">{formatDate(review.createdAt)}</p>
                       </div>
                       <RatingStars value={review.rating} readonly size="sm" />

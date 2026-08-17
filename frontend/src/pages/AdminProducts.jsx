@@ -105,15 +105,16 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+    <div className="page-shell admin-shell">
       <SEO title="Admin Products" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>
-            <h1 className="text-headline-lg font-headline-lg text-primary">Products Management</h1>
+            <p className="eyebrow">Operations / catalog</p>
+            <h1 className="mt-3 font-display-lg text-5xl leading-none text-primary">Products.</h1>
+            <p className="mt-3 max-w-xl text-sm text-on-surface-variant">Keep the catalog clear, useful, and ready for the next customer.</p>
           </div>
-          <Button variant="primary" onClick={openCreateModal}>Create Product</Button>
+          <Button variant="primary" onClick={openCreateModal} icon="add">Create product</Button>
         </div>
 
         {loading ? (
@@ -123,10 +124,10 @@ const AdminProducts = () => {
         ) : !products.length ? (
           <EmptyState title="No products found" description="Create a product to get started." icon="inventory_2" />
         ) : (
-          <div className="overflow-hidden rounded-[2rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft">
+          <div className="table-wrap bg-surface-container-lowest shadow-soft">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-outline-variant/40 text-left">
-                <thead className="sticky top-0 z-10 bg-surface-container-low text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+                <thead className="sticky top-0 z-10">
                   <tr>
                     <th className="px-4 py-4">Name</th>
                     <th className="px-4 py-4">Category</th>
@@ -147,8 +148,8 @@ const AdminProducts = () => {
                       <td className="px-4 py-4 text-on-surface-variant">{product.stock}</td>
                       <td className="px-4 py-4">
                         <div className="flex justify-end gap-2">
-                          <Button size="sm" variant="secondary" onClick={() => openEditModal(product)}>Edit</Button>
-                          <Button size="sm" variant="primary" onClick={() => handleDelete(product._id)}>Delete</Button>
+                          <Button size="sm" variant="secondary" onClick={() => openEditModal(product)} icon="edit">Edit</Button>
+                          <Button size="sm" variant="ghost" className="!w-auto text-error hover:bg-error-container/50" onClick={() => handleDelete(product._id)} icon="delete">Delete</Button>
                         </div>
                       </td>
                     </tr>

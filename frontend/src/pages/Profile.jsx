@@ -63,7 +63,7 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+      <div className="page-shell">
         <SEO title="My Profile" robots={NOINDEX_ROBOTS} />
         <div className="mx-auto max-w-container-max">
           <EmptyState
@@ -79,17 +79,18 @@ const Profile = () => {
   }
 
   return (
-    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+    <div className="page-shell">
       <SEO title="My Profile" robots={NOINDEX_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-6">
-        <div className="rounded-[2rem] border border-outline-variant/30 bg-surface-container-low/80 p-8 shadow-soft">
-          <h1 className="text-headline-lg font-headline-lg text-primary">Profile</h1>
-          <p className="mt-2 text-body-md text-on-surface-variant">Manage your account details and security.</p>
+        <div className="border-b border-outline-variant/40 pb-8">
+          <p className="eyebrow">Your account</p>
+          <h1 className="mt-3 font-display-lg text-5xl leading-none text-primary">Profile.</h1>
+          <p className="mt-4 text-body-md text-on-surface-variant">Manage your account details and security.</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_0.8fr]">
           <Card variant="panel" className="p-6">
-            <h2 className="text-headline-sm font-headline-sm text-primary">Account details</h2>
+            <p className="eyebrow">Overview</p><h2 className="mt-2 font-display-lg text-3xl text-primary">Account details.</h2>
             <div className="mt-4 space-y-2 text-body-md text-on-surface-variant">
               <p><span className="font-semibold text-on-surface">Name:</span> {user.name || 'Guest'}</p>
               <p><span className="font-semibold text-on-surface">Email:</span> {user.email || 'N/A'}</p>
@@ -98,7 +99,7 @@ const Profile = () => {
           </Card>
 
           <Card variant="panel" className="p-6">
-            <h2 className="text-headline-sm font-headline-sm text-primary">Quick actions</h2>
+            <p className="eyebrow">Shortcuts</p><h2 className="mt-2 font-display-lg text-3xl text-primary">Quick actions.</h2>
             <div className="mt-4 space-y-3">
               <Link to="/orders">
                 <Button variant="primary" className="w-full">View orders</Button>
@@ -112,7 +113,7 @@ const Profile = () => {
 
         <div className="grid gap-6 lg:grid-cols-2">
           <Card variant="panel" className="p-6">
-            <h2 className="text-headline-sm font-headline-sm text-primary">Edit profile</h2>
+            <p className="eyebrow">Personal details</p><h2 className="mt-2 font-display-lg text-3xl text-primary">Edit profile.</h2>
             <form className="mt-4 space-y-4" onSubmit={handleProfileSubmit}>
               <Input
                 label="Name"
@@ -135,7 +136,7 @@ const Profile = () => {
           </Card>
 
           <Card variant="panel" className="p-6">
-            <h2 className="text-headline-sm font-headline-sm text-primary">Change password</h2>
+            <p className="eyebrow">Security</p><h2 className="mt-2 font-display-lg text-3xl text-primary">Change password.</h2>
             <form className="mt-4 space-y-4" onSubmit={handlePasswordSubmit}>
               <Input
                 label="Current password"

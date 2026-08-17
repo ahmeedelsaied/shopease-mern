@@ -61,12 +61,13 @@ const AdminUsers = () => {
   };
 
   return (
-    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+    <div className="page-shell admin-shell">
       <SEO title="Admin Users" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div>
-          <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>
-          <h1 className="text-headline-lg font-headline-lg text-primary">Users Management</h1>
+          <p className="eyebrow">Operations / people</p>
+          <h1 className="mt-3 font-display-lg text-5xl leading-none text-primary">Users.</h1>
+          <p className="mt-3 max-w-xl text-sm text-on-surface-variant">Manage access thoughtfully and keep the team aligned.</p>
         </div>
 
         {loading ? (
@@ -76,10 +77,10 @@ const AdminUsers = () => {
         ) : !users.length ? (
           <EmptyState title="No users found" description="There are no registered users yet." icon="person_off" />
         ) : (
-          <div className="overflow-hidden rounded-[2rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft">
+          <div className="table-wrap bg-surface-container-lowest shadow-soft">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-outline-variant/40 text-left">
-                <thead className="sticky top-0 z-10 bg-surface-container-low text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+                <thead className="sticky top-0 z-10">
                   <tr>
                     <th className="px-4 py-4">Name</th>
                     <th className="px-4 py-4">Email</th>
@@ -95,8 +96,8 @@ const AdminUsers = () => {
                       <td className="px-4 py-4 capitalize text-on-surface-variant">{user.role}</td>
                       <td className="px-4 py-4">
                         <div className="flex justify-end gap-2">
-                          <Button size="sm" variant="secondary" onClick={() => { setSelectedUser(user); setRole(user.role); }}>Edit Role</Button>
-                          <Button size="sm" variant="primary" onClick={() => handleDelete(user._id)}>Delete</Button>
+                          <Button size="sm" variant="secondary" onClick={() => { setSelectedUser(user); setRole(user.role); }} icon="edit">Edit role</Button>
+                          <Button size="sm" variant="ghost" className="!w-auto text-error hover:bg-error-container/50" onClick={() => handleDelete(user._id)} icon="delete">Delete</Button>
                         </div>
                       </td>
                     </tr>

@@ -82,12 +82,13 @@ const AdminOrders = () => {
   };
 
   return (
-    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+    <div className="page-shell admin-shell">
       <SEO title="Admin Orders" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div>
-          <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>
-          <h1 className="text-headline-lg font-headline-lg text-primary">Orders Management</h1>
+          <p className="eyebrow">Operations / fulfillment</p>
+          <h1 className="mt-3 font-display-lg text-5xl leading-none text-primary">Orders.</h1>
+          <p className="mt-3 max-w-xl text-sm text-on-surface-variant">Keep every handoff visible, from pending to delivered.</p>
         </div>
 
         {loading ? (
@@ -97,10 +98,10 @@ const AdminOrders = () => {
         ) : !orders.length ? (
           <EmptyState title="No orders found" description="Orders will appear here once customers place them." icon="receipt_long" />
         ) : (
-          <div className="overflow-hidden rounded-[2rem] border border-outline-variant/30 bg-surface-container-lowest shadow-soft">
+          <div className="table-wrap bg-surface-container-lowest shadow-soft">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-outline-variant/40 text-left">
-                <thead className="sticky top-0 z-10 bg-surface-container-low text-sm uppercase tracking-[0.2em] text-on-surface-variant">
+                <thead className="sticky top-0 z-10">
                   <tr>
                     <th className="px-4 py-4">Order</th>
                     <th className="px-4 py-4">Customer</th>
@@ -121,8 +122,8 @@ const AdminOrders = () => {
                       <td className="px-4 py-4 text-on-surface-variant">${order.total}</td>
                       <td className="px-4 py-4">
                         <div className="flex justify-end gap-2">
-                          <Button size="sm" variant="secondary" onClick={() => openDetails(order)}>View</Button>
-                          <Button size="sm" variant="primary" onClick={() => handleDelete(order._id)}>Delete</Button>
+                          <Button size="sm" variant="secondary" onClick={() => openDetails(order)} icon="visibility">View</Button>
+                          <Button size="sm" variant="ghost" className="!w-auto text-error hover:bg-error-container/50" onClick={() => handleDelete(order._id)} icon="delete">Delete</Button>
                         </div>
                       </td>
                     </tr>

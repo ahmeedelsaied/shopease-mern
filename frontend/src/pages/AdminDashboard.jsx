@@ -50,18 +50,19 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="px-margin-mobile py-stack-xl md:px-margin-desktop">
+    <div className="page-shell admin-shell">
       <SEO title="Admin Dashboard" robots={NOINDEX_FOLLOW_ROBOTS} />
       <div className="mx-auto max-w-container-max space-y-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-label-sm font-label-sm uppercase tracking-[0.24em] text-on-surface-variant">Administration</p>
-            <h1 className="text-headline-lg font-headline-lg text-primary">Admin Dashboard</h1>
+            <p className="eyebrow">Operations / overview</p>
+            <h1 className="mt-3 font-display-lg text-5xl leading-none text-primary">Admin dashboard.</h1>
+            <p className="mt-3 max-w-xl text-sm text-on-surface-variant">A clear view of the store, today’s movement, and the work that needs attention.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/admin/users"><Button variant="secondary">Manage Users</Button></Link>
-            <Link to="/admin/products"><Button variant="primary">Manage Products</Button></Link>
-            <Link to="/admin/orders"><Button variant="secondary">Manage Orders</Button></Link>
+            <Link to="/admin/users"><Button variant="secondary" icon="group">Manage users</Button></Link>
+            <Link to="/admin/products"><Button variant="primary" icon="inventory_2">Manage products</Button></Link>
+            <Link to="/admin/orders"><Button variant="secondary" icon="receipt_long">Manage orders</Button></Link>
           </div>
         </div>
 

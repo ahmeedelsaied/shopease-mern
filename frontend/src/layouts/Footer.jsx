@@ -1,75 +1,68 @@
-import { Link } from 'react-router-dom';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { navigateToSection, HOME_SECTIONS } from '../utils/navigation';
+
+const BrandMark = () => (
+  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-on-primary" aria-hidden="true">
+    <svg viewBox="0 0 40 40" className="h-5 w-5" fill="none"><path d="M10 15.5c0-3 2.4-5.5 5.5-5.5h9c3.1 0 5.5 2.5 5.5 5.5v1.2c0 4.1-2.7 7.1-6.1 9.4l-1.6 1.1v2.1h4.2v2.1H13.5v-2.1h4.2v-2.1l-1.6-1.1c-3.4-2.3-6.1-5.3-6.1-9.4v-1.2Z" fill="currentColor" /><path d="M15.5 16h9" stroke="#c86b49" strokeWidth="2" strokeLinecap="round" /></svg>
+  </span>
+);
 
 const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const handleSectionClick = (sectionId) => (event) => {
     event.preventDefault();
-    navigateToSection({
-      sectionId,
-      navigate,
-      pathname: location.pathname,
-    });
+    navigateToSection({ sectionId, navigate, pathname: location.pathname });
   };
 
   return (
-    <footer className="mt-stack-xl w-full border-t border-outline-variant/40 bg-surface-container-low/80 py-stack-xl backdrop-blur-xl dark:bg-inverse-surface/80 dark:border-outline-variant/40">
-      <div className="mx-auto grid max-w-container-max gap-8 px-margin-mobile md:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] md:px-margin-desktop">
-        <div className="space-y-4">
-          <Link to="/" aria-label="ShopEase – go to home" className="flex items-center gap-3 text-primary transition-colors hover:text-secondary">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant/40 bg-surface-container-lowest/70 shadow-sm">
-              <svg viewBox="0 0 64 64" className="h-6 w-6" aria-hidden="true">
-                <path d="M16 18c0-4 3-7 7-7h18c4 0 7 3 7 7v2c0 6-4 10-8 13l-4 3v4h8v4H20v-4h8v-4l-4-3c-4-3-8-7-8-13v-2Z" fill="currentColor" />
-                <path d="M25 24h14" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-            </span>
-            <span className="text-headline-sm font-headline-sm font-semibold tracking-[-0.03em]">ShopEase</span>
-          </Link>
-          <p className="max-w-sm text-body-md text-on-surface-variant">
-            Premium essentials for the modern shopper, designed to feel effortless from discovery to delivery.
-          </p>
+    <footer className="mt-16 border-t border-outline-variant/35 bg-primary text-primary-fixed">
+      <div className="mx-auto max-w-container-max px-margin-mobile py-12 md:px-margin-desktop md:py-16">
+        <div className="grid gap-12 lg:grid-cols-[1.5fr_0.75fr_0.75fr_1.2fr]">
+          <div className="max-w-sm space-y-5">
+            <Link to="/" aria-label="ShopEase – go to home" className="inline-flex items-center gap-3 text-on-primary">
+              <BrandMark />
+              <span className="text-[19px] font-semibold tracking-[-0.04em]">ShopEase</span>
+            </Link>
+            <p className="text-sm leading-7 text-primary-fixed/70">A considered edit of everyday essentials, delivered with clarity from first browse to front door.</p>
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-primary-fixed/55"><span className="h-px w-8 bg-secondary" /> Curated, not crowded</div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary">Explore</h3>
+            <ul className="space-y-3 text-sm text-primary-fixed/70" role="list">
+              <li><Link to={`/#${HOME_SECTIONS.ABOUT}`} onClick={handleSectionClick(HOME_SECTIONS.ABOUT)} className="transition-colors hover:text-on-primary">About</Link></li>
+              <li><Link to={`/#${HOME_SECTIONS.BRANDS}`} onClick={handleSectionClick(HOME_SECTIONS.BRANDS)} className="transition-colors hover:text-on-primary">Brands</Link></li>
+              <li><Link to={`/#${HOME_SECTIONS.CONTACT}`} onClick={handleSectionClick(HOME_SECTIONS.CONTACT)} className="transition-colors hover:text-on-primary">Contact</Link></li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary">Support</h3>
+            <ul className="space-y-3 text-sm text-primary-fixed/70" role="list">
+              <li><Link to={`/#${HOME_SECTIONS.DEALS}`} onClick={handleSectionClick(HOME_SECTIONS.DEALS)} className="transition-colors hover:text-on-primary">Deals</Link></li>
+              <li><Link to="/orders" className="transition-colors hover:text-on-primary">Orders</Link></li>
+              <li><Link to="/recently-viewed" className="transition-colors hover:text-on-primary">Recently viewed</Link></li>
+              <li><Link to="/profile" className="transition-colors hover:text-on-primary">Account</Link></li>
+            </ul>
+          </div>
+
+          <div className="rounded-[1.5rem] border border-primary-fixed/15 bg-primary-container/55 p-5">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary">The edit, delivered</h3>
+            <p className="mt-3 text-sm leading-6 text-primary-fixed/75">Get thoughtful drops and quiet offers. No noise, just the good stuff.</p>
+            <form className="mt-4 space-y-2">
+              <label htmlFor="newsletter" className="sr-only">Email address</label>
+              <div className="flex items-center gap-2 rounded-full bg-primary-fixed/10 p-1.5 ring-1 ring-primary-fixed/15 focus-within:ring-secondary">
+                <input id="newsletter" type="email" placeholder="Email address" className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-on-primary outline-none placeholder:text-primary-fixed/45" />
+                <button type="button" className="rounded-full bg-secondary px-4 py-2.5 text-xs font-bold text-on-secondary transition-transform hover:-translate-y-0.5 active:scale-[0.97]">Join</button>
+              </div>
+            </form>
+          </div>
         </div>
 
-        <div className="space-y-3">
-          <h3 className="text-label-lg font-label-lg uppercase tracking-[0.22em] text-on-surface">Company</h3>
-          <ul className="space-y-2 text-body-md text-on-surface-variant" role="list">
-            <li><Link to={`/#${HOME_SECTIONS.ABOUT}`} onClick={handleSectionClick(HOME_SECTIONS.ABOUT)} className="transition-colors hover:text-primary">About</Link></li>
-            <li><Link to={`/#${HOME_SECTIONS.BRANDS}`} onClick={handleSectionClick(HOME_SECTIONS.BRANDS)} className="transition-colors hover:text-primary">Brands</Link></li>
-            <li><Link to={`/#${HOME_SECTIONS.CONTACT}`} onClick={handleSectionClick(HOME_SECTIONS.CONTACT)} className="transition-colors hover:text-primary">Contact</Link></li>
-          </ul>
-        </div>
-
-        <div className="space-y-3">
-          <h3 className="text-label-lg font-label-lg uppercase tracking-[0.22em] text-on-surface">Support</h3>
-          <ul className="space-y-2 text-body-md text-on-surface-variant" role="list">
-            <li><Link to={`/#${HOME_SECTIONS.DEALS}`} onClick={handleSectionClick(HOME_SECTIONS.DEALS)} className="transition-colors hover:text-primary">Deals</Link></li>
-            <li><Link to="/orders" className="transition-colors hover:text-primary">Orders</Link></li>
-            <li><Link to="/recently-viewed" className="transition-colors hover:text-primary">Recently Viewed</Link></li>
-            <li><Link to="/profile" className="transition-colors hover:text-primary">Account</Link></li>
-          </ul>
-        </div>
-
-        <div className="space-y-4">
-          <h3 className="text-label-lg font-label-lg uppercase tracking-[0.22em] text-on-surface">Stay in touch</h3>
-          <form className="flex flex-col gap-3 rounded-[1.5rem] border border-outline-variant/40 bg-surface-container-lowest/80 p-4 shadow-sm">
-            <label htmlFor="newsletter" className="text-sm text-on-surface-variant">Join our newsletter for launches and offers.</label>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input id="newsletter" type="email" placeholder="Email address" className="w-full rounded-full border border-outline-variant/50 bg-transparent px-4 py-3 text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/10" />
-              <button type="button" className="rounded-full bg-primary px-4 py-3 text-sm font-semibold text-on-primary transition-transform hover:-translate-y-0.5">Subscribe</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div className="mx-auto mt-8 flex max-w-container-max flex-col gap-4 border-t border-outline-variant/40 px-margin-mobile pt-6 text-sm text-on-surface-variant md:flex-row md:items-center md:justify-between md:px-margin-desktop">
-        <p>© 2024 ShopEase. All rights reserved.</p>
-        <div className="flex flex-wrap gap-4">
-          <Link to="/" className="transition-colors hover:text-primary">Privacy</Link>
-          <Link to="/" className="transition-colors hover:text-primary">Terms</Link>
-          <Link to="/" className="transition-colors hover:text-primary">Shipping</Link>
+        <div className="mt-12 flex flex-col gap-4 border-t border-primary-fixed/15 pt-5 text-xs text-primary-fixed/55 sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2024 ShopEase. All rights reserved.</p>
+          <div className="flex flex-wrap gap-4"><Link to="/" className="transition-colors hover:text-on-primary">Privacy</Link><Link to="/" className="transition-colors hover:text-on-primary">Terms</Link><Link to="/" className="transition-colors hover:text-on-primary">Shipping</Link></div>
         </div>
       </div>
     </footer>

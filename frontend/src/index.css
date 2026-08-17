@@ -6,37 +6,130 @@
   :root {
     color-scheme: light;
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   }
 
   html {
     scroll-behavior: smooth;
+    background: #f5f1ea;
   }
 
   html.dark {
     color-scheme: dark;
+    background: #17221e;
   }
 
   body {
-    @apply bg-surface-container-lowest text-on-surface antialiased;
+    @apply bg-surface text-on-surface antialiased;
+    min-width: 320px;
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background-image: radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 34%), linear-gradient(180deg, #fcf8fb 0%, #f9f7fa 100%);
+    background-image: radial-gradient(circle at 8% -4%, rgba(200, 107, 73, 0.14), transparent 28%), radial-gradient(circle at 90% 4%, rgba(49, 72, 61, 0.1), transparent 25%), linear-gradient(180deg, #fffdf9 0%, #f5f1ea 100%);
   }
 
   html.dark body {
     @apply bg-inverse-surface text-inverse-on-surface;
-    background-image: radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 32%), linear-gradient(180deg, #303032 0%, #111827 100%);
+    background-image: radial-gradient(circle at 8% -4%, rgba(200, 107, 73, 0.18), transparent 28%), linear-gradient(180deg, #1f2b26 0%, #141c19 100%);
   }
 
-  * {
-    @apply transition-colors duration-200;
+  *,
+  *::before,
+  *::after {
+    border-color: rgba(150, 141, 129, 0.28);
   }
 
   ::selection {
-    @apply bg-primary text-on-primary;
+    @apply bg-secondary text-on-secondary;
   }
 
   section {
-    scroll-margin-top: 7rem;
+    scroll-margin-top: 8rem;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid rgba(200, 107, 73, 0.42);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-container-max px-margin-mobile py-8 sm:py-10 md:px-margin-desktop lg:py-14;
+  }
+
+  .surface-card {
+    @apply rounded-[1.6rem] border border-outline-variant/40 bg-surface-container-lowest shadow-soft;
+  }
+
+  .surface-card-muted {
+    @apply rounded-[1.6rem] border border-outline-variant/35 bg-surface-container-low/75;
+  }
+
+  .eyebrow {
+    @apply text-label-sm font-label-sm uppercase text-secondary;
+  }
+
+  .section-heading {
+    @apply font-display-lg text-headline-lg text-primary sm:text-[42px];
+  }
+
+  .section-copy {
+    @apply max-w-2xl text-body-md text-on-surface-variant;
+  }
+
+  .accent-rule {
+    @apply h-px w-12 bg-secondary;
+  }
+
+  .editorial-kicker {
+    @apply inline-flex items-center gap-2 rounded-full border border-secondary/25 bg-secondary-container/35 px-3 py-1.5 text-label-sm font-label-sm text-on-secondary-container;
+  }
+
+  .soft-grid {
+    background-image: linear-gradient(rgba(31, 48, 41, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(31, 48, 41, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .media-frame {
+    @apply relative overflow-hidden rounded-[1.4rem] bg-surface-container;
+  }
+
+  .admin-shell {
+    @apply min-h-[calc(100vh-5rem)] bg-surface-container-low/60;
+  }
+
+  .table-wrap {
+    @apply overflow-x-auto rounded-[1.25rem] border border-outline-variant/35;
+  }
+
+  .table-wrap table {
+    @apply min-w-full divide-y divide-outline-variant/30;
+  }
+
+  .table-wrap th {
+    @apply bg-surface-container-low px-4 py-3 text-left text-label-sm font-label-sm uppercase text-on-surface-variant;
+  }
+
+  .table-wrap td {
+    @apply border-t border-outline-variant/20 px-4 py-4 text-sm text-on-surface;
+  }
+
+  .field-shell {
+    @apply rounded-2xl border border-outline-variant/60 bg-surface-container-lowest transition-all duration-200 focus-within:border-secondary focus-within:ring-4 focus-within:ring-secondary/10;
   }
 }
 
@@ -52,8 +145,8 @@
 
   .fade-in-up {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px);
+    transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
   }
 
   .fade-in-up.is-visible {
@@ -62,61 +155,34 @@
   }
 
   @keyframes content-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .animate-content-in {
-    animation: content-in 0.25s ease-out both;
+    animation: content-in 0.32s var(--ease-out) both;
   }
 
   .smooth-image-hover img {
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.6s var(--ease-out);
   }
 
   .smooth-image-hover:hover img {
-    transform: scale(1.05);
+    transform: scale(1.045);
   }
 
-  /* Gallery — fade between main images when the active thumbnail changes. */
   @keyframes gallery-fade {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; transform: scale(0.985); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   .animate-gallery-fade {
-    animation: gallery-fade 0.4s ease-out both;
+    animation: gallery-fade 0.4s var(--ease-out) both;
   }
 
-  /* Order success — celebratory confetti (CSS-only, no dependency).
-     Each piece is positioned by --confetti-x and delayed by --confetti-delay
-     (both set inline by <Confetti />). The animation falls off the page after
-     ~2.5s; the parent then unmounts the pieces. */
   @keyframes confetti-fall {
-    0% {
-      transform: translateY(-10%) rotate(0deg);
-      opacity: 1;
-    }
-
-    100% {
-      transform:
-        translateX(var(--confetti-x, 0))
-        translateY(110vh)
-        rotate(720deg);
-      opacity: 0;
-    }
+    0% { transform: translateY(-10%) rotate(0deg); opacity: 1; }
+    100% { transform: translateX(var(--confetti-x, 0)) translateY(110vh) rotate(720deg); opacity: 0; }
   }
 
   .confetti {
@@ -133,48 +199,24 @@
     left: var(--confetti-left, 50%);
     width: 10px;
     height: 14px;
-    background: var(--confetti-color, #2563eb);
+    background: var(--confetti-color, #c86b49);
     border-radius: 2px;
     animation: confetti-fall 2.5s ease-out forwards;
     animation-delay: var(--confetti-delay, 0s);
   }
 
-  /* Order success — pop-in checkmark. */
   @keyframes success-pop {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-
-    60% {
-      transform: scale(1.1);
-      opacity: 1;
-    }
-
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+    0% { transform: scale(0.82); opacity: 0; }
+    60% { transform: scale(1.06); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
   .animate-success-pop {
-    animation: success-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  /* Respect reduced-motion preferences: disabled celebratory animation. */
-  @media (prefers-reduced-motion: reduce) {
-    .confetti__piece,
-    .animate-success-pop {
-      animation: none;
-    }
-
-    .confetti {
-      display: none;
-    }
+    animation: success-pop 0.5s var(--ease-out) both;
   }
 
   .glass-panel {
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 253, 249, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
@@ -187,32 +229,24 @@
   .toast-enter-active {
     transform: translateY(0);
     opacity: 1;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s var(--ease-out);
   }
 
   @keyframes toast-in {
-    from {
-      opacity: 0;
-      transform: translateY(12px) scale(0.98);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   @media (min-width: 640px) {
     @keyframes toast-in {
-      from {
-        opacity: 0;
-        transform: translateX(16px) scale(0.98);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-      }
+      from { opacity: 0; transform: translateX(16px) scale(0.98); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
     }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    .confetti { display: none; }
   }
 }

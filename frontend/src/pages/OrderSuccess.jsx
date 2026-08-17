@@ -137,7 +137,7 @@ const OrderSuccess = () => {
   };
 
   return (
-    <div className="px-margin-mobile md:px-margin-desktop py-stack-xl">
+    <div className="page-shell">
       {showConfetti ? <Confetti /> : null}
 
       <div className="max-w-container-max mx-auto">
@@ -154,11 +154,11 @@ const OrderSuccess = () => {
           ) : (
             <>
               {/* Animated checkmark with a celebratory pop (CSS only). */}
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary animate-success-pop">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-secondary-container/45 text-secondary animate-success-pop">
                 <span className="material-symbols-outlined text-4xl" aria-hidden="true">check_circle</span>
               </div>
 
-              <h1 className="mt-6 text-headline-lg font-headline-lg text-primary">
+              <h1 className="mt-6 font-display-lg text-4xl leading-tight text-primary">
                 Order placed successfully!
               </h1>
               <p className="mt-3 text-body-md text-on-surface-variant">
@@ -178,7 +178,7 @@ const OrderSuccess = () => {
               {/* Order summary section */}
               {order ? (
                 <div className="mt-8 text-left rounded-2xl bg-surface-container-low/60 p-5">
-                  <h2 className="text-headline-sm font-headline-sm text-primary">Order Summary</h2>
+                  <p className="eyebrow">What you ordered</p><h2 className="mt-2 font-display-lg text-3xl text-primary">Order summary.</h2>
                   <ul className="mt-4 space-y-3">
                     {order.items?.map((item) => (
                       <li
