@@ -102,11 +102,13 @@ const ProductGallery = ({ product, className = '' }) => {
       {/* Main image card — press to open lightbox, hover to zoom. */}
       <Card variant="product" className="overflow-hidden shadow-soft">
         <div className="relative h-[520px] w-full">
-          <ProductImageZoom
+          <div key={current.src} className="animate-gallery-fade h-full w-full">
+            <ProductImageZoom
             src={current.src}
             alt={current.alt}
             zoomEnabled={!lightbox.isOpen}
-          />
+            />
+          </div>
 
           {/* Click target to open lightbox. On desktop the zoom consumes
               pointermove; the click here opens the fullscreen view without
@@ -140,7 +142,7 @@ const ProductGallery = ({ product, className = '' }) => {
                 aria-label={`View image ${position + 1} of ${images.length}`}
                 onClick={() => handleSelect(position)}
                 className={cn(
-                  'group relative h-20 w-20 overflow-hidden rounded-2xl border bg-surface-container-low transition-all duration-200',
+                  'group relative h-20 w-20 overflow-hidden rounded-2xl border bg-surface-container-low transition-all duration-300 hover:scale-[1.03]',
                   'hover:-translate-y-0.5 hover:shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10',
                   isSelected
                     ? 'border-secondary ring-2 ring-secondary/40'
@@ -154,7 +156,7 @@ const ProductGallery = ({ product, className = '' }) => {
                   decoding="async"
                   draggable={false}
                   wrapperClassName="h-full w-full"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </button>
             );

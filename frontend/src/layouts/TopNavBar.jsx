@@ -25,6 +25,7 @@ const TopNavBar = () => {
   const [accountOpen, setAccountOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('light');
+  const [isScrolled, setIsScrolled] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [activeSection, setActiveSection] = useState(HOME_SECTIONS.HERO);
   const accountMenuRef = useRef(null);
@@ -38,6 +39,13 @@ const TopNavBar = () => {
     setTheme(savedTheme);
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     document.documentElement.style.colorScheme = savedTheme;
+  }, []);
+
+  useEffect(() => {
+    const updateScrollState = () => setIsScrolled(window.scrollY > 12);
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrollState);
   }, []);
 
   useEffect(() => {
@@ -131,7 +139,7 @@ const TopNavBar = () => {
       aria-current={activeSection === item.sectionId ? 'page' : undefined}
       className={cn(
         'relative rounded-full px-3 py-2 text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-secondary/20',
-        activeSection === item.sectionId ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-surface-container-high hover:text-primary',
+        activeSection === item.sectionId ? 'bg-primary text-on-primary shadow-sm after:absolute after:inset-x-3 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-secondary' : 'text-on-surface-variant hover:bg-surface-container-high hover:text-primary',
       )}
     >
       {item.label}
@@ -139,8 +147,8 @@ const TopNavBar = () => {
   ));
 
   return (
-    <nav className="sticky top-0 z-[1000] w-full border-b border-outline-variant/40 bg-surface/90 backdrop-blur-2xl dark:bg-inverse-surface/90" aria-label="Main navigation">
-      <div className="border-b border-outline-variant/25 bg-primary px-margin-mobile py-2 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-primary-fixed md:px-margin-desktop">
+    <nav className={cn('sticky top-0 z-[1000] w-full border-b backdrop-blur-2xl transition-all duration-300 dark:bg-inverse-surface/90', isScrolled ? 'border-outline-variant/55 bg-surface/95 shadow-[0_10px_30px_rgba(31,36,31,0.06)]' : 'border-outline-variant/30 bg-surface/85')} aria-label="Main navigation">
+      <div className={cn('border-b border-outline-variant/25 bg-primary px-margin-mobile text-center text-[10px] font-bold uppercase tracking-[0.18em] text-primary-fixed transition-all duration-300 md:px-margin-desktop', isScrolled ? 'py-1.5' : 'py-2')}>
         Complimentary delivery on orders over $75 <span className="mx-2 text-secondary">•</span> Curated for the everyday
       </div>
 
@@ -176,7 +184,7 @@ const TopNavBar = () => {
               <span className="material-symbols-outlined text-[20px]">person</span>
             </button>
             {accountOpen && createPortal(
-              <div ref={dropdownRef} style={{ position: 'fixed', top: `${dropdownPos.top}px`, left: `${dropdownPos.left}px`, zIndex: 1200 }} className="w-60 rounded-[1.4rem] border border-outline-variant/50 bg-surface-container-lowest p-2 shadow-xl">
+              <div ref={dropdownRef} style={{ position: 'fixed', top: `${dropdownPos.top}px`, left: `${dropdownPos.left}px`, zIndex: 1200 }} className="animate-pop-in w-60 rounded-[1.4rem] border border-outline-variant/50 bg-surface-container-lowest p-2 shadow-xl">
                 {user ? (
                   <>
                     <div className="border-b border-outline-variant/25 px-3 py-3"><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary">Signed in as</p><p className="mt-1 truncate text-sm font-semibold text-primary">{user.name}</p></div>
@@ -205,7 +213,7 @@ const TopNavBar = () => {
       </div>
 
       {mobileMenuOpen && (
-        <div className="border-t border-outline-variant/30 bg-surface-container-lowest px-margin-mobile py-4 shadow-lg md:hidden" role="navigation" aria-label="Mobile navigation menu">
+        <div className="animate-drawer-in border-t border-outline-variant/30 bg-surface-container-lowest px-margin-mobile py-4 shadow-lg md:hidden" role="navigation" aria-label="Mobile navigation menu">
           <form onSubmit={handleSearch} className="mb-4 flex items-center gap-3 rounded-2xl border border-outline-variant/60 bg-surface-container-low px-4 py-3">
             <span className="material-symbols-outlined text-secondary" aria-hidden="true">search</span>
             <input value={searchValue} onChange={(event) => setSearchValue(event.target.value)} placeholder="Search the catalog" className="w-full bg-transparent text-sm outline-none" aria-label="Search products" />

@@ -69,6 +69,7 @@
 @layer components {
   .page-shell {
     @apply mx-auto w-full max-w-container-max px-margin-mobile py-8 sm:py-10 md:px-margin-desktop lg:py-14;
+    animation: content-in 0.36s var(--ease-out) both;
   }
 
   .surface-card {
@@ -152,6 +153,72 @@
   .fade-in-up.is-visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px) scale(0.99);
+    transition: opacity 0.62s var(--ease-out), transform 0.62s var(--ease-out);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.52s var(--ease-out), transform 0.52s var(--ease-out);
+  }
+
+  .reveal-stagger.is-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 60ms; }
+  .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 120ms; }
+  .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 180ms; }
+
+  @keyframes hero-float {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-3deg); }
+    50% { transform: translate3d(0, -7px, 0) rotate(-2deg); }
+  }
+
+  .hero-float {
+    animation: hero-float 8s ease-in-out infinite;
+  }
+
+  .animate-modal-fade-in { animation: modal-fade-in 0.2s var(--ease-out) both; }
+  .animate-modal-fade-out { animation: modal-fade-out 0.18s var(--ease-out) both; }
+  .animate-modal-in { animation: modal-in 0.24s var(--ease-out) both; }
+  .animate-modal-out { animation: modal-out 0.18s var(--ease-out) both; }
+
+  @keyframes modal-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes modal-fade-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes modal-in { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes modal-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(6px) scale(0.98); } }
+
+  .animate-pop-in {
+    animation: pop-in 0.22s var(--ease-out) both;
+    transform-origin: top right;
+  }
+
+  .animate-drawer-in {
+    animation: drawer-in 0.24s var(--ease-out) both;
+    transform-origin: top center;
+  }
+
+  @keyframes pop-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes drawer-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes content-in {
@@ -247,6 +314,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    .fade-in-up, .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
     .confetti { display: none; }
   }
 }

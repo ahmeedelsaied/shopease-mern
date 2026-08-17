@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { cn, components } from '../../styles/designSystem';
 
 const Modal = ({
@@ -8,6 +8,17 @@ const Modal = ({
   className = '',
   showClose = true,
 }) => {
+  const [rendered, setRendered] = useState(isOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      setRendered(true);
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setRendered(false), 180);
+    return () => window.clearTimeout(timer);
+  }, [isOpen]);
+
   useEffect(() => {
     if (!isOpen) return undefined;
 
@@ -24,12 +35,12 @@ const Modal = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!rendered) return null;
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-margin-mobile md:p-margin-desktop">
       <div
-        className={cn('absolute inset-0', components.modal.overlay)}
+        className={cn('absolute inset-0', components.modal.overlay, isOpen ? 'animate-modal-fade-in' : 'animate-modal-fade-out')}
         onClick={onClose}
         aria-hidden="true"
       />
@@ -39,7 +50,8 @@ const Modal = ({
         className={cn(
           'relative z-[151] w-full max-w-md glass-panel',
           components.modal.panel,
-          className
+          isOpen ? 'animate-modal-in' : 'animate-modal-out',
+          className,
         )}
       >
         {showClose && (
@@ -47,7 +59,7 @@ const Modal = ({
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="absolute right-4 top-4 text-on-surface-variant hover:text-primary transition-colors"
+            className="absolute right-4 top-4 text-on-surface-variant transition-colors hover:text-primary"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
