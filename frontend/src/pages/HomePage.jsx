@@ -60,6 +60,7 @@ const HomePage = () => {
   const [error, setError] = useState('');
   const [searchInput, setSearchInput] = useState(() => searchParams.get('search') ?? searchParams.get('q') ?? '');
   const syncingSearchFromUrl = useRef(true);
+  const hasMountedCatalogRef = useRef(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { recentlyViewedItems: recentProducts, hydrated: recentHydrated, itemCount: recentCount } = useRecentlyViewed();
   const websiteJsonLd = useMemo(() => buildWebsiteJsonLd({ siteUrl: getSiteUrl() }), []);
@@ -170,7 +171,13 @@ const HomePage = () => {
   }, [activeQuery, filters]);
 
   useEffect(() => {
+    if (!hasMountedCatalogRef.current) {
+      hasMountedCatalogRef.current = true;
+      return undefined;
+    }
+
     document.getElementById('products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return undefined;
   }, [filters.page]);
 
   useEffect(() => {
