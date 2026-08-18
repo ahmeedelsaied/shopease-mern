@@ -7,18 +7,19 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { isHomePage, isHomeSection, scrollElementIntoView } from '../utils/navigation';
+import { isHomePage, isHomeSection } from '../utils/navigation';
 
 /**
  * @param {string} pathname - `location.pathname`
  * @param {string} hash     - `location.hash`
+ * @param {boolean} [ready=true] - Whether the home page layout has settled.
  */
-export default function useScrollToSection(pathname, hash) {
+export default function useScrollToSection(pathname, hash, ready = true) {
   const handledHashRef = useRef('');
 
   useEffect(() => {
     /* Only handle hashes when on the home page. */
-    if (!isHomePage(pathname)) {
+    if (!isHomePage(pathname) || !ready) {
       handledHashRef.current = '';
       return;
     }
@@ -39,12 +40,15 @@ export default function useScrollToSection(pathname, hash) {
 
     /* Small delay to let lazy content render. */
     const timerId = setTimeout(() => {
-      const scrolled = scrollElementIntoView(sectionId);
-      if (!scrolled) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'auto', block: 'start' });
+        return;
       }
-    }, 100);
+
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 0);
 
     return () => clearTimeout(timerId);
-  }, [pathname, hash]);
+  }, [pathname, hash, ready]);
 }

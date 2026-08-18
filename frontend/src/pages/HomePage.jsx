@@ -106,7 +106,12 @@ const HomePage = () => {
     setSearchParams(next, { replace });
   }, [searchParams, setSearchParams]);
 
-  useScrollToSection(location.pathname, location.hash);
+  useScrollToSection(location.pathname, location.hash, !initialLoading);
+
+  useEffect(() => {
+    if (initialLoading || location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [initialLoading, location.hash]);
 
   useEffect(() => {
     const loadAllProducts = async () => {

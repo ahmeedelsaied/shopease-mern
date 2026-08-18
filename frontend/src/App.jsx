@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { BrowserRouter, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
@@ -11,8 +11,10 @@ import { isHomePage, isHomeSection } from './utils/navigation';
 
 function ScrollRestoration() {
   const { pathname, hash } = useLocation();
+  const sectionId = hash.replace(/^#/, '');
+  const hasValidHomeHash = isHomePage(pathname) && isHomeSection(sectionId);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!('scrollRestoration' in window.history)) return undefined;
 
     const previousMode = window.history.scrollRestoration;
@@ -22,15 +24,20 @@ function ScrollRestoration() {
     };
   }, []);
 
-  useEffect(() => {
-    const sectionId = hash.replace(/^#/, '');
-    const hasValidHomeHash = isHomePage(pathname) && isHomeSection(sectionId);
-
+  useLayoutEffect(() => {
     // Let the existing HomePage hash hook perform the intentional section scroll.
     if (hasValidHomeHash) return;
-
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [pathname, hash]);
+  }, [pathname, hash, hasValidHomeHash]);
+
+  useEffect(() => {
+    if (hasValidHomeHash) return undefined;
+
+    const timerId = window.setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }, 0);
+    return () => window.clearTimeout(timerId);
+  }, [pathname, hash, hasValidHomeHash]);
 
   return null;
 }
